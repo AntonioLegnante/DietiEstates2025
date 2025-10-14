@@ -18,7 +18,7 @@ public class Utenti {
     private String email;
     private String password;
     private String phone;
-    private String capocchia;
+    //private String capocchia;
 
     public Utenti() {
     }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.PostConstruct;
+
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class ImageController {
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-
+        System.out.println("Guarda quanti Integrali!!!");
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Il file è vuoto"));
         }
@@ -69,6 +71,7 @@ public class ImageController {
                     .body(new ErrorResponse("Errore nel salvataggio del file: " + e.getMessage()));
         }
     }
+
 
     @DeleteMapping("/{filename}")
     public ResponseEntity<?> deleteImage(@PathVariable String filename) {
@@ -125,5 +128,50 @@ public class ImageController {
         private String message;
         public SuccessResponse(String message) { this.message = message; }
         public String getMessage() { return message; }
+    }
+
+    @GetMapping("/{filename}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String filename) {
+        try {
+            // Validazione nome file per sicurezza (evita path traversal)
+            if (filename.contains("..") || filename.contains("/")) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            // Scarica il file da MinIO
+            InputStream inputStream = minioService.downloadFile(filename);
+            byte[] imageBytes = inputStream.readAllBytes();
+            inputStream.close();
+
+            // Determina il Content-Type in base all'estensione
+            String contentType = getContentType(filename);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(imageBytes);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    private String getContentType(String filename) {
+        String extension = getFileExtension(filename);
+        switch (extension) {
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";
+            case "png":
+                return "image/png";
+            case "gif":
+                return "image/gif";
+            case "webp":
+                return "image/webp";
+            case "bmp":
+                return "image/bmp";
+            default:
+                return "application/octet-stream";
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.DietiEstates2025.DietiEstates2025;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.http.Method;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -62,7 +63,7 @@ public class MinioService {
         }
     }
 
-    public String uploadFile(MultipartFile file) throws Exception {
+    public String uploadFile(@NotNull MultipartFile file) throws Exception {
         // Genera nome unico
         String originalFilename = file.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));

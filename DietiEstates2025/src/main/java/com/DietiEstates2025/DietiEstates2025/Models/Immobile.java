@@ -1,9 +1,15 @@
 package com.DietiEstates2025.DietiEstates2025.Models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 
+@Entity
 public class Immobile {
+    @Id
     private Integer id;
+    private String titolo;
     private String linkImmagine;
     private Double prezzo;
     private String dimensione;
@@ -15,10 +21,15 @@ public class Immobile {
     private Double longitudine;
     private Double latitudine;
 
-    public Immobile(Integer id, String linkImmagine, Double prezzo, String dimensione,
+    public Immobile() {
+
+    }
+
+    public Immobile(Integer id, String titolo, String linkImmagine, Double prezzo, String dimensione,
                     String stanze, Boolean ascensore, String classeEnergetica, Boolean affitto,
                     Boolean vendita, Double longitudine, Double latitudine) {
         this.id = id;
+        this.titolo = titolo;
         this.linkImmagine = linkImmagine;
         this.prezzo = prezzo;
         this.dimensione = dimensione;

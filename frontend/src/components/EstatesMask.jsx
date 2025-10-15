@@ -1,41 +1,137 @@
-import { useState, useEffect } from "react"
-import axios  from 'axios'
+import { useState } from "react"
+import axios from 'axios'
 
 export function EstatesMask() {
-    const [image, setImage] = useState("");
-    /*useEffect(() => {
-        axios.get("http://localhost:8081/images/a8b35354-6343-48a3-9f7c-d553cdfe5a54.webp")
-            .then(response => {
-                console.log(response.data)
-                setImage(_ => response.data)
-            });
-    }, [])*/
-
-    const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    
-    if (!file) return;
-    
-    // Crea FormData e aggiungi il file con il nome "file"
-    const formData = new FormData();
-    formData.append("file", file);
-    
-    axios.post("http://localhost:8080/api/images/upload", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    })
-    .then(res => {
-        console.log("Upload riuscito:", res.data);
-    })
-    .catch(err => {
-        console.error("Errore upload:", err);
+    const [formData, setFormData] = useState({
+        titolo: "",
+        descrizione: "",
+        prezzo: "",
+        dimensione: "",
+        stanze: "",
+        ascensore: "",
+        classeEnergetica: "",
+        affitto: "",
+        vendite: "",
+        longitudine: "",
+        latitudine: "",
+        indirizzo: ""
     });
-}
+    const [file, setFile] = useState(null);
 
-return (
-    <>
-        <input type="file" onChange={handleFileUpload} />
-    </>
-)
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!file) {
+            alert("Seleziona un'immagine!");
+            return;
+        }
+
+        // Crea FormData con file + dati
+        const data = new FormData();
+        data.append("file", file);
+        data.append("titolo", formData.titolo);
+        data.append("descrizione", formData.descrizione);
+        data.append("dimensione", formData.dimensione);
+        data.append("prezzo", formData.prezzo);
+        data.append("indirizzo", formData.indirizzo);
+
+        axios.post("http://localhost:8080/api/immobili/create", data, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        })
+        .then(res => {
+            console.log("Immobile creato:", res.data);
+            alert("Immobile creato con successo!");
+            // Reset form
+            setFormData({ titolo: "", descrizione: "", prezzo: "", indirizzo: "" });
+            setFile(null);
+        })
+        .catch(err => {
+            console.error("Errore:", err);
+            alert("Errore nella creazione dell'immobile");
+        });
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Titolo:</label>
+                <input 
+                    type="text" 
+                    name="titolo"
+                    value={formData.titolo}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Descrizione:</label>
+                <textarea 
+                    name="descrizione"
+                    value={formData.descrizione}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Prezzo (€):</label>
+                <input 
+                    type="number" 
+                    name="prezzo"
+                    value={formData.prezzo}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Dimensione:</label>
+                <input 
+                    type="text" 
+                    name="dimensione"
+                    value={formData.indirizzo}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Indirizzo:</label>
+                <input 
+                    type="text" 
+                    name="indirizzo"
+                    value={formData.indirizzo}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Immagine:</label>
+                <input 
+                    type="file" 
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    required
+                />
+            </div>
+
+            <button type="submit">Crea Immobile</button>
+        </form>
+    );
 }

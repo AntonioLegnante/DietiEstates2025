@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { HomePage } from "./components/HomePage.jsx"
 import { Login } from "./components/Login.jsx"
 import { Registration } from "./components/Registration.jsx"
+import { EstatesMask } from './components/EstatesMask.jsx'
 
 function App() {
   return (
@@ -10,12 +11,14 @@ function App() {
         <Link to="/">Homepage</Link>
         <Link to="/login">Login</Link>
         <Link to="/registration">Registration</Link>
+        <Link to="/insert">new Estates</Link>
       </nav>
 
       <Routes>
         <Route path="/" element={<HomePage />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/registration" element={<Registration />}/>
+        <Route path="/insert" element={<EstatesMask />}/>
       </Routes>
     </BrowserRouter>
   )

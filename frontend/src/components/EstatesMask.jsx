@@ -1,19 +1,21 @@
 import { useState } from "react"
 import axios from 'axios'
 
-export function EstatesMask() {
-    const [formData, setFormData] = useState({
-        titolo: "",
-        descrizione: "",
-        prezzo: "",
-        dimensione: "",
-        stanze: "",
+/*
+stanze: "",
         ascensore: "",
         classeEnergetica: "",
         affitto: "",
         vendite: "",
         longitudine: "",
         latitudine: "",
+*/
+export function EstatesMask() {
+    const [formData, setFormData] = useState({
+        titolo: "",
+        descrizione: "",
+        prezzo: "",
+        dimensione: "",
         indirizzo: ""
     });
     const [file, setFile] = useState(null);
@@ -43,11 +45,11 @@ export function EstatesMask() {
         data.append("file", file);
         data.append("titolo", formData.titolo);
         data.append("descrizione", formData.descrizione);
-        data.append("dimensione", formData.dimensione);
         data.append("prezzo", formData.prezzo);
+        data.append("dimensione", formData.dimensione);
         data.append("indirizzo", formData.indirizzo);
 
-        axios.post("http://localhost:8080/api/immobili/create", data, {
+        axios.post("http://localhost:8080/api/immobili", data, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -56,7 +58,7 @@ export function EstatesMask() {
             console.log("Immobile creato:", res.data);
             alert("Immobile creato con successo!");
             // Reset form
-            setFormData({ titolo: "", descrizione: "", prezzo: "", indirizzo: "" });
+            setFormData({ titolo: "", descrizione: "", prezzo: "", formData: "", indirizzo: "" });
             setFile(null);
         })
         .catch(err => {
@@ -104,7 +106,7 @@ export function EstatesMask() {
                 <input 
                     type="text" 
                     name="dimensione"
-                    value={formData.indirizzo}
+                    value={formData.dimensione}
                     onChange={handleInputChange}
                     required
                 />

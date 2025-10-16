@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react';
+import { CardEstates } from './CardEstates.jsx';
+import { Home } from 'lucide-react';
 
 function SearchFilter() {
     const [prova, setProva] = useState("");
@@ -35,12 +37,40 @@ function SearchFilter() {
 }
 
 function EstatesList() {
+    const [immobili, setImmobili] = useState([
+    {
+      id: 1,
+      titolo: "Villa moderna con piscina",
+      descrizione: "Splendida villa di recente costruzione con ampio giardino, piscina e finiture di pregio. Ideale per famiglie che cercano comfort e tranquillità.",
+      prezzo: 450000,
+      indirizzo: "Via dei Platani 42, Milano",
+      imageUrl: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&h=300&fit=crop"
+    }]);
+
     return (
+    <div>
+      <div>
+        <h1>
+          I Nostri Immobili
+        </h1>
+        
         <div>
-            <ol>
-                {}
-            </ol>
+          {immobili.map((immobile) => (
+            <CardEstates
+              key={immobile.id}
+              immobile={immobile}
+            />
+          ))}
         </div>
+
+        {immobili.length === 0 && (
+          <div>
+            <Home />
+            <p>Nessun immobile disponibile</p>
+          </div>
+        )}
+      </div>
+    </div>
     )
 }
 export function HomePage() {

@@ -15,7 +15,7 @@ export function CardEstates({ immobile }) {
       {/* Immagine */}
       <div>
         <img
-          src={immobile.imageUrl}
+          src={immobile.linkImmagine}
           alt={immobile.titolo}
           
           onError={(e) => {

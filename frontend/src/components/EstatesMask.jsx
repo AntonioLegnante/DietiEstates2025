@@ -17,7 +17,9 @@ export function EstatesMask() {
         citta: "",
         prezzo: "",
         dimensione: "",
-        indirizzo: ""
+        indirizzo: "",
+        affitto: false,
+        vendita: false
     });
     const [file, setFile] = useState(null);
 
@@ -28,6 +30,14 @@ export function EstatesMask() {
             [name]: value
         }));
     };
+
+    const handleBooleanInputChange = (e) => {
+        const { name, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: checked
+        }))
+    }
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -50,6 +60,8 @@ export function EstatesMask() {
         data.append("dimensione", formData.dimensione);
         data.append("citta", formData.citta);
         data.append("indirizzo", formData.indirizzo);
+        data.append("affitto", formData.affitto);
+        data.append("vendita", formData.vendita);
 
         axios.post("http://localhost:8080/api/immobili", data, {
             headers: {
@@ -60,7 +72,7 @@ export function EstatesMask() {
             console.log("Immobile creato:", res.data);
             alert("Immobile creato con successo!");
             // Reset form
-            setFormData({ titolo: "", descrizione: "", dimensione: "", prezzo: "", formData: "", citta: "", indirizzo: "" });
+            setFormData({ titolo: "", descrizione: "", dimensione: "", prezzo: "", formData: "", citta: "", indirizzo: "", affitto: false, vendita: false});
             setFile(null);
         })
         .catch(err => {
@@ -133,6 +145,23 @@ export function EstatesMask() {
                     value={formData.indirizzo}
                     onChange={handleInputChange}
                     required
+                />
+            </div>
+
+            <div>
+                <label>Affitto:</label>
+                <input 
+                    type="checkbox" 
+                    name="affitto"
+                    checked={formData.affitto}
+                    onChange={handleBooleanInputChange}
+                />
+                <label>Vendita:</label>
+                <input 
+                    type="checkbox" 
+                    name="vendita"
+                    checked={formData.vendita}
+                    onChange={handleBooleanInputChange}
                 />
             </div>
 

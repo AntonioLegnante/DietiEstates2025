@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { CardEstates } from './CardEstates.jsx';
 import { Home } from 'lucide-react';
 
-function SearchFilter() {
+function SearchFilter({ setImmobili }) {
     const [prova, setProva] = useState("");
     const [localita, setLocalita] = useState("")
     const [distanza, setDistanza] = useState("");
@@ -39,24 +39,15 @@ function SearchFilter() {
                                                 acquisto
                                             }})
                                             .then(response =>{
-                                                    console.log(response.data)
+                                                    console.log(response.data);
+                                                    setImmobili(_ => response.data)
                                             })
                 }>Cerca</button>
         </div>
     )
 }
 
-function EstatesList() {
-    const [immobili, setImmobili] = useState([
-    {
-      id: 1,
-      titolo: "Villa moderna con piscina",
-      descrizione: "Splendida villa di recente costruzione con ampio giardino, piscina e finiture di pregio. Ideale per famiglie che cercano comfort e tranquillità.",
-      prezzo: 450000,
-      indirizzo: "Via dei Platani 42, Milano",
-      imageUrl: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&h=300&fit=crop"
-    }]);
-
+function EstatesList({ immobili }) {
     return (
     <div>
       <div>
@@ -84,11 +75,20 @@ function EstatesList() {
     )
 }
 export function HomePage() {
+    const [immobili, setImmobili] = useState([]);
     return (
         <div>
-            <SearchFilter />
-            <EstatesList />
+            <SearchFilter setImmobili={setImmobili}/>
+            <EstatesList immobili={immobili} />
             <h1>ToDo</h1>
         </div>
     )
 }
+
+/*  id: 1,
+      titolo: "Villa moderna con piscina",
+      descrizione: "Splendida villa di recente costruzione con ampio giardino, piscina e finiture di pregio. Ideale per famiglie che cercano comfort e tranquillità.",
+      prezzo: 450000,
+      indirizzo: "Via dei Platani 42, Milano",
+      imageUrl: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&h=300&fit=crop"
+    }]);*/

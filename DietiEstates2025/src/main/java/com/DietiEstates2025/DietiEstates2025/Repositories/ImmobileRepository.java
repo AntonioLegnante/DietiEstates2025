@@ -14,7 +14,7 @@ public interface ImmobileRepository extends JpaRepository<Immobile, Integer> {
         WHERE (:localita IS NULL OR i.indirizzo LIKE %:localita%)
         AND (:prezzo IS NULL OR i.prezzo <= :prezzo)
         AND (:affitta IS NULL OR i.affitto = :affitta) 
-        AND (:acquisto IS NULL OR i.vendita = :acquisto) 
+        OR (:acquisto IS NULL OR i.vendita = :acquisto) 
     """)
     List<Immobile> ricercaAvanzata(
             @Param("localita") String localita,

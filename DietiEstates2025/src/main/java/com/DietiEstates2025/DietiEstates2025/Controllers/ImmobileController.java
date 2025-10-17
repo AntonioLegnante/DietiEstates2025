@@ -30,11 +30,13 @@ public class ImmobileController {
             @RequestParam("prezzo") Double prezzo,
             @RequestParam("dimensione") String dimensione,
             @RequestParam("citta") String citta,
-            @RequestParam("indirizzo") String indirizzo
+            @RequestParam("indirizzo") String indirizzo,
+            @RequestParam("affitto") Boolean affitto,
+            @RequestParam("vendita") Boolean vendita
     ) {
         System.out.println("Guarda quanti integrali!");
         try {
-            Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, citta, indirizzo, file);
+            Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, citta, indirizzo, affitto, vendita, file);
             return ResponseEntity.status(HttpStatus.CREATED).body(immobile);
 
         } catch (IllegalArgumentException e) {

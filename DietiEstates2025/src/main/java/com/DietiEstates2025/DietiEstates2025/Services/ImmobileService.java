@@ -33,7 +33,7 @@ public class ImmobileService {
      */
     @Transactional
     public Immobile createImmobile(String titolo, String descrizione, Double prezzo, String dimensione, String citta,
-                                   String indirizzo, MultipartFile imageFile) throws Exception {
+                                   String indirizzo, Boolean affitto, Boolean vendita, MultipartFile imageFile) throws Exception {
 
         // 1. Valida i dati
         //validateImmobileData(titolo, descrizione, prezzo, indirizzo);
@@ -50,6 +50,8 @@ public class ImmobileService {
             immobile.setPrezzo(prezzo);
             immobile.setDimensione(dimensione);
             immobile.setIndirizzo(indirizzo);
+            immobile.setAffitto(affitto);
+            immobile.setVendita(vendita);
             immobile.setLinkImmagine(imageUrl);
             return immobileRepository.save(immobile);
 

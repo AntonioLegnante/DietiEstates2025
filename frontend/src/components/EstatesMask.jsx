@@ -14,6 +14,7 @@ export function EstatesMask() {
     const [formData, setFormData] = useState({
         titolo: "",
         descrizione: "",
+        citta: "",
         prezzo: "",
         dimensione: "",
         indirizzo: ""
@@ -47,6 +48,7 @@ export function EstatesMask() {
         data.append("descrizione", formData.descrizione);
         data.append("prezzo", formData.prezzo);
         data.append("dimensione", formData.dimensione);
+        data.append("citta", formData.citta);
         data.append("indirizzo", formData.indirizzo);
 
         axios.post("http://localhost:8080/api/immobili", data, {
@@ -58,7 +60,7 @@ export function EstatesMask() {
             console.log("Immobile creato:", res.data);
             alert("Immobile creato con successo!");
             // Reset form
-            setFormData({ titolo: "", descrizione: "", prezzo: "", formData: "", indirizzo: "" });
+            setFormData({ titolo: "", descrizione: "", dimensione: "", prezzo: "", formData: "", citta: "", indirizzo: "" });
             setFile(null);
         })
         .catch(err => {
@@ -107,6 +109,17 @@ export function EstatesMask() {
                     type="text" 
                     name="dimensione"
                     value={formData.dimensione}
+                    onChange={handleInputChange}
+                    required
+                />
+            </div>
+
+            <div>
+                <label>Citta:</label>
+                <input 
+                    type="text"
+                    name="citta"
+                    value={formData.citta}
                     onChange={handleInputChange}
                     required
                 />

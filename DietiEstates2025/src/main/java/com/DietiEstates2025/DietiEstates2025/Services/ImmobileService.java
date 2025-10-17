@@ -32,7 +32,7 @@ public class ImmobileService {
      * @throws Exception se ci sono errori
      */
     @Transactional
-    public Immobile createImmobile(String titolo, String descrizione, Double prezzo, String dimensione,
+    public Immobile createImmobile(String titolo, String descrizione, Double prezzo, String dimensione, String citta,
                                    String indirizzo, MultipartFile imageFile) throws Exception {
 
         // 1. Valida i dati
@@ -46,8 +46,9 @@ public class ImmobileService {
             Immobile immobile = new Immobile();
             immobile.setTitolo(titolo);
             immobile.setDescrizione(descrizione);
+            immobile.setCitta(citta);
             immobile.setPrezzo(prezzo);
-            immobile.setDescrizione(dimensione);
+            immobile.setDimensione(dimensione);
             immobile.setIndirizzo(indirizzo);
             immobile.setLinkImmagine(imageUrl);
             return immobileRepository.save(immobile);
@@ -62,6 +63,11 @@ public class ImmobileService {
             }
             throw new Exception("Errore nel salvataggio dell'immobile: " + e.getMessage());
         }
+    }
+
+    @Transactional
+    public List<Immobile> applicaRicerca(String localita, Double prezzo, Boolean affitta, Boolean acquisto) {
+        return immobileRepository.ricercaAvanzata(localita, prezzo, affitta, acquisto);
     }
 
     /**

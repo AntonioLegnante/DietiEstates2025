@@ -29,11 +29,12 @@ public class ImmobileController {
             @RequestParam("descrizione") String descrizione,
             @RequestParam("prezzo") Double prezzo,
             @RequestParam("dimensione") String dimensione,
+            @RequestParam("citta") String citta,
             @RequestParam("indirizzo") String indirizzo
     ) {
         System.out.println("Guarda quanti integrali!");
         try {
-            Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, indirizzo, file);
+            Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, citta, indirizzo, file);
             return ResponseEntity.status(HttpStatus.CREATED).body(immobile);
 
         } catch (IllegalArgumentException e) {
@@ -55,6 +56,19 @@ public class ImmobileController {
         return ResponseEntity.ok(immobili);
     }
 */
+
+    @GetMapping(value = "/ricerca")
+    public ResponseEntity<List<Immobile>> getImmobiliDaRicerca(
+            @RequestParam("localita") String localita,
+            @RequestParam("prezzo") Double prezzo,
+            @RequestParam("affitta") Boolean affitta,
+            @RequestParam("acquisto") Boolean acquisto
+    ) {
+        System.out.println(localita);
+        //gestione dei parametri
+        List<Immobile> immobili = immobileService.applicaRicerca(localita, prezzo, affitta, acquisto);
+        return ResponseEntity.ok(immobili);
+    }
     /**
      * Ottieni immobile per ID
      */

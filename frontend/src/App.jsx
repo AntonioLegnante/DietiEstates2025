@@ -16,6 +16,8 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />}/>
+        {/* prova Link con Pagina di prova */}
+        <Route path="/immobile/:id" element={<Login />} />
         <Route path="/login" element={<Login />}/>
         <Route path="/registration" element={<Registration />}/>
         <Route path="/insert" element={<EstatesMask />}/>

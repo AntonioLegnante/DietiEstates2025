@@ -62,8 +62,10 @@ function SearchFilter({ setImmobili }) {
 function EstatesList({ immobili }) {
     const navigate = useNavigate();
 
-    const handleClick = (id) => {
-        navigate(`/immobile/${id}`);
+    const handleClick = (immobile) => {
+        navigate(`/immobile/${immobile.id}`, {
+            state: { immobile }
+        });
     };
 
     return (
@@ -75,7 +77,7 @@ function EstatesList({ immobili }) {
         
         <div>
           {immobili.map((immobile) => (
-            <div onClick={() => handleClick(immobile.id)}>
+            <div onClick={() => handleClick(immobile)}>
                 <CardEstates
                     key={immobile.id}
                     immobile={immobile}

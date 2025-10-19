@@ -1,6 +1,12 @@
 import { MapPin, Home } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { MapView } from "./MapView.jsx";
 
-export function ModalDetail({ immobile }) {
+export function ModalDetail() {
+  const location = useLocation();       
+  const immobile = location.state?.immobile;
+  console.log(immobile);
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
@@ -21,11 +27,11 @@ export function ModalDetail({ immobile }) {
               e.target.src = 'https://via.placeholder.com/800x400?text=Immagine+non+disponibile';
             }}
           />
-          <button
+         { /*<button
             onClick={onClose}
           >
             ✕
-          </button>
+          </button>*/}
           <div>
             {formatPrice(immobile.prezzo)}
           </div>
@@ -60,11 +66,11 @@ export function ModalDetail({ immobile }) {
             </div>
           )}
 
-          <button
+         {/* <button
             onClick={onClose}
           >
             Chiudi
-          </button>
+          </button>*/}
         </div>
       </div>
     </div>

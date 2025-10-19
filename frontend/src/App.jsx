@@ -3,6 +3,7 @@ import { HomePage } from "./components/HomePage.jsx"
 import { Login } from "./components/Login.jsx"
 import { Registration } from "./components/Registration.jsx"
 import { EstatesMask } from './components/EstatesMask.jsx'
+import { ModalDetail } from './components/ModalDetail.jsx'
 
 function App() {
   return (
@@ -16,8 +17,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />}/>
-        {/* prova Link con Pagina di prova */}
-        <Route path="/immobile/:id" element={<Login />} />
+        <Route path="/immobile/:id" element={<ModalDetail />} />
         <Route path="/login" element={<Login />}/>
         <Route path="/registration" element={<Registration />}/>
         <Route path="/insert" element={<EstatesMask />}/>

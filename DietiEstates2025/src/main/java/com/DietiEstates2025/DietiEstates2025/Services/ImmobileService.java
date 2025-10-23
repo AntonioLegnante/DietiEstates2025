@@ -68,8 +68,10 @@ public class ImmobileService {
     }
 
     @Transactional
-    public List<Immobile> applicaRicerca(String localita, Double prezzo, Boolean affitta, Boolean acquisto) {
-        return immobileRepository.ricercaAvanzata(localita, prezzo, affitta, acquisto);
+    public List<Immobile> applicaRicerca(String localita, Double minPrezzo, Double maxPrezzo, Boolean affitta, Boolean vendita,
+                                         Integer numeroStanze, String dimensione, String piano, String classeEnergetica) {
+        return immobileRepository.ricercaAvanzata(localita, minPrezzo, maxPrezzo, affitta, vendita,
+                numeroStanze, dimensione, piano, classeEnergetica);
     }
 
     /**

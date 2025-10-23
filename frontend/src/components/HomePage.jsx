@@ -10,17 +10,26 @@ function SearchFilter({ setImmobili }) {
     const [minPrezzo, setMinPrezzo] = useState(0);
     const [maxPrezzo, setMaxPrezzo] = useState(0);
     const [affitta, setAffitta] = useState(false);
-    const [acquisto, setAcquisto] = useState(false);
+    const [vendita, setVendita] = useState(false);
+    const [numeroStanze, setNumeroStanze] = useState(1);
+    const [dimensione, setDimensione] = useState(null);
+    const [piano, setPiano] = useState(null);
+    const [classeEnergetica, setClasseEnergetica] = useState(null);
     const [altriFiltriCheck, setAltriFiltri] = useState(false);
 
     const altriFiltri = <>
             <label htmlFor='numero di stanze'>Numero di stanze: </label>
-            <input type="number" id="numero di stanze"></input>
+            <input type="number" id="numero di stanze" onChange={e => setNumeroStanze(_ => e.target.value)}></input>
             <label htmlFor='dimensione'>Dimensione:</label>
-            <input id="dimensione"></input>
-            <select>Classe energetica:
-                <option value="A1">A1</option>
-                <option value="A2">A2</option>
+            <input id="dimensione" onChange={e => setDimensione(_ => e.target.value)}></input>
+            <label htmlFor='piano'>Piano:</label>
+            <input id='piano' onChange={e => setPiano(_ => e.target.value)}></input>
+            <select onChange={e => setClasseEnergetica(_ => e.target.value)}>Classe energetica:
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
             </select>
             <br/>
         </>
@@ -36,9 +45,9 @@ function SearchFilter({ setImmobili }) {
                     <label htmlFor="a">a:</label> 
                         <input type="number" id="a" onChange={e => setMaxPrezzo(_ => e.target.value)}></input> 
                 </label>
-                <input type="checkbox" name="tipo" value={true} id="affitto" onChange={e => setAffitta(_ => e.target.value)}></input>
+                <input type="checkbox" name="tipo" checked={affitta} id="affitto" onChange={e => setAffitta(_ => e.target.checked)}></input>
                 <label htmlFor="affitto">Affitto</label>
-                <input type="checkbox" name="tipo" value={true} id="vendita" onChange={e => setAcquisto(_ => e.target.value)}></input>
+                <input type="checkbox" name="tipo" checked={vendita} id="vendita" onChange={e => setVendita(_ => e.target.checked)}></input>
                 <label htmlFor="vendita">Vendita</label>
                 <button onClick={() => setAltriFiltri(_ => !altriFiltriCheck)}>Altri filtri</button><br/>
                 {altriFiltriCheck ? altriFiltri : null}
@@ -48,7 +57,11 @@ function SearchFilter({ setImmobili }) {
                                                 minPrezzo,
                                                 maxPrezzo,
                                                 affitta,
-                                                acquisto
+                                                vendita,
+                                                numeroStanze, 
+                                                dimensione,
+                                                piano,
+                                                classeEnergetica
                                             }})
                                             .then(response =>{
                                                     console.log(response.data);

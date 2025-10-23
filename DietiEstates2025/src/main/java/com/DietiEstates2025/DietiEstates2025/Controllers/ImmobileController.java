@@ -61,14 +61,20 @@ public class ImmobileController {
 
     @GetMapping(value = "/ricerca")
     public ResponseEntity<List<Immobile>> getImmobiliDaRicerca(
-            @RequestParam("localita") String localita,
-            @RequestParam("prezzo") Double prezzo,
-            @RequestParam("affitta") Boolean affitta,
-            @RequestParam("acquisto") Boolean acquisto
+            @RequestParam(value="localita", required = false) String localita,
+            @RequestParam(value="minPrezzo", required = false) Double minPrezzo,
+            @RequestParam(value="maxPrezzo", required = false) Double maxPrezzo,
+            @RequestParam(value="affitta", required = false) Boolean affitta,
+            @RequestParam(value="vendita", required = false) Boolean vendita,
+            @RequestParam(value="numeroStanze", required = false) Integer numeroStanze,
+            @RequestParam(value="dimensione", required = false) String dimensione,
+            @RequestParam(value="piano", required = false) String piano,
+            @RequestParam(value="classeEnergetica", required = false) String classeEnergetica
     ) {
-        System.out.println(localita);
+        System.out.println(dimensione);
         //gestione dei parametri
-        List<Immobile> immobili = immobileService.applicaRicerca(localita, prezzo, affitta, acquisto);
+        List<Immobile> immobili = immobileService.applicaRicerca(localita, minPrezzo, maxPrezzo, affitta, vendita,
+                numeroStanze, dimensione, piano, classeEnergetica);
         return ResponseEntity.ok(immobili);
     }
     /**

@@ -1,26 +1,84 @@
 import { useState } from 'react'
+import  axios  from 'axios'
 
 export function Registration() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [numeroDiTelefono, setNumeroDiTelefono] = useState("");
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState({
+        username: "",
+        password: "",
+        numeroDiTelefono: "",
+        ruolo: ""
+    });
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUser(prev => ({
+            ...prev, 
+            [name]: value
+        }))
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(user);
+        axios.post("http://localhost:8080/auth/registrazione", 
+            user)
+        .then(res => {
+            console.log("Utente creato:", res.data);
+            alert("Utente creato con successo!");
+            // Reset form
+            setUser({ username: "", password: "", numeroDiTelefono: "", ruolo: "" });
+        })
+        .catch(err => {
+            console.error("Errore:", err);
+            alert("Errore nella creazione dell'utente");
+        });
+    }
     return (
-        <div>
-            <form>
-                <label htmlFor="username">Username</label>
-                <input id="username" onChange={e => setUsername(_ => e.target.value)}></input><br/>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>Username</label>
+                <input
+                     name="username"
+                     onChange={handleInputChange}>
+                </input>
+            </div>
+            
+            <div>
                 <label htmlFor="password">Password</label>
-                <input type="password" id="password" onChange={e => setPassword(_ => e.target.value)}></input><br/>
-                <label htmlFor="numero di telefono">Numero di telefono</label>
-                <input id="numero di telefono" onChange={e => setNumeroDiTelefono(_ => e.target.value)}></input><br/>
-                <input type="radio" name="user" value="agente immobiliare" id="agente immobiliare" onChange={e => setUser(_ => e.target.value)}></input>
-                <label htmlFor="agente immobiliare">Agente immobiliare</label>
-                <input type="radio" name="user" value="utente" id="utente"  onChange={e => setUser(_ => e.target.value)}></input>
-                <label htmlFor="utente">Utente</label><br/>
-                <button type="submit">Conferma</button>
-            </form>
-        </div>
+                <input 
+                    type="password" 
+                    name="password" 
+                    onChange={handleInputChange}>
+                </input>
+            </div>
+            
+            <div>
+                <label>Numero di telefono</label>
+                <input 
+                    name="numeroDiTelefono" 
+                    onChange={handleInputChange}>
+                </input>
+            </div>
+           
+            <div>
+                <input 
+                    type="radio" 
+                    name="ruolo" 
+                    value="agente immobiliare" 
+                    onChange={handleInputChange}>
+                </input>
+                <label>Agente immobiliare</label>
+
+                <input 
+                    type="radio" 
+                    name="ruolo" 
+                    value="utente"
+                    onChange={handleInputChange}>
+                </input>
+                <label>Utente</label><br/>
+            </div>
+            
+            <button type="submit">Conferma</button>
+        </form>
     )
 }

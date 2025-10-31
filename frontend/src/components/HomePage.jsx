@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { CardEstates } from './CardEstates.jsx';
 import { Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
 
 
 function SearchFilter({ setImmobili }) {
-    const [localita, setLocalita] = useState("")
+    const [localita, setLocalita] = useState("");
     const [minPrezzo, setMinPrezzo] = useState(0);
     const [maxPrezzo, setMaxPrezzo] = useState(0);
     const [affitta, setAffitta] = useState(false);
@@ -51,7 +53,7 @@ function SearchFilter({ setImmobili }) {
                 <label htmlFor="vendita">Vendita</label>
                 <button onClick={() => setAltriFiltri(_ => !altriFiltriCheck)}>Altri filtri</button><br/>
                 {altriFiltriCheck ? altriFiltri : null}
-                <button onClick={() => axios.get("http://localhost:8080/api/immobili/ricerca",{
+                <button onClick={() => axios.get("http://localhost:8080/api/immobili/ricerca", {
                                             params: {
                                                 localita,
                                                 minPrezzo,
@@ -110,8 +112,14 @@ function EstatesList({ immobili }) {
     )
 }
 export function HomePage() {
+ 
+    const location = useLocation();
+    const userData = location.state?.userData;
+
+    console.log(userData);
+
     const [immobili, setImmobili] = useState([{
-        id: 'IMM001',
+    id: 'IMM001',
     titolo: 'Elegante Appartamento in Centro Storico',
     indirizzo: 'Via Dante, 15 - Milano',
     prezzo: 450000,
@@ -124,6 +132,7 @@ export function HomePage() {
     }]);
     return (
         <div>
+            {userData ? userData.username : null}
             <SearchFilter setImmobili={setImmobili}/>
             <EstatesList immobili={immobili} />
             <h1>ToDo</h1>

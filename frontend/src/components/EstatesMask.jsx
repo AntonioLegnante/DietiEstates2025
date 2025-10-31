@@ -71,7 +71,6 @@ export function EstatesMask() {
         .then(res => {
             console.log("Immobile creato:", res.data);
             alert("Immobile creato con successo!");
-            // Reset form
             setFormData({ titolo: "", descrizione: "", dimensione: "", prezzo: "", formData: "", citta: "", indirizzo: "", affitto: false, vendita: false});
             setFile(null);
         })

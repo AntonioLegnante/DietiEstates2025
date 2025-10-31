@@ -1,7 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import  axios  from 'axios'
 
 export function Registration() {
+    const navigate = useNavigate();
+
     const [user, setUser] = useState({
         username: "",
         password: "",
@@ -25,12 +28,15 @@ export function Registration() {
         .then(res => {
             console.log("Utente creato:", res.data);
             alert("Utente creato con successo!");
-            // Reset form
             setUser({ username: "", password: "", numeroDiTelefono: "", ruolo: "" });
+            navigate("/");
         })
         .catch(err => {
             console.error("Errore:", err);
             alert("Errore nella creazione dell'utente");
+            setUser({ username: "", password: "", numeroDiTelefono: "", ruolo: "" });
+            navigate("/");
+
         });
     }
     return (
@@ -39,6 +45,7 @@ export function Registration() {
                 <label>Username</label>
                 <input
                      name="username"
+                     value={user.username}
                      onChange={handleInputChange}>
                 </input>
             </div>
@@ -48,6 +55,7 @@ export function Registration() {
                 <input 
                     type="password" 
                     name="password" 
+                    value={user.password}
                     onChange={handleInputChange}>
                 </input>
             </div>

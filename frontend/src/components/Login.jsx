@@ -11,10 +11,9 @@ export function Login() {
     function handleLoginButton() {
         axios.post("auth/login", {username, password})
         .then(response => {
-            console.log(response.data)
-            navigate("/", { 
-                state: { userData: response.data }
-            });
+            console.log(response.data.token)
+            localStorage.setItem("token", response.data.token);
+            navigate("/");
         });
     }
 

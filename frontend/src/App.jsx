@@ -12,7 +12,7 @@ function App() {
         <Link to="/">Homepage</Link>
         <Link to="/login">Login</Link>
         <Link to="/registration">Registration</Link>
-        <Link to="/insert">new Estates</Link>
+        {localStorage.getItem("token") ? <Link to="/insert">new Estates</Link> : null}
       </nav>
 
       <Routes>

@@ -113,10 +113,11 @@ function EstatesList({ immobili }) {
 }
 export function HomePage() {
  
-    const location = useLocation();
-    const userData = location.state?.userData;
-
-    console.log(userData);
+   // const location = useLocation();
+   // const userData = location.state?.userData;
+    
+   const [userData,setUserData] = useState(() => localStorage.getItem("token"));
+   console.log(userData);
 
     const [immobili, setImmobili] = useState([{
     id: 'IMM001',
@@ -132,9 +133,13 @@ export function HomePage() {
     }]);
     return (
         <div>
-            {userData ? userData.username : null}
+            {userData ? userData : null}
             <SearchFilter setImmobili={setImmobili}/>
             <EstatesList immobili={immobili} />
+            <button onClick={() => {
+                localStorage.removeItem("token");
+                setUserData(null);
+            }}>Logout</button>
             <h1>ToDo</h1>
         </div>
     )

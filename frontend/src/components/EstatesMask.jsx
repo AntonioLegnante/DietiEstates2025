@@ -65,7 +65,8 @@ export function EstatesMask() {
 
         axios.post("http://localhost:8080/api/immobili", data, {
             headers: {
-                "Content-Type": "multipart/form-data"
+                "Content-Type": "multipart/form-data",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
             }
         })
         .then(res => {

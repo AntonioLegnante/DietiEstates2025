@@ -2,6 +2,7 @@ package com.DietiEstates2025.DietiEstates2025.Models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,11 +12,20 @@ public class Utente {
     @SequenceGenerator(name = "utente_seq", sequenceName = "utente_sequence", allocationSize = 1)
     private Integer id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(unique = true, nullable = false)
     private String numeroDiTelefono;
+
+    @Column(nullable = false)
     private String ruolo;
+
+    @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Immobile> immobili;
 
     public Utente() {
 
@@ -68,15 +78,23 @@ public class Utente {
         this.ruolo = ruolo;
     }
 
+    public List<Immobile> getImmobili() {
+        return immobili;
+    }
+
+    public void setImmobili(List<Immobile> immobili) {
+        this.immobili = immobili;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Utente utente = (Utente) o;
-        return Objects.equals(id, utente.id) && Objects.equals(username, utente.username) && Objects.equals(password, utente.password) && Objects.equals(numeroDiTelefono, utente.numeroDiTelefono) && Objects.equals(ruolo, utente.ruolo);
+        return Objects.equals(id, utente.id) && Objects.equals(username, utente.username) && Objects.equals(password, utente.password) && Objects.equals(numeroDiTelefono, utente.numeroDiTelefono) && Objects.equals(ruolo, utente.ruolo) && Objects.equals(immobili, utente.immobili);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, numeroDiTelefono, ruolo);
+        return Objects.hash(id, username, password, numeroDiTelefono, ruolo, immobili);
     }
 }

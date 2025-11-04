@@ -14,9 +14,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UtenteRepository utenteRepository;
 
-    /**
-     * Spring Security chiama questo metodo per caricare l'utente
-     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -29,8 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         // 2. Converti il tuo User in un UserDetails di Spring Security
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
-                .password(user.getPassword())  // Password GIÀ cifrata nel DB
-          //      .authorities("ROLE_USER")      // Ruolo dell'utente
+                .password(user.getPassword())
+          //      .authorities("ROLE_USER")
                 .build();
     }
 }

@@ -2,7 +2,9 @@ package com.DietiEstates2025.DietiEstates2025.Services;
 
 import com.DietiEstates2025.DietiEstates2025.MinioService;
 import com.DietiEstates2025.DietiEstates2025.Models.Immobile;
+import com.DietiEstates2025.DietiEstates2025.Models.Utente;
 import com.DietiEstates2025.DietiEstates2025.Repositories.ImmobileRepository;
+import com.DietiEstates2025.DietiEstates2025.Repositories.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,9 @@ public class ImmobileService {
 
     @Autowired
     private ImmobileRepository immobileRepository;
+
+    @Autowired
+    private UtenteRepository utenteRepository;
 
     @Autowired
     private MinioService minioService;
@@ -33,27 +38,34 @@ public class ImmobileService {
      */
     @Transactional
     public Immobile createImmobile(String titolo, String descrizione, Double prezzo, String dimensione, String citta,
-                                   String indirizzo, Boolean affitto, Boolean vendita, MultipartFile imageFile) throws Exception {
+                                   String indirizzo, Boolean affitto, Boolean vendita, MultipartFile imageFile, String username) throws Exception {
 
-        // 1. Valida i dati
-        //validateImmobileData(titolo, descrizione, prezzo, indirizzo);
+
         System.out.println("Questo problema è sicuramente indecidibile");
-        // 2. Upload immagine su MinIO
+
         String imageUrl = minioService.uploadFile(imageFile);
 
         try {
-            // 3. Crea e salva l'immobile nel database PostgreSQL
-            Immobile immobile = new Immobile();
-            immobile.setTitolo(titolo);
-            immobile.setDescrizione(descrizione);
-            immobile.setCitta(citta);
-            immobile.setPrezzo(prezzo);
-            immobile.setDimensione(dimensione);
-            immobile.setIndirizzo(indirizzo);
-            immobile.setAffitto(affitto);
-            immobile.setVendita(vendita);
-            immobile.setLinkImmagine(imageUrl);
-            return immobileRepository.save(immobile);
+
+            Optional<Utente> utente = utenteRepository.findByUsername(username);
+            if(utente.isPresent()) {
+                Immobile immobile = new Immobile();
+                immobile.setTitolo(titolo);
+                immobile.setDescrizione(descrizione);
+                immobile.setCitta(citta);
+                immobile.setPrezzo(prezzo);
+                immobile.setDimensione(dimensione);
+                immobile.setIndirizzo(indirizzo);
+                immobile.setAffitto(affitto);
+                immobile.setVendita(vendita);
+                immobile.setLinkImmagine(imageUrl);
+                immobile.setUtente(utente.get());
+                return immobileRepository.save(immobile);
+            }
+            else {
+                throw new RuntimeException("Utente non trovato");
+            }
+
 
         } catch (Exception e) {
             // Se il salvataggio fallisce, elimina l'immagine da MinIO

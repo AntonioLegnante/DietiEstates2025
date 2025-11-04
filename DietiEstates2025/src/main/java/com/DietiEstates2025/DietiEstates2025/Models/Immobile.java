@@ -10,17 +10,41 @@ public class Immobile {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "immobile_seq")
     @SequenceGenerator(name = "immobile_seq", sequenceName = "immobile_sequence", allocationSize = 1)
     private Integer id;
+
+    @Column(nullable = false)
     private String titolo;
+
+    @Column(nullable = false)
     private String descrizione;
+
+    @Column(nullable = false)
     private String citta;
+
+    @Column(unique = true, nullable = false)
     private String linkImmagine;
+
+    @Column(nullable = false)
     private Double prezzo;
+
+    @Column(nullable = false)
     private String indirizzo;
+
+    @Column(nullable = false)
     private Boolean affitto;
+
+    @Column(nullable = false)
     private Boolean vendita;
+
     private Integer numeroStanze;
+
     private String dimensione;
+
     private String piano;
+
+    @ManyToOne
+    @JoinColumn(name = "utente_id", nullable = false)
+    private Utente utente;
+
     private String classeEnergetica;
 
     public Immobile() {
@@ -29,7 +53,7 @@ public class Immobile {
 
     public Immobile(Integer id, String titolo, String descrizione, String citta, String linkImmagine,
                     Double prezzo, String indirizzo, Boolean affitto, Boolean vendita, Integer numeroStanze,
-                    String dimensione, String piano, String classeEnergetica) {
+                    String dimensione, String piano, String classeEnergetica, Utente utente) {
         this.id = id;
         this.titolo = titolo;
         this.descrizione = descrizione;
@@ -43,6 +67,7 @@ public class Immobile {
         this.dimensione = dimensione;
         this.piano = piano;
         this.classeEnergetica = classeEnergetica;
+        this.utente = utente;
     }
 
     public Integer getId() {
@@ -149,15 +174,23 @@ public class Immobile {
         this.classeEnergetica = classeEnergetica;
     }
 
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Immobile immobile = (Immobile) o;
-        return Objects.equals(id, immobile.id) && Objects.equals(titolo, immobile.titolo) && Objects.equals(descrizione, immobile.descrizione) && Objects.equals(citta, immobile.citta) && Objects.equals(linkImmagine, immobile.linkImmagine) && Objects.equals(prezzo, immobile.prezzo) && Objects.equals(indirizzo, immobile.indirizzo) && Objects.equals(affitto, immobile.affitto) && Objects.equals(vendita, immobile.vendita) && Objects.equals(numeroStanze, immobile.numeroStanze) && Objects.equals(dimensione, immobile.dimensione) && Objects.equals(piano, immobile.piano) && Objects.equals(classeEnergetica, immobile.classeEnergetica);
+        return Objects.equals(id, immobile.id) && Objects.equals(titolo, immobile.titolo) && Objects.equals(descrizione, immobile.descrizione) && Objects.equals(citta, immobile.citta) && Objects.equals(linkImmagine, immobile.linkImmagine) && Objects.equals(prezzo, immobile.prezzo) && Objects.equals(indirizzo, immobile.indirizzo) && Objects.equals(affitto, immobile.affitto) && Objects.equals(vendita, immobile.vendita) && Objects.equals(numeroStanze, immobile.numeroStanze) && Objects.equals(dimensione, immobile.dimensione) && Objects.equals(piano, immobile.piano) && Objects.equals(utente, immobile.utente) && Objects.equals(classeEnergetica, immobile.classeEnergetica);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, titolo, descrizione, citta, linkImmagine, prezzo, indirizzo, affitto, vendita, numeroStanze, dimensione, piano, classeEnergetica);
+        return Objects.hash(id, titolo, descrizione, citta, linkImmagine, prezzo, indirizzo, affitto, vendita, numeroStanze, dimensione, piano, utente, classeEnergetica);
     }
 }

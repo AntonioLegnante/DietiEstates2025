@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,11 +33,15 @@ public class ImmobileController {
             @RequestParam("citta") String citta,
             @RequestParam("indirizzo") String indirizzo,
             @RequestParam("affitto") Boolean affitto,
-            @RequestParam("vendita") Boolean vendita
+            @RequestParam("vendita") Boolean vendita,
+            Authentication authentication
     ) {
         System.out.println("Guarda quanti integrali!");
+        String username = authentication.getName();
+        System.out.println(username);
+
         try {
-            Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, citta, indirizzo, affitto, vendita, file);
+            Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, citta, indirizzo, affitto, vendita, file, username);
             return ResponseEntity.status(HttpStatus.CREATED).body(immobile);
 
         } catch (IllegalArgumentException e) {

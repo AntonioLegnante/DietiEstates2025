@@ -84,11 +84,14 @@ export function CardEstates({ immobile, utente, utenteRegistrato }) {
                 utente={utenteRegistrato}
           />
         */}
+        <div>
+          {immobile.agenteImmobiliare}
+        </div>
         <button onClick={(e) => {
           // prevent the outer div's onClick from running
           e.stopPropagation();
           // pass a state object to the route (don't use the comma expression)
-          navigate('/Chat', { state: { immobile: immobile.id ?? immobile, vendor: immobile.vendor, utente: user } });
+          navigate('/Chat', { state: { immobile: immobile.id ?? immobile, vendor: immobile.agenteImmobiliare, utente: user } });
         }}>
           Messaggia
         </button>

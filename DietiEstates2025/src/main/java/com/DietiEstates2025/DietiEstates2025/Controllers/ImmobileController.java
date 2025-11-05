@@ -1,5 +1,6 @@
 package com.DietiEstates2025.DietiEstates2025.Controllers;
 
+import com.DietiEstates2025.DietiEstates2025.DTO.ImmobileDTO;
 import com.DietiEstates2025.DietiEstates2025.Models.Immobile;
 import com.DietiEstates2025.DietiEstates2025.Services.ImmobileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/immobili")
@@ -42,7 +44,8 @@ public class ImmobileController {
 
         try {
             Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, citta, indirizzo, affitto, vendita, file, username);
-            return ResponseEntity.status(HttpStatus.CREATED).body(immobile);
+            System.out.println("Immobile created!"+ immobile.getUtente().getUsername());
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ImmobileDTO(immobile));
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
@@ -65,7 +68,7 @@ public class ImmobileController {
 */
 
     @GetMapping(value = "/ricerca")
-    public ResponseEntity<List<Immobile>> getImmobiliDaRicerca(
+    public ResponseEntity<List<ImmobileDTO>> getImmobiliDaRicerca(
             @RequestParam(value="localita", required = false) String localita,
             @RequestParam(value="minPrezzo", required = false) Double minPrezzo,
             @RequestParam(value="maxPrezzo", required = false) Double maxPrezzo,
@@ -80,7 +83,7 @@ public class ImmobileController {
         //gestione dei parametri
         List<Immobile> immobili = immobileService.applicaRicerca(localita, minPrezzo, maxPrezzo, affitta, vendita,
                 numeroStanze, dimensione, piano, classeEnergetica);
-        return ResponseEntity.ok(immobili);
+        return ResponseEntity.ok(immobili.stream().map(immobile -> new ImmobileDTO(immobile)).collect(Collectors.toList()));
     }
     /**
      * Ottieni immobile per ID

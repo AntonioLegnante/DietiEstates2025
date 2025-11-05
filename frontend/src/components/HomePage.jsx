@@ -68,6 +68,7 @@ function SearchFilter({ setImmobili }) {
                                             .then(response =>{
                                                     console.log(response.data);
                                                     setImmobili(_ => response.data)
+                                                    
                                             })
                 }>Cerca</button>
         </div>
@@ -131,7 +132,8 @@ export function HomePage() {
     coordinate: {
       lat: 45.4642,
       lng: 9.1900
-    }
+    }, 
+    agenteImmobiliare: 'gormita'
     }]);
     return (
         <div>

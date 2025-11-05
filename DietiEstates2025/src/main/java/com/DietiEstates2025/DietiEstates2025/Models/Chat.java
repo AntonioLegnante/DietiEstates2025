@@ -47,4 +47,10 @@ public class Chat {
     public Chat() {
 
     }
+
+    public void aggiungiMessaggi(Messaggi messaggio){
+        messaggi.add(messaggio);
+
+    }
+
 }

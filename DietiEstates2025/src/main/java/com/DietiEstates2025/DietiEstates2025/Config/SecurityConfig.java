@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/static/**",
                                 "/favicon.ico", "/assets/**", "/vite.svg", "/manifest.json", "/auth/**", "/api/immobili/ricerca").permitAll()
-                        .requestMatchers("/api/immobili").authenticated()
+                        .requestMatchers("/api/immobili", "/chat/openChat").authenticated()
                         .anyRequest().authenticated())
                 // NON usare sessioni (JWT è stateless)
                 .sessionManagement(session -> session

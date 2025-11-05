@@ -74,7 +74,7 @@ function SearchFilter({ setImmobili }) {
     )
 }
 
-function EstatesList({ immobili }) {
+function EstatesList({ immobili, utenteRegistrato }) {
     const navigate = useNavigate();
 
     const handleClick = (immobile) => {
@@ -96,6 +96,8 @@ function EstatesList({ immobili }) {
                 <CardEstates
                     key={immobile.id}
                     immobile={immobile}
+                    utente={utenteRegistrato}
+
                 />
             </div>
             ))}
@@ -135,7 +137,9 @@ export function HomePage() {
         <div>
             {userData ? userData : null}
             <SearchFilter setImmobili={setImmobili}/>
-            <EstatesList immobili={immobili} />
+            <EstatesList immobili={immobili} 
+                utenteRegistrato={userData}
+            />
             <button onClick={() => {
                 localStorage.removeItem("token");
                 setUserData(null);

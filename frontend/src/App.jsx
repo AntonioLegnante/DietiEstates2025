@@ -5,6 +5,7 @@ import { Registration } from "./components/Registration.jsx"
 import { EstatesMask } from './components/EstatesMask.jsx'
 import { ModalDetail } from './components/ModalDetail.jsx'
 import { AuthProvider, useAuth } from './components/AuthContext.jsx';
+import { Chat } from './components/Chat.jsx'
 
 // Sposta la navbar in un componente separato che può usare useAuth
 function Navigation() {
@@ -27,6 +28,7 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<HomePage />}/>
+          <Route path="/Chat" element={<Chat />}/>
           <Route path="/immobile/:id" element={<ModalDetail />} />
           <Route path="/login" element={<Login />}/>
           <Route path="/registration" element={<Registration />}/>

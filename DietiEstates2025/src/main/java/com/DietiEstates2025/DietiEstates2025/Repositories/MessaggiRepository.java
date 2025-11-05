@@ -10,5 +10,4 @@ import java.util.Optional;
 
 public interface MessaggiRepository extends JpaRepository<Messaggi, Integer> {
 
-    Optional<List<Messaggi>> findByChatId(Integer chatId);
 }

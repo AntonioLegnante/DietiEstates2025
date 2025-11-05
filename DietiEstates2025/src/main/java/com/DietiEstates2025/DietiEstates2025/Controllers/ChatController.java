@@ -1,0 +1,38 @@
+package com.DietiEstates2025.DietiEstates2025.Controllers;
+
+import com.DietiEstates2025.DietiEstates2025.Models.Chat;
+import com.DietiEstates2025.DietiEstates2025.Services.ChatService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("chat")
+public class ChatController {
+
+    @Autowired
+    private ChatService chatService;
+
+    @GetMapping("/retrieveChats")
+    public ResponseEntity<List<Chat>> retrieveChats(@RequestParam Integer userId, Authentication authentication) {
+        return ResponseEntity.ok(chatService.retrieveChatUser(userId));
+    }
+
+    @GetMapping("/retrieveChat")
+    public ResponseEntity<Chat> retrieveChatFromId(@RequestParam Integer chatId, Authentication authentication) {
+        return ResponseEntity.ok(chatService.retrieveChat(chatId));
+    }
+
+    @GetMapping("/openChat")
+    public ResponseEntity<Chat> openChat(@RequestParam String user, @RequestParam String vendor,
+                                         @RequestParam Integer immobile, Authentication authentication) {
+        return ResponseEntity.ok(chatService.generateNewChat(user, vendor, immobile));
+    }
+
+}

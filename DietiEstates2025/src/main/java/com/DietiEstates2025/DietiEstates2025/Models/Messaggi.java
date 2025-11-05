@@ -17,9 +17,11 @@ public class Messaggi {
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
-    public Messaggi(Chat chat) {
+    public Messaggi(Chat chat,  String messageContent) {
         this.chat = chat;
+        this.messageContent = messageContent;
     }
+
 
     public Messaggi() {
 

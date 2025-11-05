@@ -1,12 +1,17 @@
 import axios from 'axios';
-import { MapPin, Home, ExternalLink } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-export function Chat({immobile, vendor, utente}){
+export function Chat(){
     const [messaggi, setMessaggi] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = localStorage.getItem("token");
+
+    const location = useLocation();
+    const { immobile, agenteImmobiliare, utenteLoggato } = location.state || {};
+
+    console.log(`${immobile}, ${agenteImmobiliare}, ${utenteLoggato}`);
 
     useEffect(()=>{
         setLoading(true);
@@ -15,14 +20,15 @@ export function Chat({immobile, vendor, utente}){
         // use full backend URL to avoid relying on dev-server proxy
         axios.get("http://localhost:8080/chat/openChat",  { 
             params: {
-                user: utente,
-                vendor: vendor,
+                user: utenteLoggato,
+                vendor: agenteImmobiliare,
                 immobile: immobile,
                 
-            }, headers: {
+            }, 
+            headers: {
                 Authorization: `Bearer ${token}`
-                 }
-            })
+            }
+        })
         .then(response => {
             // Ensure we always store an array
             // backend returns a Chat object — adapt to response shape
@@ -43,15 +49,15 @@ export function Chat({immobile, vendor, utente}){
             setError(err);
         })
         .finally(() => setLoading(false));
-    }, [immobile, vendor, utente]);
+    }, [immobile, agenteImmobiliare, utenteLoggato]);
 
     if (loading) return (<div>
         Caricamento conversazione…</div>);
     if (error) {
         // log useful debug info outside of JSX (JSX expressions must be expressions, not statements)
         console.log('Chat error - immobile:', immobile);
-        console.log('Chat error - vendor:', vendor);
-        console.log('Chat error - utente:', utente);
+        console.log('Chat error - vendor:', agenteImmobiliare);
+        console.log('Chat error - utente:', utenteLoggato);
         return (<div>Errore nel caricamento della chat.</div>);
     }
     return (

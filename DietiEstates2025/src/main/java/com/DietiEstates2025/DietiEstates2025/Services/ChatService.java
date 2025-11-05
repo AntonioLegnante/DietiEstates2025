@@ -69,7 +69,8 @@ public class ChatService {
     }
 
     public Chat chatEsistente(Utente utente, Utente vendorId, Immobile immobile){
-        Optional<Chat>  userChat = chatRepository.findChat(utente.getId(), vendorId.getId(), immobile.getId());
+        System.out.println("GGG");
+        Optional<Chat>  userChat = chatRepository.findChat(utente, vendorId, immobile);
         return userChat.orElse(null);
 
     }

@@ -1,11 +1,9 @@
 import axios from 'axios'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CardEstates } from './CardEstates.jsx';
 import { Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-
-
+import { jwtDecode } from "jwt-decode";
 
 function SearchFilter({ setImmobili }) {
     const [localita, setLocalita] = useState("");
@@ -75,7 +73,7 @@ function SearchFilter({ setImmobili }) {
     )
 }
 
-function EstatesList({ immobili, utenteRegistrato }) {
+function EstatesList({ immobili, utenteLoggato }) {
     const navigate = useNavigate();
 
     const handleClick = (immobile) => {
@@ -97,8 +95,7 @@ function EstatesList({ immobili, utenteRegistrato }) {
                 <CardEstates
                     key={immobile.id}
                     immobile={immobile}
-                    utente={utenteRegistrato}
-
+                    utenteLoggato={utenteLoggato}
                 />
             </div>
             ))}
@@ -116,11 +113,14 @@ function EstatesList({ immobili, utenteRegistrato }) {
 }
 export function HomePage() {
  
-   // const location = useLocation();
-   // const userData = location.state?.userData;
-    
-   const [userData,setUserData] = useState(() => localStorage.getItem("token"));
-   console.log(userData);
+   const [userData,setUserData] = useState("");
+
+   useEffect(() => {
+       setUserData(() => localStorage.getItem("token"));
+       setUserData(prev => prev ? jwtDecode(prev)?.sub : null);
+   })
+   //const [userData,setUserData] = useState(() => localStorage.getItem("token"));
+   //console.log(userData);
 
     const [immobili, setImmobili] = useState([{
     id: 'IMM001',
@@ -139,9 +139,7 @@ export function HomePage() {
         <div>
             {userData ? userData : null}
             <SearchFilter setImmobili={setImmobili}/>
-            <EstatesList immobili={immobili} 
-                utenteRegistrato={userData}
-            />
+            <EstatesList immobili={immobili} utenteLoggato={userData}/>
             <button onClick={() => {
                 localStorage.removeItem("token");
                 setUserData(null);

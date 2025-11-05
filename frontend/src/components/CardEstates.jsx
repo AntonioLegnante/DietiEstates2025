@@ -4,12 +4,9 @@ import { MapView } from './MapView.jsx';
 import { Chat } from './Chat.jsx'
 import { useNavigate } from 'react-router-dom';
 
-export function CardEstates({ immobile, utente, utenteRegistrato }) {
+export function CardEstates({ immobile, utenteLoggato }) {
 
   const navigate = useNavigate();
-
-  // support both prop names (EstatesList passes `utente`, some places use `utenteRegistrato`)
-  const user = utente ?? utenteRegistrato;
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('it-IT', {
@@ -87,11 +84,20 @@ export function CardEstates({ immobile, utente, utenteRegistrato }) {
         <div>
           {immobile.agenteImmobiliare}
         </div>
+        <div>
+          {utenteLoggato}
+        </div>
         <button onClick={(e) => {
           // prevent the outer div's onClick from running
           e.stopPropagation();
           // pass a state object to the route (don't use the comma expression)
-          navigate('/Chat', { state: { immobile: immobile.id ?? immobile, vendor: immobile.agenteImmobiliare, utente: user } });
+          navigate('/Chat', { 
+            state: { 
+              immobile: immobile.id, 
+              agenteImmobiliare: immobile.agenteImmobiliare, 
+              utenteLoggato: utenteLoggato 
+            } 
+          });
         }}>
           Messaggia
         </button>

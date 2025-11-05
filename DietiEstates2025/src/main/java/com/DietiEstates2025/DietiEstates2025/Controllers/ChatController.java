@@ -30,8 +30,11 @@ public class ChatController {
     }
 
     @GetMapping("/openChat")
-    public ResponseEntity<Chat> openChat(@RequestParam String user, @RequestParam String vendor,
-                                         @RequestParam Integer immobile, Authentication authentication) {
+    public ResponseEntity<Chat> openChat(@RequestParam String user,
+                                         @RequestParam String vendor,
+                                         @RequestParam Integer immobile,
+                                         Authentication authentication) {
+        System.out.println("sono entrato");
         return ResponseEntity.ok(chatService.generateNewChat(user, vendor, immobile));
     }
 

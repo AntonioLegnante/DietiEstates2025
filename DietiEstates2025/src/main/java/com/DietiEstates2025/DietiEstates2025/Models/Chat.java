@@ -2,6 +2,7 @@ package com.DietiEstates2025.DietiEstates2025.Models;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,7 @@ public class Chat {
     }
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "chat")
-    private List<Messaggi> messaggi;
+    private List<Messaggi> messaggi = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "utente_id", nullable = false)
@@ -50,7 +51,6 @@ public class Chat {
 
     public void aggiungiMessaggi(Messaggi messaggio){
         messaggi.add(messaggio);
-
     }
 
 }

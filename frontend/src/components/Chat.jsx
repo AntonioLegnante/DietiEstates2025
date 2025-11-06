@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 export function Chat(){
     const [messaggi, setMessaggi] = useState([]);
+    const [messaggio, setMessaggio] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = localStorage.getItem("token");
@@ -12,6 +13,12 @@ export function Chat(){
     const { immobile, agenteImmobiliare, utenteLoggato } = location.state || {};
 
     console.log(`${immobile}, ${agenteImmobiliare}, ${utenteLoggato}`);
+
+    function addMessage() {
+        setMessaggi(prev => [...prev, {
+            messageContent: messaggio
+        }]);
+    }
 
     useEffect(()=>{
         setLoading(true);
@@ -34,11 +41,13 @@ export function Chat(){
             // backend returns a Chat object — adapt to response shape
             // if the backend returns messages inside response.data.messaggi use that, otherwise
             // fallback to the whole response data (wrapped in an array for map)
-            const data = response?.data;
+            /*const data = response?.data;
             if (Array.isArray(data?.messaggi)) setMessaggi(data.messaggi);
             else if (Array.isArray(data)) setMessaggi(data);
             else if (data) setMessaggi([data]);
-            else setMessaggi([]);
+            else setMessaggi([]);*/
+            console.log(`prova ${response.data.messaggi}`);
+            setMessaggi(_ => response.data.messaggi)
         })
         .catch(err => {
             console.error("Failed to load chat:", err);
@@ -63,12 +72,22 @@ export function Chat(){
     return (
         <div>
             {
-                messaggi.map((messaggio, idx) => (
-                    <div key={messaggio?.id ?? idx}>
-                        {typeof messaggio === 'string' ? messaggio : JSON.stringify(messaggio)}
-                    </div>
-                ))
+                messaggi ?
+                messaggi.map((messaggio, id) => (
+                    <div key={id}>
+                        {messaggio.messageContent}
+                    </div> 
+                )) : null
             }
+            <div>
+                <label>Inserisci messaggio</label>
+                <input onChange={e => setMessaggio(_ => e.target.value)}>
+                </input>
+                <label>Invia messaggio</label>
+                <button onClick={addMessage}>
+                    Invia Messaggio
+                </button>
+            </div>
         </div>
     );
 }

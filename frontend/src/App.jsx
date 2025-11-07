@@ -5,7 +5,8 @@ import { Registration } from "./components/Registration.jsx"
 import { EstatesMask } from './components/EstatesMask.jsx'
 import { ModalDetail } from './components/ModalDetail.jsx'
 import { AuthProvider, useAuth } from './components/AuthContext.jsx';
-import { Chat } from './components/Chat.jsx'
+import { Chat } from './components/Chat.jsx';
+import { Chats } from './components/Chats.jsx';
 
 // Sposta la navbar in un componente separato che può usare useAuth
 function Navigation() {
@@ -17,11 +18,13 @@ function Navigation() {
       <Link to="/login">Login</Link>
       <Link to="/registration">Registration</Link>
       {isAuthenticated ? <Link to="/insert">new Estates</Link> : null}
+      {isAuthenticated ? <Link to="/Chats">Open chats</Link> : null}
     </nav>
   );
 }
 
 function App() {
+
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -33,10 +36,13 @@ function App() {
           <Route path="/login" element={<Login />}/>
           <Route path="/registration" element={<Registration />}/>
           <Route path="/insert" element={<EstatesMask />}/>
+          <Route path="/Chats" element={<Chats />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   )
 }
 
-export default App
+export default App;
+
+

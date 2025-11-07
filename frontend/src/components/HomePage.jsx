@@ -114,10 +114,14 @@ function EstatesList({ immobili, utenteLoggato }) {
 export function HomePage() {
  
    const [userData,setUserData] = useState("");
+   const [ruolo, setRuolo] = useState("");
 
    useEffect(() => {
        setUserData(() => localStorage.getItem("token"));
        setUserData(prev => prev ? jwtDecode(prev)?.sub : null);
+       setRuolo(() => localStorage.getItem("token"))
+       setRuolo(prev => prev ? jwtDecode(prev)?.roles : null);
+       console.log(ruolo);
    })
    //const [userData,setUserData] = useState(() => localStorage.getItem("token"));
    //console.log(userData);

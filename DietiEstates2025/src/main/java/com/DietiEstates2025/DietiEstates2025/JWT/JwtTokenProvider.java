@@ -3,12 +3,14 @@ package com.DietiEstates2025.DietiEstates2025.JWT;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider  {
@@ -31,6 +33,15 @@ public class JwtTokenProvider  {
         // 1. Prendi lo username dall'oggetto Authentication
         String username = authentication.getName();
 
+        System.out.println(authentication.getAuthorities());
+
+        String ruolo = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        System.out.println(ruolo);
+        //String ruoli = GrantedAuthority.getAuthority(authentication.getAuthorities().toArray()[0]);
+
         // 2. Prendi la data e ora ADESSO
         Date adesso = new Date();
 
@@ -44,7 +55,8 @@ public class JwtTokenProvider  {
 
         // 5. COSTRUISCI IL TOKEN
         String token = Jwts.builder()
-                .setSubject(username)           // CHI è l'utente
+                .setSubject(username)       // ✅ Salva il ruolo nel token// CHI è l'utente
+                .claim("roles", ruolo)
                 .setIssuedAt(adesso)            // QUANDO è stato creato
                 .setExpiration(scadenza)        // QUANDO scade
                 .signWith(chiave)            // FIRMA con la chiave segreta

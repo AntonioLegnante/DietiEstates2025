@@ -58,8 +58,10 @@ public class ChatService {
         return storicoChat.orElse(null);
     }
 
-    public List<Chat> retrieveChatAgent(Integer vendorId){
-        Optional<List<Chat>> storicoChat = chatRepository.findByVendorId_Id(vendorId);
+    public List<Chat> retrieveChatAgent(String username){
+        Utente user = utenteRepository.findByUsername(username).get();
+        Optional<List<Chat>> storicoChat = chatRepository.findByVendorId_Id(user.getId());
+        System.out.println(storicoChat.get());
         return storicoChat.orElse(null);
     }
 

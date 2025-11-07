@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("chat")
@@ -22,9 +24,18 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    @GetMapping("/retrieveChats")
+    @GetMapping("/retrieveChatsUser")
     public ResponseEntity<List<Chat>> retrieveChats(@RequestParam Integer userId, Authentication authentication) {
         return ResponseEntity.ok(chatService.retrieveChatUser(userId));
+    }
+
+    @GetMapping("/retrieveChatsAgent")
+    public ResponseEntity<List<ChatDTO>> retrieveChatsAgent(@RequestParam("user") String username, Authentication authentication) {
+        System.out.println(" prova bella " + username);
+        List<Chat> chats = chatService.retrieveChatAgent(username);
+        List<ChatDTO> chatsDTO = chats.stream().map(ChatDTO::new).collect(Collectors.toList());
+       // return ResponseEntity.ok(chatDTO);
+        return ResponseEntity.ok(chatsDTO);
     }
 
     @GetMapping("/retrieveChat")

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 export function Chat(){
     const [messaggi, setMessaggi] = useState([]);
     const [messaggio, setMessaggio] = useState("");
+    const [chatId, setChatId] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = localStorage.getItem("token");
@@ -15,6 +16,16 @@ export function Chat(){
     console.log(`${immobile}, ${agenteImmobiliare}, ${utenteLoggato}`);
 
     function addMessage() {
+        axios.get("http://localhost:8080/chat/addMessage", {
+            params: {
+                chatId: chatId,
+                messaggio: messaggio
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+
+        });
         setMessaggi(prev => [...prev, {
             messageContent: messaggio
         }]);
@@ -37,16 +48,13 @@ export function Chat(){
             }
         })
         .then(response => {
-            // Ensure we always store an array
-            // backend returns a Chat object — adapt to response shape
-            // if the backend returns messages inside response.data.messaggi use that, otherwise
-            // fallback to the whole response data (wrapped in an array for map)
-            /*const data = response?.data;
-            if (Array.isArray(data?.messaggi)) setMessaggi(data.messaggi);
-            else if (Array.isArray(data)) setMessaggi(data);
-            else if (data) setMessaggi([data]);
-            else setMessaggi([]);*/
             console.log(`prova ${response.data.messaggi}`);
+            console.log(`chat id: ${response.data.chatId}`);
+            console.log(`Sender id: ${response.data.senderId}`);
+            console.log(`Receiver id: ${response.data.receiverId}`);
+            console.log(`Estate id: ${response.data.immobileId}`);
+            console.log(`primo messaggio: ${response.data.messaggi[0]}`);
+            setChatId(_ => response.data.chatId);
             setMessaggi(_ => response.data.messaggi)
         })
         .catch(err => {

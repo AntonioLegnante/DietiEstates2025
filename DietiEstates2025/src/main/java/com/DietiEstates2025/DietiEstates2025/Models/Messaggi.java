@@ -22,10 +22,40 @@ public class Messaggi {
         this.messageContent = messageContent;
     }
 
+  /*  @Override
+    public String toString() {
+        return "Messaggi{" +
+                "messageId=" + messageId +
+                ", messageContent='" + messageContent + '\'' +
+                ", chat=" + chat +
+                '}';
+    }*/
 
     public Messaggi() {
 
     }
 
+    public Integer getMessageId() {
+        return messageId;
+    }
 
+    public void setMessageId(Integer messageId) {
+        this.messageId = messageId;
+    }
+
+    public String getMessageContent() {
+        return messageContent;
+    }
+
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
 }

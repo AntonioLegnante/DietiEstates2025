@@ -70,13 +70,19 @@ public class ChatService {
 
     public Chat chatEsistente(Utente utente, Utente vendorId, Immobile immobile){
         System.out.println("GGG");
-        Optional<Chat>  userChat = chatRepository.findChat(utente, vendorId, immobile);
+        Optional<Chat> userChat = chatRepository.findChat(utente, vendorId, immobile);
         return userChat.orElse(null);
 
     }
 
-
-
-
+    public void updateMessages(Integer chatId, String messaggio) {
+        Optional<Chat> chat = chatRepository.findById(chatId);
+        if (chat.isPresent()) {
+            Messaggi msg = new Messaggi(chat.get(), messaggio);
+            chat.get().aggiungiMessaggi(msg);
+            chatRepository.save(chat.get());
+            System.out.println(chat.get());
+        }
+    }
 
 }

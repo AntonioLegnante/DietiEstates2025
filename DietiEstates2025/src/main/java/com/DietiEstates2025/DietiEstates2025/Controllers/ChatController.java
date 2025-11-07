@@ -1,8 +1,10 @@
 package com.DietiEstates2025.DietiEstates2025.Controllers;
 
+import com.DietiEstates2025.DietiEstates2025.DTO.ChatDTO;
 import com.DietiEstates2025.DietiEstates2025.Models.Chat;
 import com.DietiEstates2025.DietiEstates2025.Services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -31,13 +33,24 @@ public class ChatController {
     }
 
     @GetMapping("/openChat")
-    public ResponseEntity<Chat> openChat(@RequestParam String user,
+    public ResponseEntity<ChatDTO> openChat(
+                                         @RequestParam String user,
                                          @RequestParam String vendor,
                                          @RequestParam Integer immobile,
                                          Authentication authentication) {
         System.out.println("sono entrato");
-        return ResponseEntity.ok(chatService.generateNewChat(user, vendor, immobile));
+        Chat chat = chatService.generateNewChat(user, vendor, immobile);
+        System.out.println(chat);
+        ChatDTO chatDTO = new ChatDTO(chat);
+        return ResponseEntity.ok(chatDTO);
     }
 
-
+    @GetMapping("/addMessage")
+    public ResponseEntity<?> sendMessage(
+            @RequestParam Integer chatId,
+            @RequestParam String messaggio,
+            Authentication authentication) {
+        chatService.updateMessages(chatId, messaggio);
+        return ResponseEntity.ok("");
+    }
 }

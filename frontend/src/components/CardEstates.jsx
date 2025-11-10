@@ -1,6 +1,6 @@
 import { MapPin, Home, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
-import { StaticMapView} from './MapView.jsx';
+import { StaticMapViewWithPOI} from './MapView.jsx';
 import { Chat } from './Chat.jsx'
 import { useNavigate } from 'react-router-dom';
 
@@ -73,7 +73,7 @@ export function CardEstates({ immobile, utenteLoggato }) {
             <div>
               {/* Debug: log the full address being passed */}
               {console.log('CardEstates: fullAddress ->', fullAddress, 'immobile.citta ->', immobile?.citta, 'hasCoordinate ->', !!immobile.coordinate)}
-              <StaticMapView
+              <StaticMapViewWithPOI
                 address={fullAddress}
               />
             </div>

@@ -1,6 +1,6 @@
 import { MapPin, Home } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { StaticMapView } from "./MapView.jsx";
+import { StaticMapViewWithPOI } from "./MapView.jsx";
 
 export function ModalDetail() {
   const location = useLocation();       
@@ -65,7 +65,7 @@ export function ModalDetail() {
           {(immobile.coordinate || fullAddress) && (
             <div>
               <h3>Posizione</h3>
-              <StaticMapView 
+              <StaticMapViewWithPOI
                 address={fullAddress}
               />
             </div>

@@ -129,7 +129,8 @@ export function HomePage() {
     const [immobili, setImmobili] = useState([{
     id: 'IMM001',
     titolo: 'Elegante Appartamento in Centro Storico',
-    indirizzo: 'Via Dante, 15 - Milano',
+    citta: "Milano",
+    indirizzo: 'Via Dante, 15',
     prezzo: 450000,
     descrizione: 'Splendido appartamento di 120 mq situato nel cuore del centro storico di Milano. L\'immobile si trova al terzo piano di un elegante palazzo d\'epoca con ascensore e si compone di ingresso, ampio salone, cucina abitabile, tre camere da letto e due bagni. Completamente ristrutturato con finiture di pregio.',
     linkImmagine: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800',

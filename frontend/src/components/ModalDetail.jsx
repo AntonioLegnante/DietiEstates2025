@@ -7,6 +7,13 @@ export function ModalDetail() {
   const immobile = location.state?.immobile;
   console.log(immobile);
 
+  // Build a safe full address: prefer street first, then city, and bias to Italy to reduce ambiguous matches
+  const fullAddress = immobile?.indirizzo
+    ? immobile?.citta
+      ? `${immobile.indirizzo}, ${immobile.citta}, Italy`
+      : `${immobile.indirizzo}, Italy`
+    : immobile?.citta ?? null;
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('it-IT', {
       style: 'currency',
@@ -42,7 +49,7 @@ export function ModalDetail() {
           
           <div>
             <MapPin />
-            <span>{immobile.indirizzo}</span>
+            <span>{fullAddress}</span>
           </div>
 
           <div>
@@ -55,11 +62,11 @@ export function ModalDetail() {
             <span>ID Immobile: {immobile.id}</span>
           </div>
 
-          {immobile.coordinate && (
+          {(immobile.coordinate || fullAddress) && (
             <div>
               <h3>Posizione</h3>
               <StaticMapView 
-                address={immobile.indirizzo}
+                address={fullAddress}
               />
             </div>
           )}

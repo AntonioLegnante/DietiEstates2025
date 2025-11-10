@@ -8,6 +8,9 @@ export function StaticMapView({ address }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Debug: log the received address prop so we can see whether city is present
+    console.log('StaticMapView received address ->', address);
+
     useEffect(() => {
         if (!address) return;
 
@@ -47,11 +50,11 @@ export function StaticMapView({ address }) {
     // --- Rendering ---
 
     if (loading) {
-        return <p>Caricamento mappa...</p>;
+        return <p>Caricamento mappa... {address ? `(address: ${address})` : ''}</p>;
     }
 
     if (error) {
-        return <p style={{color: 'red'}}>Errore: {error}</p>;
+        return <p style={{color: 'red'}}>Errore: {error} {address ? `(address: ${address})` : ''}</p>;
     }
 
     if (!coords) {

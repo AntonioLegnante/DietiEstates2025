@@ -7,6 +7,15 @@ import { useNavigate } from 'react-router-dom';
 export function CardEstates({ immobile, utenteLoggato }) {
 
   const navigate = useNavigate();
+  // Build a safe full address: prefer street first, then city, and bias to Italy to reduce ambiguous matches
+  const fullAddress = immobile?.indirizzo
+    ? immobile?.citta
+      ? `${immobile.indirizzo}, ${immobile.citta}, Italy`
+      : `${immobile.indirizzo}, Italy`
+    : immobile?.citta ?? null;
+  // DEBUG: always log the immobile received by this component (helps debug search results)
+  console.log('CardEstates received immobile ->', immobile);
+  
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('it-IT', {
@@ -47,7 +56,11 @@ export function CardEstates({ immobile, utenteLoggato }) {
           {/* Indirizzo */}
           <div>
             <MapPin />
-            <span>{immobile.indirizzo}</span>
+            <span>{`${immobile.citta},${immobile.indirizzo}`}</span>
+            {/* Visible debug: show the constructed fullAddress so user can see if city is present */}
+            <div style={{ fontSize: '0.9rem', color: '#666' }}>
+              {`fullAddress: ${fullAddress ?? '(undefined)'}`}
+            </div>
           </div>
 
           {/* Descrizione */}
@@ -55,11 +68,13 @@ export function CardEstates({ immobile, utenteLoggato }) {
             {immobile.descrizione}
           </p>
 
-          {/* Mappa piccola */}
-          {immobile.coordinate && (
+          {/* Mappa piccola (debug: rendera' la mappa anche se mancano `coordinate` ma esiste un indirizzo) */}
+          {(immobile.coordinate || immobile.citta || immobile.indirizzo) && (
             <div>
+              {/* Debug: log the full address being passed */}
+              {console.log('CardEstates: fullAddress ->', fullAddress, 'immobile.citta ->', immobile?.citta, 'hasCoordinate ->', !!immobile.coordinate)}
               <StaticMapView
-                address={immobile.indirizzo}
+                address={fullAddress}
               />
             </div>
           )}

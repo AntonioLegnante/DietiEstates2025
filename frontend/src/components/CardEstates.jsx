@@ -1,6 +1,6 @@
 import { MapPin, Home, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
-import { MapView } from './MapView.jsx';
+import { StaticMapView} from './MapView.jsx';
 import { Chat } from './Chat.jsx'
 import { useNavigate } from 'react-router-dom';
 
@@ -58,9 +58,7 @@ export function CardEstates({ immobile, utenteLoggato }) {
           {/* Mappa piccola */}
           {immobile.coordinate && (
             <div>
-              <MapView 
-                lat={immobile.coordinate.lat} 
-                lng={immobile.coordinate.lng} 
+              <StaticMapView
                 address={immobile.indirizzo}
               />
             </div>

@@ -38,7 +38,8 @@ public class ChatService {
 
             Chat chat = chatEsistente(user.get(), venditore.get(), casaVendita.get());
 
-            if(chat != null){
+            if(chat != null) {
+                System.out.println("Chat esistente");
                 return chat;
             }
             else {

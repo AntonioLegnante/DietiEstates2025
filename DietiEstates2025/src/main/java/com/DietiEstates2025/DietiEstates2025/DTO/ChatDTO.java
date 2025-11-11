@@ -19,13 +19,19 @@ public class ChatDTO {
 
     private Integer senderId;
 
+    private String usernameSender;
+
     private Integer receiverId;
+
+    private String usernameReceiver;
 
     private Integer immobileId;
 
     public ChatDTO(Chat chat) {
         this.chatId = chat.getChatId();
         this.messaggi = chat.getMessaggi().stream().map(MessaggiDTO::new).collect(Collectors.toList());
+        this.usernameSender = chat.getUtente().getUsername();
+        this.usernameReceiver = chat.getVendorId().getUsername();
         this.senderId = chat.getUtente().getId();
         this.receiverId = chat.getVendorId().getId();
         this.immobileId = chat.getImmobileId().getId();
@@ -71,15 +77,31 @@ public class ChatDTO {
         this.immobileId = immobileId;
     }
 
+    public String getUsernameSender() {
+        return usernameSender;
+    }
+
+    public void setUsernameSender(String usernameSender) {
+        this.usernameSender = usernameSender;
+    }
+
+    public String getUsernameReceiver() {
+        return usernameReceiver;
+    }
+
+    public void setUsernameReceiver(String usernameReceiver) {
+        this.usernameReceiver = usernameReceiver;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ChatDTO chatDTO = (ChatDTO) o;
-        return Objects.equals(chatId, chatDTO.chatId) && Objects.equals(messaggi, chatDTO.messaggi) && Objects.equals(senderId, chatDTO.senderId) && Objects.equals(receiverId, chatDTO.receiverId) && Objects.equals(immobileId, chatDTO.immobileId);
+        return Objects.equals(chatId, chatDTO.chatId) && Objects.equals(messaggi, chatDTO.messaggi) && Objects.equals(senderId, chatDTO.senderId) && Objects.equals(usernameSender, chatDTO.usernameSender) && Objects.equals(receiverId, chatDTO.receiverId) && Objects.equals(usernameReceiver, chatDTO.usernameReceiver) && Objects.equals(immobileId, chatDTO.immobileId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, messaggi, senderId, receiverId, immobileId);
+        return Objects.hash(chatId, messaggi, senderId, usernameSender, receiverId, usernameReceiver, immobileId);
     }
 }

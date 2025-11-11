@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export function Chats() {
     const [userData, setUserData] = useState({
@@ -8,7 +9,20 @@ export function Chats() {
         ruolo: ""
     });
     
+
+    const navigate = useNavigate();
+
     const [chats, setChats] = useState([]);
+
+    const handleOpenChat = (immobile, agenteImmobiliare, utenteLoggato) => {
+        navigate("/Chat", {
+            state: { 
+              immobile: immobile, 
+              agenteImmobiliare: agenteImmobiliare, 
+              utenteLoggato: utenteLoggato 
+            } 
+        });
+    }
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -46,12 +60,16 @@ export function Chats() {
         <>
             <h1>{userData.ruolo}</h1>
             {chats.map((chat, idx) => (
-                <div key={idx}>
-                    <span>{chat?.senderId}</span>
+                <div key={idx} onClick={() => handleOpenChat(
+                        chat?.immobileId, 
+                        chat?.usernameReceiver, 
+                        chat?.usernameSender)
+                    }>
+                    <span>{chat?.usernameSender}</span>
+                    <span>{chat?.usernameReceiver}</span>
                     <span>{chat?.immobileId}</span>
                 </div>
             ))}
-
         </>
     )
 }

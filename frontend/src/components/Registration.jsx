@@ -19,11 +19,11 @@ export function Registration() {
             [name]: value
         }))
     }
-
+//http://localhost:8080/
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(user);
-        axios.post("http://localhost:8080/auth/registrazione", 
+        axios.post("auth/registrazione", 
             user)
         .then(res => {
             console.log("Utente creato:", res.data);

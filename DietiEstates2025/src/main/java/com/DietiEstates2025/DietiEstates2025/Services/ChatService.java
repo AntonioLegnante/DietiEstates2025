@@ -18,7 +18,6 @@ import java.util.Optional;
 @Service
 public class ChatService {
 
-
     @Autowired
     private ChatRepository chatRepository;
 
@@ -54,8 +53,10 @@ public class ChatService {
 
     }
 
-    public List<Chat> retrieveChatUser(Integer userId){
-        Optional<List<Chat>> storicoChat = chatRepository.findByUtente_Id(userId);
+    public List<Chat> retrieveChatUser(String username){
+        Utente user = utenteRepository.findByUsername(username).get();
+        Optional<List<Chat>> storicoChat = chatRepository.findByUtente_Id(user.getId());
+        System.out.println(storicoChat.get());
         return storicoChat.orElse(null);
     }
 

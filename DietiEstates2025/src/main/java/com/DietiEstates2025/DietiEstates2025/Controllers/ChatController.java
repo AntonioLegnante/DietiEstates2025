@@ -25,8 +25,11 @@ public class ChatController {
     private ChatService chatService;
 
     @GetMapping("/retrieveChatsUser")
-    public ResponseEntity<List<Chat>> retrieveChats(@RequestParam Integer userId, Authentication authentication) {
-        return ResponseEntity.ok(chatService.retrieveChatUser(userId));
+    public ResponseEntity<List<ChatDTO>> retrieveChats(@RequestParam("user") String username, Authentication authentication) {
+        System.out.println(" prova bella " + username);
+        List<Chat> chats = chatService.retrieveChatUser(username);
+        List<ChatDTO> chatsDTO = chats.stream().map(ChatDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(chatsDTO);
     }
 
     @GetMapping("/retrieveChatsAgent")

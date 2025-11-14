@@ -51,7 +51,14 @@ export function Chats() {
             })
             .catch(err => console.error(err));
         } else {
-            // fallback: endpoint per utenti normali o nessuna azione
+            axios.get("http://localhost:8080/chat/retrieveChatsUser", {
+                params: { user: utente },
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(response => {
+                setChats(response.data || []);
+            })
+            .catch(err => console.error(err));
         }
         
     }, []);

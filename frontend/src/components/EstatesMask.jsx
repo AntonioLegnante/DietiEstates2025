@@ -63,7 +63,7 @@ export function EstatesMask() {
         data.append("affitto", formData.affitto);
         data.append("vendita", formData.vendita);
 
-        axios.post("http://localhost:8080/api/immobili", data, {
+        axios.post(`${import.meta.env.VITE_API_URL}/api/immobili`, data, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 "Authorization": `Bearer ${localStorage.getItem("token")}`

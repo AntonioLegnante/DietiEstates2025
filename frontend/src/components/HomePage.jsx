@@ -51,7 +51,7 @@ function SearchFilter({ setImmobili }) {
                 <label htmlFor="vendita">Vendita</label>
                 <button onClick={() => setAltriFiltri(_ => !altriFiltriCheck)}>Altri filtri</button><br/>
                 {altriFiltriCheck ? altriFiltri : null}
-                <button onClick={() => axios.get("http://localhost:8080/api/immobili/ricerca", {
+                <button onClick={() => axios.get(`${import.meta.env.VITE_API_URL}/api/immobili/ricerca`, {
                                             params: {
                                                 localita,
                                                 minPrezzo,

@@ -7,6 +7,7 @@ import { ModalDetail } from './components/ModalDetail.jsx'
 import { AuthProvider, useAuth } from './components/AuthContext.jsx';
 import { Chat } from './components/Chat.jsx';
 import { Chats } from './components/Chats.jsx';
+import './index.css'
 
 // Sposta la navbar in un componente separato che può usare useAuth
 function Navigation() {

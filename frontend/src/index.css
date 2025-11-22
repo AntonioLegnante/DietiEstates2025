@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* Stili base per i form */
+input, textarea, select {
+    border: 1px solid #d1d5db;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: white;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Stili base per i bottoni */
+button {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2563eb;
+}

@@ -9,19 +9,19 @@ export function Login() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const { login } = useAuth(); // Ottieni login dal contesto
-    
+
     function handleLoginButton() {
-        axios.post("auth/login", {username, password})
-        .then(response => {
-            console.log(response.data.token)
-            login(response.data.token);
-            navigate("/");
-        })
-        .catch(error => {
-            console.error("Errore durante il login:", error);
-        });
+        axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {username, password})
+            .then(response => {
+                console.log(response.data.token);
+                login(response.data.token);
+                navigate("/");
+            })
+            .catch(error => {
+                console.error("Errore durante il login:", error);
+            });
     }
-    
+
     return (
         <div>
             <label htmlFor="username">Username</label>

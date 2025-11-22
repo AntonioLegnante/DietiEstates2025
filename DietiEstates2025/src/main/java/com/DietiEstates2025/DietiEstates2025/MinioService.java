@@ -1,20 +1,14 @@
 package com.DietiEstates2025.DietiEstates2025;
 
 import io.minio.*;
-import io.minio.errors.*;
-import io.minio.http.Method;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class MinioService {
@@ -36,28 +30,28 @@ public class MinioService {
                 minioClient.makeBucket(
                         MakeBucketArgs.builder().bucket(bucketName).build()
                 );
-
-                // Imposta il bucket come pubblico
-                String policy = String.format(
-                        "{\n" +
-                                "    \"Version\": \"2012-10-17\",\n" +
-                                "    \"Statement\": [\n" +
-                                "        {\n" +
-                                "            \"Effect\": \"Allow\",\n" +
-                                "            \"Principal\": {\"AWS\": \"*\"},\n" +
-                                "            \"Action\": [\"s3:GetObject\"],\n" +
-                                "            \"Resource\": [\"arn:aws:s3:::%s/*\"]\n" +
-                                "        }\n" +
-                                "    ]\n" +
-                                "}", bucketName);
-
-                minioClient.setBucketPolicy(
-                        SetBucketPolicyArgs.builder()
-                                .bucket(bucketName)
-                                .config(policy)
-                                .build()
-                );
             }
+
+            // Imposta SEMPRE il bucket come pubblico (anche se già esiste)
+            String policy = String.format(
+                    "{\n" +
+                            "    \"Version\": \"2012-10-17\",\n" +
+                            "    \"Statement\": [\n" +
+                            "        {\n" +
+                            "            \"Effect\": \"Allow\",\n" +
+                            "            \"Principal\": {\"AWS\": \"*\"},\n" +
+                            "            \"Action\": [\"s3:GetObject\"],\n" +
+                            "            \"Resource\": [\"arn:aws:s3:::%s/*\"]\n" +
+                            "        }\n" +
+                            "    ]\n" +
+                            "}", bucketName);
+
+            minioClient.setBucketPolicy(
+                    SetBucketPolicyArgs.builder()
+                            .bucket(bucketName)
+                            .config(policy)
+                            .build()
+            );
         } catch (Exception e) {
             throw new RuntimeException("Errore inizializzazione MinIO", e);
         }
@@ -84,7 +78,7 @@ public class MinioService {
     }
 
     public String getPublicUrl(String fileName) {
-        return String.format("http://localhost:9000/%s/%s", bucketName, fileName);
+        return String.format("/images/%s", fileName);
     }
 
     public InputStream downloadFile(String fileName) throws Exception {

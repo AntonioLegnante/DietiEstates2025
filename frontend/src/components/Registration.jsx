@@ -23,7 +23,7 @@ export function Registration() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(user);
-        axios.post("auth/registrazione", 
+        axios.post(`${import.meta.env.VITE_API_URL}/auth/registrazione`,
             user)
         .then(res => {
             console.log("Utente creato:", res.data);

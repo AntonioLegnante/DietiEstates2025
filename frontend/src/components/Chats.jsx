@@ -42,7 +42,7 @@ export function Chats() {
         console.log(`utente loggato ${utente} ruolo: ${ruolo}`);
         
         if (ruolo.toLowerCase().includes('agente')) {
-            axios.get("http://localhost:8080/chat/retrieveChatsAgent", {
+            axios.get(`${import.meta.env.VITE_API_URL}/chat/retrieveChatsAgent`, {
                 params: { user: utente },
                 headers: { Authorization: `Bearer ${token}` }
             })
@@ -51,7 +51,7 @@ export function Chats() {
             })
             .catch(err => console.error(err));
         } else {
-            axios.get("http://localhost:8080/chat/retrieveChatsUser", {
+            axios.get(`${import.meta.env.VITE_API_URL}/chat/retrieveChatsUser`, {
                 params: { user: utente },
                 headers: { Authorization: `Bearer ${token}` }
             })

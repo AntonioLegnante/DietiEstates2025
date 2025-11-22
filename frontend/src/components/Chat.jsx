@@ -16,7 +16,7 @@ export function Chat(){
     console.log(`${immobile}, ${agenteImmobiliare}, ${utenteLoggato}`);
 
     function addMessage() {
-        axios.get("http://localhost:8080/chat/addMessage", {
+        axios.get(`${import.meta.env.VITE_API_URL}/chat/addMessage`, {
             params: {
                 chatId: chatId,
                 messaggio: messaggio
@@ -36,13 +36,13 @@ export function Chat(){
         setError(null);
         // backend controller maps to /chat/openChat and expects params 'user', 'vendor', 'immobile'
         // use full backend URL to avoid relying on dev-server proxy
-        axios.get("http://localhost:8080/chat/openChat",  { 
+        axios.get(`${import.meta.env.VITE_API_URL}/chat/openChat`,  {
             params: {
                 user: utenteLoggato,
                 vendor: agenteImmobiliare,
                 immobile: immobile,
-                
-            }, 
+
+            },
             headers: {
                 Authorization: `Bearer ${token}`
             }

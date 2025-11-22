@@ -32,10 +32,11 @@ export function CardEstates({ immobile, utenteLoggato }) {
         {/* Immagine */}
         <div className="relative">
           <img
-            src={immobile.linkImmagine}
-            alt={immobile.titolo}
-            onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/400x300?text=Immagine+non+disponibile';
+              src={immobile.linkImmagine}
+              alt={immobile.titolo}
+              className="w-[400px] h-[400px] object-cover"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/400x300?text=Immagine+non+disponibile';
             }}
           />
           <div>

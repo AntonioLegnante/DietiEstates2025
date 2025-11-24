@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,27 +27,46 @@ public class ImmobileService {
     private MinioService minioService;
 
     /**
-     * Crea un nuovo immobile con immagine
-     * @param titolo Titolo dell'immobile
-     * @param descrizione Descrizione
-     * @param prezzo Prezzo
-     * @param dimensione Dimensione
-     * @param indirizzo Indirizzo
-     * @param imageFile File immagine
+     * Crea un nuovo immobile con immagine di copertina e gallery
+     *
+     * @param titolo        Titolo dell'immobile
+     * @param descrizione   Descrizione
+     * @param prezzo        Prezzo
+     * @param dimensione    Dimensione
+     * @param citta         Città
+     * @param indirizzo     Indirizzo
+     * @param affitto       Se è in affitto
+     * @param vendita       Se è in vendita
+     * @param imageFile     File immagine di copertina
+     * @param galleryImages Lista di immagini per la gallery (max 5)
+     * @param username      Username dell'utente
      * @return Immobile salvato
      * @throws Exception se ci sono errori
      */
     @Transactional
     public Immobile createImmobile(String titolo, String descrizione, Double prezzo, String dimensione, String citta,
-                                   String indirizzo, Boolean affitto, Boolean vendita, MultipartFile imageFile, String username) throws Exception {
-
+                                   String indirizzo, Boolean affitto, Boolean vendita,
+                                   MultipartFile imageFile, List<MultipartFile> galleryImages,
+                                   String username) throws Exception {
 
         System.out.println("Questo problema è sicuramente indecidibile");
 
+        // Upload della foto di copertina
         String imageUrl = minioService.uploadFile(imageFile);
 
-        try {
+        // Upload delle gallery images (se presenti)
+        List<String> galleryUrls = new ArrayList<>();
+        if (galleryImages != null && !galleryImages.isEmpty()) {
+            try {
+                galleryUrls = minioService.uploadMultipleFiles(galleryImages);
+                System.out.println("Caricate " + galleryUrls.size() + " immagini nella gallery");
+            } catch (Exception e) {
+                System.err.println("Errore upload gallery images: " + e.getMessage());
+                // Continua comunque con la creazione dell'immobile anche se la gallery fallisce
+            }
+        }
 
+        try {
             Optional<Utente> utente = utenteRepository.findByUsername(username);
             if(utente.isPresent()) {
                 Immobile immobile = new Immobile();
@@ -58,22 +78,29 @@ public class ImmobileService {
                 immobile.setIndirizzo(indirizzo);
                 immobile.setAffitto(affitto);
                 immobile.setVendita(vendita);
-                immobile.setLinkImmagine(imageUrl);
+                immobile.setCoverImage(imageUrl);
+                immobile.setGalleryImages(galleryUrls);  // NUOVO: Salva le gallery images
                 immobile.setUtente(utente.get());
+
                 return immobileRepository.save(immobile);
             }
             else {
                 throw new RuntimeException("Utente non trovato");
             }
 
-
         } catch (Exception e) {
-            // Se il salvataggio fallisce, elimina l'immagine da MinIO
+            // Se il salvataggio fallisce, elimina TUTTE le immagini da MinIO
             try {
+                // Elimina cover image
                 String filename = extractFilenameFromUrl(imageUrl);
                 minioService.deleteFile(filename);
+
+                // Elimina gallery images
+                if (!galleryUrls.isEmpty()) {
+                    minioService.deleteMultipleFiles(galleryUrls);
+                }
             } catch (Exception cleanupException) {
-                System.err.println("Errore nella pulizia dell'immagine: " + cleanupException.getMessage());
+                System.err.println("Errore nella pulizia delle immagini: " + cleanupException.getMessage());
             }
             throw new Exception("Errore nel salvataggio dell'immobile: " + e.getMessage());
         }
@@ -86,116 +113,6 @@ public class ImmobileService {
                 numeroStanze, dimensione, piano, classeEnergetica);
     }
 
-    /**
-     * Aggiorna un immobile esistente
-     */
- /*   @Transactional
-    public Immobile updateImmobile(Long id, String titolo, String descrizione, Double prezzo,
-                                   String indirizzo, MultipartFile imageFile) throws Exception {
-
-        // Trova l'immobile esistente
-        Immobile immobile = immobileRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Immobile non trovato con ID: " + id));
-
-        // Valida i dati
-        validateImmobileData(titolo, descrizione, prezzo, indirizzo);
-
-        // Aggiorna i campi
-        immobile.setTitolo(titolo);
-        immobile.setDescrizione(descrizione);
-        immobile.setPrezzo(prezzo);
-        immobile.setIndirizzo(indirizzo);
-
-        // Se c'è una nuova immagine, sostituisci la vecchia
-        if (imageFile != null && !imageFile.isEmpty()) {
-            String oldImageUrl = immobile.getImageUrl();
-
-            // Upload nuova immagine
-            String newImageUrl = minioService.uploadFile(imageFile);
-            immobile.setImageUrl(newImageUrl);
-
-            // Salva le modifiche
-            Immobile updated = immobileRepository.save(immobile);
-
-            // Elimina vecchia immagine
-            try {
-                String oldFilename = extractFilenameFromUrl(oldImageUrl);
-                minioService.deleteFile(oldFilename);
-            } catch (Exception e) {
-                System.err.println("Errore nell'eliminazione della vecchia immagine: " + e.getMessage());
-            }
-
-            return updated;
-        }
-
-        // Salva senza cambiare l'immagine
-        return immobileRepository.save(immobile);
-    }
-*/
-    /**
-     * Elimina un immobile
-     */
- /*   @Transactional
-    public void deleteImmobile(Long id) throws Exception {
-        Immobile immobile = immobileRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Immobile non trovato con ID: " + id));
-
-        // Elimina immagine da MinIO
-        try {
-            String filename = extractFilenameFromUrl(immobile.getImageUrl());
-            minioService.deleteFile(filename);
-        } catch (Exception e) {
-            System.err.println("Errore nell'eliminazione dell'immagine: " + e.getMessage());
-        }
-
-        // Elimina dal database
-        immobileRepository.delete(immobile);
-    }
-*/
-    /**
-     * Trova immobile per ID
-     */
- /*   public Optional<Immobile> findById(Long id) {
-        return immobileRepository.findById(id);
-    }
-*/
-    /**
-     * Trova tutti gli immobili
-     */
- /*   public List<Immobile> findAll() {
-        return immobileRepository.findAll();
-    }
-*/
-    /**
-     * Cerca immobili per prezzo massimo
-     */
-/*    public List<Immobile> findByMaxPrice(Double maxPrice) {
-        return immobileRepository.findByPrezzoLessThanEqual(maxPrice);
-    }
-*/
-    /**
-     * Cerca immobili per indirizzo
-     */
- /*   public List<Immobile> searchByAddress(String address) {
-        return immobileRepository.findByIndirizzoContainingIgnoreCase(address);
-    }
-*/
-    // Metodi helper privati
- /*   private void validateImmobileData(String titolo, String descrizione, Double prezzo, String indirizzo) {
-        if (titolo == null || titolo.trim().isEmpty()) {
-            throw new IllegalArgumentException("Il titolo è obbligatorio");
-        }
-        if (descrizione == null || descrizione.trim().isEmpty()) {
-            throw new IllegalArgumentException("La descrizione è obbligatoria");
-        }
-        if (prezzo == null || prezzo <= 0) {
-            throw new IllegalArgumentException("Il prezzo deve essere maggiore di zero");
-        }
-        if (indirizzo == null || indirizzo.trim().isEmpty()) {
-            throw new IllegalArgumentException("L'indirizzo è obbligatorio");
-        }
-    }
-*/
     private String extractFilenameFromUrl(String url) {
         if (url == null || url.isEmpty()) {
             throw new IllegalArgumentException("URL non valido");

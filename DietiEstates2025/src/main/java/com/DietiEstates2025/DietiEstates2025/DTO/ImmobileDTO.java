@@ -4,6 +4,8 @@ import com.DietiEstates2025.DietiEstates2025.Models.Immobile;
 import com.DietiEstates2025.DietiEstates2025.Models.Utente;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ImmobileDTO {
@@ -16,7 +18,9 @@ public class ImmobileDTO {
 
     private String citta;
 
-    private String linkImmagine;
+    private String coverImage;
+
+    private List<String> galleryImages;  // NUOVO: Lista delle immagini della gallery
 
     private Double prezzo;
 
@@ -41,7 +45,8 @@ public class ImmobileDTO {
         this.titolo = immobile.getTitolo();
         this.descrizione = immobile.getDescrizione();
         this.citta = immobile.getCitta();
-        this.linkImmagine = immobile.getLinkImmagine();
+        this.coverImage = immobile.getCoverImage();
+        this.galleryImages = immobile.getGalleryImages() != null ? immobile.getGalleryImages() : new ArrayList<>();  // NUOVO
         this.prezzo = immobile.getPrezzo();
         this.indirizzo = immobile.getIndirizzo();
         this.affitto = immobile.getAffitto();
@@ -86,11 +91,20 @@ public class ImmobileDTO {
     }
 
     public String getLinkImmagine() {
-        return linkImmagine;
+        return coverImage;
     }
 
     public void setLinkImmagine(String linkImmagine) {
-        this.linkImmagine = linkImmagine;
+        this.coverImage = linkImmagine;
+    }
+
+    // NUOVO: Getter e Setter per galleryImages
+    public List<String> getGalleryImages() {
+        return galleryImages;
+    }
+
+    public void setGalleryImages(List<String> galleryImages) {
+        this.galleryImages = galleryImages;
     }
 
     public Double getPrezzo() {
@@ -169,11 +183,26 @@ public class ImmobileDTO {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ImmobileDTO that = (ImmobileDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(titolo, that.titolo) && Objects.equals(descrizione, that.descrizione) && Objects.equals(citta, that.citta) && Objects.equals(linkImmagine, that.linkImmagine) && Objects.equals(prezzo, that.prezzo) && Objects.equals(indirizzo, that.indirizzo) && Objects.equals(affitto, that.affitto) && Objects.equals(vendita, that.vendita) && Objects.equals(numeroStanze, that.numeroStanze) && Objects.equals(dimensione, that.dimensione) && Objects.equals(piano, that.piano) && Objects.equals(agenteImmobiliare, that.agenteImmobiliare) && Objects.equals(classeEnergetica, that.classeEnergetica);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(titolo, that.titolo) &&
+                Objects.equals(descrizione, that.descrizione) &&
+                Objects.equals(citta, that.citta) &&
+                Objects.equals(coverImage, that.coverImage) &&
+                Objects.equals(galleryImages, that.galleryImages) &&  // NUOVO
+                Objects.equals(prezzo, that.prezzo) &&
+                Objects.equals(indirizzo, that.indirizzo) &&
+                Objects.equals(affitto, that.affitto) &&
+                Objects.equals(vendita, that.vendita) &&
+                Objects.equals(numeroStanze, that.numeroStanze) &&
+                Objects.equals(dimensione, that.dimensione) &&
+                Objects.equals(piano, that.piano) &&
+                Objects.equals(agenteImmobiliare, that.agenteImmobiliare) &&
+                Objects.equals(classeEnergetica, that.classeEnergetica);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, titolo, descrizione, citta, linkImmagine, prezzo, indirizzo, affitto, vendita, numeroStanze, dimensione, piano, agenteImmobiliare, classeEnergetica);
+        return Objects.hash(id, titolo, descrizione, citta, coverImage, galleryImages, prezzo, indirizzo,
+                affitto, vendita, numeroStanze, dimensione, piano, agenteImmobiliare, classeEnergetica);
     }
 }

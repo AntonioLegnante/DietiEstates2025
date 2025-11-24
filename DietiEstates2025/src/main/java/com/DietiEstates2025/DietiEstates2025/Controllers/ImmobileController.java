@@ -23,11 +23,12 @@ public class ImmobileController {
     private ImmobileService immobileService;
 
     /**
-     * Crea un nuovo immobile
+     * Crea un nuovo immobile con foto di copertina e gallery
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createImmobile(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("file") MultipartFile file,  // Foto di copertina
+            @RequestParam(value = "galleryImages", required = false) List<MultipartFile> galleryImages,  // NUOVO: Gallery images
             @RequestParam("titolo") String titolo,
             @RequestParam("descrizione") String descrizione,
             @RequestParam("prezzo") Double prezzo,
@@ -43,8 +44,13 @@ public class ImmobileController {
         System.out.println(username);
 
         try {
-            Immobile immobile = immobileService.createImmobile(titolo, descrizione, prezzo, dimensione, citta, indirizzo, affitto, vendita, file, username);
-            System.out.println("Immobile created!"+ immobile.getUtente().getUsername());
+            // Passa anche le gallery images al service
+            Immobile immobile = immobileService.createImmobile(
+                    titolo, descrizione, prezzo, dimensione, citta, indirizzo,
+                    affitto, vendita, file, galleryImages, username
+            );
+
+            System.out.println("Immobile created! " + immobile.getUtente().getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).body(new ImmobileDTO(immobile));
 
         } catch (IllegalArgumentException e) {
@@ -56,16 +62,6 @@ public class ImmobileController {
                     .body(new ErrorResponse("Errore nella creazione dell'immobile: " + e.getMessage()));
         }
     }
-
-    /**
-     * Ottieni tutti gli immobili
-     */
-  /*  @GetMapping
-    public ResponseEntity<List<Immobile>> getAllImmobili() {
-        List<Immobile> immobili = immobileService.findAll();
-        return ResponseEntity.ok(immobili);
-    }
-*/
 
     @GetMapping(value = "/ricerca")
     public ResponseEntity<List<ImmobileDTO>> getImmobiliDaRicerca(
@@ -80,84 +76,11 @@ public class ImmobileController {
             @RequestParam(value="classeEnergetica", required = false) String classeEnergetica
     ) {
         System.out.println(dimensione);
-        //gestione dei parametri
         List<Immobile> immobili = immobileService.applicaRicerca(localita, minPrezzo, maxPrezzo, affitta, vendita,
                 numeroStanze, dimensione, piano, classeEnergetica);
         return ResponseEntity.ok(immobili.stream().map(immobile -> new ImmobileDTO(immobile)).collect(Collectors.toList()));
     }
-    /**
-     * Ottieni immobile per ID
-     */
- /*   @GetMapping("/{id}")
-    public ResponseEntity<?> getImmobile(@PathVariable Long id) {
-        return immobileService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-*/
-    /**
-     * Cerca immobili per prezzo massimo
-     */
- /*   @GetMapping("/search/price")
-    public ResponseEntity<List<Immobile>> searchByPrice(@RequestParam Double maxPrice) {
-        List<Immobile> immobili = immobileService.findByMaxPrice(maxPrice);
-        return ResponseEntity.ok(immobili);
-    }
-*/
-    /**
-     * Cerca immobili per indirizzo
-     */
- /*   @GetMapping("/search/address")
-    public ResponseEntity<List<Immobile>> searchByAddress(@RequestParam String address) {
-        List<Immobile> immobili = immobileService.searchByAddress(address);
-        return ResponseEntity.ok(immobili);
-    }
-*/
-    /**
-     * Aggiorna un immobile
-     */
- /*   @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateImmobile(
-            @PathVariable Long id,
-            @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam("titolo") String titolo,
-            @RequestParam("descrizione") String descrizione,
-            @RequestParam("prezzo") Double prezzo,
-            @RequestParam("indirizzo") String indirizzo
-    ) {
-        try {
-            Immobile updated = immobileService.updateImmobile(id, titolo, descrizione, prezzo, indirizzo, file);
-            return ResponseEntity.ok(updated);
 
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body(new ErrorResponse(e.getMessage()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Errore nell'aggiornamento: " + e.getMessage()));
-        }
-    }
-*/
-    /**
-     * Elimina un immobile
-     */
- /*   @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteImmobile(@PathVariable Long id) {
-        try {
-            immobileService.deleteImmobile(id);
-            return ResponseEntity.ok(new SuccessResponse("Immobile eliminato con successo"));
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(e.getMessage()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponse("Errore nell'eliminazione: " + e.getMessage()));
-        }
-    }
-*/
     // Response classes
     static class ErrorResponse {
         private String error;

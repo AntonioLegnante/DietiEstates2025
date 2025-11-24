@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -58,9 +60,21 @@ public class MinioService {
     }
 
     public String uploadFile(@NotNull MultipartFile file) throws Exception {
-        // Genera nome unico
+        // 🔹 Genera nome unico con controllo estensione
         String originalFilename = file.getOriginalFilename();
-        String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
+        String extension = "";
+
+        if (originalFilename != null) {
+            int dotIndex = originalFilename.lastIndexOf(".");
+            if (dotIndex > 0) { // punto trovato
+                extension = originalFilename.substring(dotIndex);
+            } else {
+                extension = ".jpg"; // fallback default
+            }
+        } else {
+            extension = ".jpg"; // fallback default
+        }
+
         String fileName = UUID.randomUUID().toString() + extension;
 
         // Upload su MinIO
@@ -75,6 +89,50 @@ public class MinioService {
 
         // Ritorna URL pubblico
         return getPublicUrl(fileName);
+    }
+
+    // NUOVO METODO: Upload multiplo per gallery images
+    public List<String> uploadMultipleFiles(List<MultipartFile> files) throws Exception {
+        List<String> urls = new ArrayList<>();
+
+        if (files == null || files.isEmpty()) {
+            return urls;
+        }
+
+        // Limita a massimo 5 file
+        int maxFiles = Math.min(files.size(), 5);
+
+        for (int i = 0; i < maxFiles; i++) {
+            MultipartFile file = files.get(i);
+            if (file != null && !file.isEmpty()) {
+                try {
+                    String url = uploadFile(file);
+                    urls.add(url);
+                } catch (Exception e) {
+                    // Log dell'errore ma continua con gli altri file
+                    System.err.println("Errore upload file " + file.getOriginalFilename() + ": " + e.getMessage());
+                }
+            }
+        }
+
+        return urls;
+    }
+
+    // NUOVO METODO: Elimina più file
+    public void deleteMultipleFiles(List<String> fileUrls) {
+        if (fileUrls == null || fileUrls.isEmpty()) {
+            return;
+        }
+
+        for (String url : fileUrls) {
+            try {
+                // Estrai il nome del file dall'URL /images/filename.jpg
+                String fileName = url.replace("/images/", "");
+                deleteFile(fileName);
+            } catch (Exception e) {
+                System.err.println("Errore eliminazione file " + url + ": " + e.getMessage());
+            }
+        }
     }
 
     public String getPublicUrl(String fileName) {

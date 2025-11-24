@@ -1,7 +1,13 @@
 package com.DietiEstates2025.DietiEstates2025.Models;
 
+import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -20,8 +26,12 @@ public class Immobile {
     @Column(nullable = false)
     private String citta;
 
-    @Column(unique = true, nullable = false)
-    private String linkImmagine;
+    @Column(unique = true, nullable = false, name = "cover_image")
+    private String coverImage;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "gallery_images")
+    private List<String> galleryImages = new ArrayList<>();
 
     @Column(nullable = false)
     private Double prezzo;
@@ -51,14 +61,16 @@ public class Immobile {
 
     }
 
-    public Immobile(Integer id, String titolo, String descrizione, String citta, String linkImmagine,
+
+    public Immobile(Integer id, String titolo, String descrizione, String citta, String coverImage, List<String> galleryImages,
                     Double prezzo, String indirizzo, Boolean affitto, Boolean vendita, Integer numeroStanze,
                     String dimensione, String piano, String classeEnergetica, Utente utente) {
         this.id = id;
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.citta = citta;
-        this.linkImmagine = linkImmagine;
+        this.coverImage = coverImage;
+        this.galleryImages = galleryImages;
         this.prezzo = prezzo;
         this.indirizzo = indirizzo;
         this.affitto = affitto;
@@ -102,12 +114,20 @@ public class Immobile {
         this.citta = citta;
     }
 
-    public String getLinkImmagine() {
-        return linkImmagine;
+    public String getCoverImage() {
+        return coverImage;
     }
 
-    public void setLinkImmagine(String linkImmagine) {
-        this.linkImmagine = linkImmagine;
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public List<String> getGalleryImages() {
+        return galleryImages;
+    }
+
+    public void setGalleryImages(List<String> galleryImages) {
+        this.galleryImages = galleryImages;
     }
 
     public Double getPrezzo() {
@@ -186,11 +206,11 @@ public class Immobile {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Immobile immobile = (Immobile) o;
-        return Objects.equals(id, immobile.id) && Objects.equals(titolo, immobile.titolo) && Objects.equals(descrizione, immobile.descrizione) && Objects.equals(citta, immobile.citta) && Objects.equals(linkImmagine, immobile.linkImmagine) && Objects.equals(prezzo, immobile.prezzo) && Objects.equals(indirizzo, immobile.indirizzo) && Objects.equals(affitto, immobile.affitto) && Objects.equals(vendita, immobile.vendita) && Objects.equals(numeroStanze, immobile.numeroStanze) && Objects.equals(dimensione, immobile.dimensione) && Objects.equals(piano, immobile.piano) && Objects.equals(utente, immobile.utente) && Objects.equals(classeEnergetica, immobile.classeEnergetica);
+        return Objects.equals(id, immobile.id) && Objects.equals(titolo, immobile.titolo) && Objects.equals(descrizione, immobile.descrizione) && Objects.equals(citta, immobile.citta) && Objects.equals(coverImage, immobile.coverImage) && Objects.equals(galleryImages, immobile.galleryImages) && Objects.equals(prezzo, immobile.prezzo) && Objects.equals(indirizzo, immobile.indirizzo) && Objects.equals(affitto, immobile.affitto) && Objects.equals(vendita, immobile.vendita) && Objects.equals(numeroStanze, immobile.numeroStanze) && Objects.equals(dimensione, immobile.dimensione) && Objects.equals(piano, immobile.piano) && Objects.equals(utente, immobile.utente) && Objects.equals(classeEnergetica, immobile.classeEnergetica);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, titolo, descrizione, citta, linkImmagine, prezzo, indirizzo, affitto, vendita, numeroStanze, dimensione, piano, utente, classeEnergetica);
+        return Objects.hash(id, titolo, descrizione, citta, coverImage, galleryImages, prezzo, indirizzo, affitto, vendita, numeroStanze, dimensione, piano, utente, classeEnergetica);
     }
 }

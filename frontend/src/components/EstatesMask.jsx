@@ -6,7 +6,7 @@ import imageCompression from "browser-image-compression";   // 🆕 IMPORT COMPR
 async function compressImage(file) {
     const options = {
         maxSizeMB: 0.8,              // 🌟 MODIFICA QUI (prima era 2)
-        maxWidthOrHeight: 1600,      // 🌟 MODIFICA QUI (prima era 1920)
+        maxWidthOrHeight: 1920,      // 🌟 MODIFICA QUI (prima era 1920)
         useWebWorker: true
     };
 

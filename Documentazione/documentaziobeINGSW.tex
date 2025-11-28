@@ -1,0 +1,65 @@
+\documentclass[a4paper,12pt]{article}
+
+% --- Pacchetti di base ---
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{hyperref} % per link cliccabili
+\usepackage{graphicx} % per immagini
+\usepackage{float} % per l'opzione H (posizionamento preciso)
+\usepackage{wrapfig} % per testo che avvolge l'immagine
+\usepackage{subcaption} % per sottofigure affiancate
+\usepackage{placeins} % per \FloatBarrier
+\usepackage[export]{adjustbox} %opzioni extra per \includegraphics
+\usepackage{xcolor}   % per colori
+\usepackage{listings} % per codice sorgente
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+% --- Pacchetti per la tabella Use Case (Cockburn) ---
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{ragged2e}
+\newcolumntype{L}[1]{>{\RaggedRight\hspace{0pt}}p{#1}} % colonna testo giustificata a sinistra
+
+% --- Definizione linguaggio JavaScript ---
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, const, let, await, async},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{teal}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{orange}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+% --- Stile per codice React ---
+\lstdefinestyle{react}{
+  language=JavaScript,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{gray!10},
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{orange},
+  commentstyle=\color{gray}\itshape,
+  showstringspaces=false,
+  frame=single,
+  breaklines=true
+}
+
+
+
+% --- Documento ---
+\begin{document}
+
+
+
+\end{document}

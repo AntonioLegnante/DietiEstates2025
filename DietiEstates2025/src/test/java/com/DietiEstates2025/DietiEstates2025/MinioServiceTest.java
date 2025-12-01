@@ -109,7 +109,7 @@ class MinioServiceTest {
 
         String url = minioService.getPublicUrl(fileName);
 
-        assertEquals("http://localhost:9000/" + bucketName + "/" + fileName, url);
+        assertEquals("https://inquiries-competitive-heads-survivor.trycloudflare.com:9000/" + bucketName + "/" + fileName, url);
     }
 
     @Test

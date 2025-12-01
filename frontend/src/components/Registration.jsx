@@ -26,14 +26,14 @@ export function Registration() {
         axios.post(`${import.meta.env.VITE_API_URL}/auth/registrazione`,
             user)
         .then(res => {
-            console.log("Utente creato:", res.data);
-            alert("Utente creato con successo!");
+            console.log(res.data);
+            alert(res.data);
             setUser({ username: "", password: "", numeroDiTelefono: "", ruolo: "" });
             navigate("/");
         })
         .catch(err => {
-            console.error("Errore:", err);
-            alert("Errore nella creazione dell'utente");
+            console.error(err.data);
+            alert(err.data);
             setUser({ username: "", password: "", numeroDiTelefono: "", ruolo: "" });
             navigate("/");
 

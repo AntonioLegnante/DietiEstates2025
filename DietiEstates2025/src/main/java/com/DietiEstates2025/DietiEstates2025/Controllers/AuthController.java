@@ -91,8 +91,14 @@ public class AuthController {
     public ResponseEntity<String> registrazioneUtente(@RequestBody Utente utente) {
         System.out.println(utente.getUsername());
         //implementare controlli
-        utenteService.registrazioneUtente(utente.getUsername(),utente.getPassword(),
+        Boolean result = utenteService.registrazioneUtente(utente.getUsername(),utente.getPassword(),
                 utente.getNumeroDiTelefono(), utente.getRuolo());
-        return ResponseEntity.ok("Utente registrato con successo");
+
+        if (result) {
+            return ResponseEntity.status(201).body("Utente creato");
+        }
+        else {
+            return ResponseEntity.status(409).body("Dati non valida, duplicati");
+        }
     }
 }

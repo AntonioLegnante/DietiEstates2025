@@ -3,6 +3,7 @@ package com.DietiEstates2025.DietiEstates2025.Services;
 import com.DietiEstates2025.DietiEstates2025.Models.Utente;
 import com.DietiEstates2025.DietiEstates2025.Repositories.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,18 @@ public class UtenteService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registrazioneUtente(String username, String rawPassword, String numeroDiTelefono, String ruolo) {
+    public Boolean registrazioneUtente(String username, String rawPassword, String numeroDiTelefono, String ruolo) {
+        Boolean result = true;
         String password = passwordEncoder.encode(rawPassword);
         Utente utente = new Utente(username, password, numeroDiTelefono, ruolo);
-        utenteRepository.save(utente);
+
+        try {
+            utenteRepository.save(utente);
+        }
+        catch(DataIntegrityViolationException e) {
+            result = false;
+        }
+
+        return result;
     }
 }

@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{grffile}
 \usepackage[italian]{babel}
 \usepackage{hyperref}
 
@@ -109,25 +110,10 @@
 
     \newpage
     \tableofcontents
-    \chapter{Analisi dei requisiti}
-    \section{Glossario}
-    \section{Casi d'uso}
-    \section{Personas}
-    \section{Requisiti non funzionali}
-    \section{Diagrammi di cockburn}
-    \section{Mock-up}
-
-    \chapter{Analisi di sistema}
-    \section{Architettura di sistema}
-    \section{Schema dei dati}
-    \section{Design interfaccia utente - non ho capito -}
-    \section{Diagramma delle classi}
-    \section{Diagramma di sequenza}
-
-    \chapter{Testing}
-    \section{Test del Controller}
-    \section{Test del Service}
-    \section{Test End-to-end}
-    \section{Test usabilita}
+    
+    \include{capitolo1}
+    \include{capitolo2}
+    \include{capitolo3}
+    
 
 \end{document}

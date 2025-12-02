@@ -1,0 +1,55 @@
+\textbf{Requisito 1: Gestione Utenti e Autenticazione}
+\textbf{Attori coinvolti}
+\begin{itemize}
+    \item Amministratore
+    \item Agente immobiliare
+    \item Utente
+\end{itemize}
+\textbf{Descrizione:} \\
+Il sistema deve permettere la registrazione di nuovi utenti (clienti) e di agenti immobiliari. 
+Tutti gli attori devono essere in grado di effettuare il login con credenziali sicure. 
+L’Amministratore deve poter modificare le credenziali di accesso predefinite e gestire gli account degli agenti.
+\\ \\
+\textbf{Requisito 2: Inserimento di Inserzioni Immobiliari}
+\textbf{Attori coinvolti}
+\begin{itemize}
+    \item Agente immobiliare
+\end{itemize}
+\textbf{Descrizione:} \\
+Gli agenti immobiliari possono caricare nuove inserzioni di immobili, complete di dettagli 
+quali foto, descrizione, prezzo, dimensioni, indirizzo, numero di stanze, classe energetica,
+ecc. Le inserzioni devono essere classificate per tipologia: vendita o affitto.
+\\ \\
+\textbf{Requisito 3: Ricerca Avanzata di Immobili}
+\textbf{Attori coinvolti}
+\begin{itemize}
+    \item Utente
+    \item Geopify
+\end{itemize}
+\textbf{Descrizione:} \\
+Il sistema deve permettere la ricerca avanzata di immobili tramite filtri multipli: tipologia, 
+prezzo, posizione geografica (con supporto mappa), numero di stanze, classe energetica, ecc. 
+La ricerca deve essere efficiente e visualizzare i risultati anche tramite mappa interattiva.
+\\ \\
+\textbf{Requisito 4: Gestione delle Offerte sugli Immobili}
+\textbf{Attori coinvolti}
+\begin{itemize}
+    \item Agente immobiliare
+    \item Utente registrato
+\end{itemize}
+\textbf{Descrizione:} \\
+Gli utenti registrati possono fare offerte per immobili specificando un prezzo. Gli agenti 
+possono accettare, rifiutare o fare controproposte. Deve essere possibile visualizzare uno s
+torico delle offerte sia per l’utente che per l’agente. Gli agenti possono inserire manualmente 
+offerte ricevute esternamente al sistema.
+\\ \\
+\textbf{Requisito 5: Integrazione con Servizi Esterni (Geoapify)}
+\textbf{Attori coinvolti}
+\begin{itemize}
+    \item Geopify
+\end{itemize}
+\textbf{Descrizione:} \\
+All’atto della creazione di un’inserzione immobiliare, il sistema deve interrogare il servizio
+esterno Geoapify per verificare la presenza di scuole, parchi o trasporto pubblico 
+nelle vicinanze dell’immobile. Se presenti, verranno mostrati appositi indicatori 
+(“Vicino a scuole”, ecc.).

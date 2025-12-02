@@ -1,0 +1,94 @@
+\textbf{Architettura complessiva}
+L’applicazione adotta un’architettura client–server organizzata secondo il modello a 3 livelli (3-tier), strutturata come Single Page Application (SPA) e progettata seguendo il pattern MVC.
+Al primo accesso il server invia al client l’intera applicazione Web (HTML, CSS, JavaScript).
+Da quel momento l’applicazione viene eseguita interamente nel browser, e il server entra in gioco soltanto per fornire o aggiornare i dati tramite API RESTful, che restituiscono JSON.
+Il rendering dell’interfaccia utente avviene lato client (Client-Side Rendering).
+\\ \\
+\textbf{Architettura del Server (Backend)}
+Il lato server adotta un’architettura ispirata al pattern MVC, ma limitata alle componenti Model 
+e Controller, poiché la View è delegata al client.
+\\ \\
+\textbf{Model}
+Il model comprende:
+\begin{itemize}
+    \item Entità: rappresentano le strutture dati persistenti (immobili, utenti, chat, ecc...)
+    \item Logica di business (servizi): implementano le regole applicative 
+    (inserimento di un immobile, autenticazione, ricerca immobili, apertura chat…).
+\end{itemize}
+Le entità costituiscono il nucleo del livello dati.
+I servizi fungono da ponte tra i Controller e il database, incapsulando la logica
+applicativa.
+\\ \\
+\textbf{Controller}
+Il Controller:
+\begin{itemize}
+    \item riceve le richieste HTTP dai client (routing),
+    \item le interpreta 
+    \item invoca la logica dei servizi
+    \item restituisce risposte JSON
+\end{itemize}
+Non produce HTML (la View è lato client).
+Il backend espone esclusivamente servizi RESTful.
+\\ \\
+\textbf{Sistema di persistenza dei dati}
+Il sistema di persistenza dei dati è costituito:
+\begin{itemize}
+    \item Sistema di persistenza dei dati testuali: gestito tramite un ORM 
+    (Object–Relational Mapping), che assicura una netta separazione tra la 
+    logica applicativa e il database relazionale. L’ORM consente di modellare le 
+    entità come oggetti, gestire le relazioni in modo trasparente e semplificare 
+    le operazioni CRUD.
+    \item Sistema di persistenza delle immagini gestito tramite un apposito Database.
+    In questo modo si garantiscono migliori prestazioni, minor carico sul database 
+    e una maggiore leggerezza complessiva del sistema. Nel database viene 
+    mantenuto solo il riferimento (path o URL) all’immagine.
+\end{itemize}
+\textbf{Sistema di autenticazione e autorizzazione}
+L'applicazione adotta un meccanismo stateless di autenticazione e autorizzazione 
+basato su JWT (JSON Web Token). Al momento del login, il server genera un token 
+firmato contenente le informazioni essenziali sull’utente, come identificatore, 
+ruolo e tempo di scadenza. Il client memorizza il token localmente e lo include in 
+tutte le successive richieste HTTP verso le API RESTful, tramite l’header 
+Authorization. Il server verifica la validità e l’integrità del token ad ogni 
+richiesta, senza mantenere sessioni lato backend. Questo approccio garantisce:
+sicurezza, scalabilità e flessibilità.
+\\ \\
+\textbf{Architettura del client}
+Il client costituisce la View dell’applicazione e gestisce:
+\begin{itemize}
+    \item il rendering dell’interfaccia (Client-Side Rendering),
+    \item la gestione dello stato,
+    \item le interazioni dell’utente,
+    \item le chiamate alle API REST del backend.
+\end{itemize}
+\textbf{Sintesi dei 3 livelli (3-tier)}
+\begin{enumerate}
+    \item Presentation Tier (Client / Browser)
+        \begin{itemize}
+            \item View
+            \item SPA renderizzata lato client
+            \item Gestione dell’interfaccia e delle interazioni
+            \item Memorizzazione e utilizzo dei token JWT
+        \end{itemize}
+    \item Application Tier (Server / Logica di business)
+        \begin{itemize}
+            \item Controller
+            \item Servizi (Business Logic)
+            \item Gestione sicurezza, verifica dei token JWT ad ogni richiesta
+        \end{itemize}
+    \item Data Tier (Database)
+        \begin{itemize}
+            \item Dati testuali
+            \item Dati multimediali (immagini)
+            \item Operazioni CRUD sui dati
+        \end{itemize}
+\end{enumerate}
+
+\textbf{Ciclo delle richieste}
+\begin{enumerate}
+    \item L'utente invia una richiesta HTTP/HTTPS (GET o POST)
+    \item DispatcherServlet intercetta la richiesta e la inoltra al controller 
+    appropriato. (Front Controller design pattern)
+    \item il controller elabora la logica, interagisce con il model e prepara i dati
+    \item il controller restituisce i dati in formato JSON
+\end{enumerate}

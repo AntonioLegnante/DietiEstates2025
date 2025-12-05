@@ -8,17 +8,27 @@ import { AuthProvider, useAuth } from './components/AuthContext.jsx';
 import { Chat } from './components/Chat.jsx';
 import { Chats } from './components/Chats.jsx';
 import './index.css'
+import { AdministratorPage } from './components/AdministratorPage.jsx'
+
 
 // Sposta la navbar in un componente separato che può usare useAuth
 function Navigation() {
-  const { isAuthenticated } = useAuth();
-  
+  const { isAuthenticated, username, ruolo } = useAuth();
+  console.log(`in App: ${username}`);
+  console.log(`in App: ${ruolo}`);
+
   return (
     <nav>
       <Link to="/">Homepage</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/registration">Registration</Link>
-      {isAuthenticated ? <Link to="/insert">new Estates</Link> : null}
+      {!isAuthenticated ? <Link to="/login">Login</Link> : <span>Benvenuto {username} </span>}
+      {!isAuthenticated ? <Link to="/registration">Registration</Link> : 
+      <span onClick={() => {
+                localStorage.removeItem("token");
+                window.location.reload();
+            }}>
+      Esci</span>}
+      {ruolo == "Amministratore" || ruolo == "nuovoAmministratore" ? <Link to="/paginaAmministratore">Aggiungi amministratore</Link> : null}
+      {isAuthenticated ? <Link to="/insert">Aggiungi immobile</Link> : null}
       {isAuthenticated ? <Link to="/Chats">Open chats</Link> : null}
     </nav>
   );
@@ -33,6 +43,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />}/>
           <Route path="/Chat" element={<Chat />}/>
+          <Route path="/paginaAmministratore" element={<AdministratorPage/>} />
           <Route path="/immobile/:id" element={<ModalDetail />} />
           <Route path="/login" element={<Login />}/>
           <Route path="/registration" element={<Registration />}/>

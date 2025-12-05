@@ -101,4 +101,19 @@ public class AuthController {
             return ResponseEntity.status(409).body("Dati non valida, duplicati");
         }
     }
+
+    @PostMapping("/cambiaPassword")
+    public ResponseEntity<String> cambiaPassword(@RequestBody Utente utente) {
+        Boolean result = utenteService.cambiaPassword(utente.getUsername(),utente.getPassword(),
+                utente.getNumeroDiTelefono(), utente.getRuolo());
+
+        System.out.println("Dio merda!!!");
+        if (result) {
+            return ResponseEntity.status(201).body("Password Aggiornata con successo");
+        }
+        else {
+            return ResponseEntity.status(409).body("Dati non valida, duplicati");
+        }
+
+    }
 }

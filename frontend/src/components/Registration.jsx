@@ -32,8 +32,8 @@ export function Registration() {
             navigate("/");
         })
         .catch(err => {
-            console.error(err.data);
-            alert(err.data);
+            console.error(err.response.data);
+            alert(err.response.data);
             setUser({ username: "", password: "", numeroDiTelefono: "", ruolo: "" });
             navigate("/");
 
@@ -84,6 +84,14 @@ export function Registration() {
                     onChange={handleInputChange}>
                 </input>
                 <label>Utente</label><br/>
+
+                <input 
+                    type="radio" 
+                    name="ruolo" 
+                    value="nuovoAmministratore"
+                    onChange={handleInputChange}>
+                </input>
+                <label>nA</label><br/>
             </div>
             
             <button type="submit">Conferma</button>

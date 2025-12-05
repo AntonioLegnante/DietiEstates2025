@@ -7,6 +7,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UtenteService {
     private final UtenteRepository utenteRepository;
@@ -25,6 +27,27 @@ public class UtenteService {
 
         try {
             utenteRepository.save(utente);
+        }
+        catch(DataIntegrityViolationException e) {
+            result = false;
+        }
+
+        return result;
+    }
+
+    public Boolean cambiaPassword(String username, String rawPassword, String numeroDiTelefono, String ruolo) {
+        Boolean result = true;
+        String password = passwordEncoder.encode(rawPassword);
+        Optional<Utente> utente = utenteRepository.findByUsername(username);
+
+        if (utente.isEmpty()) {
+            return false;
+        }
+
+        try {
+            utente.get().setPassword(password);
+            utente.get().setRuolo(ruolo);
+            utenteRepository.save(utente.get());
         }
         catch(DataIntegrityViolationException e) {
             result = false;

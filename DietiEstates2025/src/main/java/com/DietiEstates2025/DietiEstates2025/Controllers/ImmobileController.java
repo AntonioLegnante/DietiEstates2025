@@ -37,17 +37,21 @@ public class ImmobileController {
             @RequestParam("indirizzo") String indirizzo,
             @RequestParam("affitto") Boolean affitto,
             @RequestParam("vendita") Boolean vendita,
+            @RequestParam("numeroStanze") Integer numeroStanze,
+            @RequestParam("piano") String piano,
+            @RequestParam("classeEnergetica") String classeEnergetica,
             Authentication authentication
     ) {
         System.out.println("Guarda quanti integrali!");
         String username = authentication.getName();
         System.out.println(username);
+        System.out.println(numeroStanze);
 
         try {
             // Passa anche le gallery images al service
             Immobile immobile = immobileService.createImmobile(
                     titolo, descrizione, prezzo, dimensione, citta, indirizzo,
-                    affitto, vendita, file, galleryImages, username
+                    affitto, vendita, numeroStanze, piano, classeEnergetica, file, galleryImages, username
             );
 
             System.out.println("Immobile created! " + immobile.getUtente().getUsername());

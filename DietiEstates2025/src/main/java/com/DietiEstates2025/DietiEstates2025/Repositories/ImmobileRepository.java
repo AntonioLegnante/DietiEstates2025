@@ -10,17 +10,18 @@ import java.util.List;
 public interface ImmobileRepository extends JpaRepository<Immobile, Integer> {
     @Query("""
         SELECT i FROM Immobile i
-        WHERE (:localita IS NULL OR i.indirizzo LIKE %:localita%)
-        OR (i.prezzo <= :maxPrezzo AND i.prezzo >= :minPrezzo)
-         OR (
-         (:affitta IS NOT NULL AND :affitta = TRUE AND i.affitto = TRUE)
+        WHERE ((:localita IS NULL OR i.indirizzo LIKE %:localita%)
+                OR (:localita IS NULL OR i.citta LIKE %:localita%))
+        AND (i.prezzo <= :maxPrezzo AND i.prezzo >= :minPrezzo)
+        AND (
+            (:affitta IS NOT NULL AND :affitta = TRUE AND i.affitto = TRUE)
             OR (:vendita IS NOT NULL AND :vendita = TRUE AND i.vendita = TRUE)
             OR (:affitta IS NULL AND :vendita IS NULL)
          )
-         OR (:numeroStanze IS NULL OR i.numeroStanze = :numeroStanze)
-         OR (:dimensione IS NULL OR i.dimensione = :dimensione)
-         OR (:piano IS NULL OR i.piano = :piano)
-         OR (:classeEnergetica IS NULL OR i.classeEnergetica = :classeEnergetica)
+         AND (:numeroStanze IS NULL OR i.numeroStanze = :numeroStanze)
+         AND (:dimensione IS NULL OR i.dimensione = :dimensione)
+         AND (:piano IS NULL OR i.piano = :piano)
+         AND (:classeEnergetica IS NULL OR i.classeEnergetica = :classeEnergetica)
     """)
     List<Immobile> ricercaAvanzata(
             @Param("localita") String localita,

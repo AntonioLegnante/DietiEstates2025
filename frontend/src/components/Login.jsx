@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx'; // Importa useAuth invece di login
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
+
 
 export function Login() {
     const [username, setUsername] = useState("");
@@ -15,10 +17,19 @@ export function Login() {
             .then(response => {
                 console.log(response.data.token);
                 login(response.data.token);
-                navigate("/");
+                let ruolo = jwtDecode(response.data.token)?.roles;
+                console.log(`In login: ${ruolo}`);
+                if (ruolo == "Amministratore" || ruolo == "nuovoAmministratore") {
+                    console.log("In login entro nel if nuovo amministratore");
+                    navigate("/paginaAmministratore");
+                }
+                else {
+                    navigate("/");
+                }
             })
             .catch(error => {
                 console.error("Errore durante il login:", error);
+                alert("Errore nel login");
             });
     }
 

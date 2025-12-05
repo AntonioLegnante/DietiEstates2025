@@ -5,6 +5,7 @@ import { Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 
+
 function SearchFilter({ setImmobili }) {
     const [localita, setLocalita] = useState("");
     const [minPrezzo, setMinPrezzo] = useState(0);
@@ -115,13 +116,13 @@ export function HomePage() {
  
    const [userData,setUserData] = useState("");
    const [ruolo, setRuolo] = useState("");
-
+   
    useEffect(() => {
        setUserData(() => localStorage.getItem("token"));
        setUserData(prev => prev ? jwtDecode(prev)?.sub : null);
        setRuolo(() => localStorage.getItem("token"))
        setRuolo(prev => prev ? jwtDecode(prev)?.roles : null);
-       console.log(ruolo);
+       console.log(`in Homepage: ${ruolo}`);
    })
    //const [userData,setUserData] = useState(() => localStorage.getItem("token"));
    //console.log(userData);
@@ -145,11 +146,6 @@ export function HomePage() {
             {userData ? userData : null}
             <SearchFilter setImmobili={setImmobili}/>
             <EstatesList immobili={immobili} utenteLoggato={userData}/>
-            <button onClick={() => {
-                localStorage.removeItem("token");
-                setUserData(null);
-            }}>Logout</button>
-            <h1>ToDo</h1>
         </div>
     )
 }

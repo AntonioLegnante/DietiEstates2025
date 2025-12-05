@@ -28,7 +28,10 @@ export function EstatesMask() {
         dimensione: "",
         indirizzo: "",
         affitto: false,
-        vendita: false
+        vendita: false,
+        numeroStanze: 0,
+        piano: "",
+        classeEnergetica: ""
     });
 
     const [file, setFile] = useState(null);
@@ -97,7 +100,7 @@ export function EstatesMask() {
             alert("Seleziona un'immagine di copertina!");
             return;
         }
-
+        console.log(`NumeroStanze in EstatesMask is: ${formData.numeroStanze}`);
         const data = new FormData();
         data.append("file", file);
 
@@ -113,6 +116,9 @@ export function EstatesMask() {
         data.append("indirizzo", formData.indirizzo);
         data.append("affitto", formData.affitto);
         data.append("vendita", formData.vendita);
+        data.append("numeroStanze", formData.numeroStanze);
+        data.append("piano", formData.piano);
+        data.append("classeEnergetica", formData.classeEnergetica);
 
         axios.post(`${import.meta.env.VITE_API_URL}/api/immobili`, data, {
             headers: {
@@ -132,7 +138,10 @@ export function EstatesMask() {
                     citta: "",
                     indirizzo: "",
                     affitto: false,
-                    vendita: false
+                    vendita: false,
+                    numeroStanze: 0,
+                    piano: "",
+                    classeEnergetica: ""
                 });
                 setFile(null);
                 setCoverPreview(null);
@@ -242,6 +251,42 @@ export function EstatesMask() {
                     />
                     <span className="font-medium text-gray-700">Vendita</span>
                 </label>
+            </div>
+
+            <div>
+                <label htmlFor="numeroStanze">
+                    Numero stanze: 
+                </label>
+                <input
+                    id="numeroStanze"
+                    name="numeroStanze"
+                    type="number" 
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div>
+                <label htmlFor="piano">
+                    piano: 
+                </label>
+                <input
+                    id="piano"
+                    name="piano"
+                    onChange={handleInputChange}
+                />
+            </div>
+
+            <div>
+               <select 
+                    name="classeEnergetica" 
+                    onChange={handleInputChange}>
+                    Classe energetica:
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                </select>
             </div>
 
             <div>

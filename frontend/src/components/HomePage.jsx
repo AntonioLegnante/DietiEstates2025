@@ -8,11 +8,11 @@ import { jwtDecode } from "jwt-decode";
 
 function SearchFilter({ setImmobili }) {
     const [localita, setLocalita] = useState("");
-    const [minPrezzo, setMinPrezzo] = useState(0);
-    const [maxPrezzo, setMaxPrezzo] = useState(0);
+    const [minPrezzo, setMinPrezzo] = useState(null);
+    const [maxPrezzo, setMaxPrezzo] = useState(null);
     const [affitta, setAffitta] = useState(false);
     const [vendita, setVendita] = useState(false);
-    const [numeroStanze, setNumeroStanze] = useState(1);
+    const [numeroStanze, setNumeroStanze] = useState(null);
     const [dimensione, setDimensione] = useState(null);
     const [piano, setPiano] = useState(null);
     const [classeEnergetica, setClasseEnergetica] = useState(null);
@@ -38,8 +38,8 @@ function SearchFilter({ setImmobili }) {
     
     return (
         <div>
-                <label htmlFor="località">Inserisci la tua località</label>
-                <input id="località" onChange={e => setLocalita(_ => e.target.value)}></input><br/>
+                <label htmlFor="localita">Inserisci la tua località</label>
+                <input type="text" id="localita" onChange={e => setLocalita(_ => e.target.value)} required></input><br/>
                 <label htmlFor="prezzo">Prezzo
                     <label htmlFor="da">Da:</label> 
                         <input type="number" id="da" onChange={e => setMinPrezzo(_ => e.target.value)}></input> 
@@ -52,24 +52,28 @@ function SearchFilter({ setImmobili }) {
                 <label htmlFor="vendita">Vendita</label>
                 <button onClick={() => setAltriFiltri(_ => !altriFiltriCheck)}>Altri filtri</button><br/>
                 {altriFiltriCheck ? altriFiltri : null}
-                <button onClick={() => axios.get(`${import.meta.env.VITE_API_URL}/api/immobili/ricerca`, {
-                                            params: {
-                                                localita,
-                                                minPrezzo,
-                                                maxPrezzo,
-                                                affitta,
-                                                vendita,
-                                                numeroStanze, 
-                                                dimensione,
-                                                piano,
-                                                classeEnergetica
-                                            }})
-                                            .then(response =>{
-                                                    console.log(response.data);
-                                                    setImmobili(_ => response.data)
-                                                    
-                                            })
-                }>Cerca</button>
+                <button onClick={() => {
+                    if (!localita.trim()) {
+                        alert("Inserisci una località");
+                        return;
+                    }
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/immobili/ricerca`, {
+                            params: {
+                                    localita,
+                                    minPrezzo,
+                                    maxPrezzo,
+                                    affitta,
+                                    vendita,
+                                    numeroStanze, 
+                                    dimensione,
+                                    piano,
+                                    classeEnergetica
+                            }})
+                            .then(response => {
+                                                console.log(response.data);
+                                                setImmobili(_ => response.data)
+                                        })
+                }}>Cerca</button>
         </div>
     )
 }

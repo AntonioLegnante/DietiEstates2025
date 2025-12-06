@@ -277,7 +277,9 @@ export function EstatesMask() {
             </div>
 
             <div>
+               <label htmlFor="classeEnergetica">Classe energetica:</label>
                <select 
+                    id="classeEnergetica"
                     name="classeEnergetica" 
                     onChange={handleInputChange}>
                     Classe energetica:

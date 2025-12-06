@@ -69,17 +69,23 @@ public class ImmobileController {
 
     @GetMapping(value = "/ricerca")
     public ResponseEntity<List<ImmobileDTO>> getImmobiliDaRicerca(
-            @RequestParam(value="localita", required = false) String localita,
+            @RequestParam(value="localita") String localita,
             @RequestParam(value="minPrezzo", required = false) Double minPrezzo,
             @RequestParam(value="maxPrezzo", required = false) Double maxPrezzo,
-            @RequestParam(value="affitta", required = false) Boolean affitta,
-            @RequestParam(value="vendita", required = false) Boolean vendita,
+            @RequestParam(value="affitta") Boolean affitta,
+            @RequestParam(value="vendita") Boolean vendita,
             @RequestParam(value="numeroStanze", required = false) Integer numeroStanze,
             @RequestParam(value="dimensione", required = false) String dimensione,
             @RequestParam(value="piano", required = false) String piano,
             @RequestParam(value="classeEnergetica", required = false) String classeEnergetica
     ) {
-        System.out.println(dimensione);
+        System.out.println("In ImmobileController Localita " + localita);
+        System.out.println("In ImmobileController minPrezzo " + minPrezzo);
+        System.out.println("In ImmobileController affitta " + affitta);
+        System.out.println("In ImmobileController numeroStanze " + numeroStanze);
+        System.out.println("In ImmobileController Dimensione " + dimensione);
+        System.out.println("In ImmobileController Piano " + piano);
+
         List<Immobile> immobili = immobileService.applicaRicerca(localita, minPrezzo, maxPrezzo, affitta, vendita,
                 numeroStanze, dimensione, piano, classeEnergetica);
         return ResponseEntity.ok(immobili.stream().map(immobile -> new ImmobileDTO(immobile)).collect(Collectors.toList()));

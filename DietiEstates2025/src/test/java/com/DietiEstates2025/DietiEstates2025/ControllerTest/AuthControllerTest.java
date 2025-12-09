@@ -75,4 +75,5 @@ public class AuthControllerTest {
                         .with(csrf()))
                 .andExpect(status().isConflict());
     }
+
 }

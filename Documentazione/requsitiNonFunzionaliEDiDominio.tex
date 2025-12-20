@@ -1,0 +1,57 @@
+I requisiti non funzionali descrivono vincoli di qualità applicabili all'intero sistema.
+I requisiti di dominio derivano dal contesto reale in cui il sistema opera:
+leggi, regolamenti, abitudini, regole del settore.
+Sono di seguito elencati i requisiti non funzionali e di dominio
+
+\textbf{Usabilità}
+
+\begin{itemize}
+    \item Un utente non esperto deve poter registrare un immobile senza consultare documentazione esterna.
+    \item L’interfaccia deve essere accessibile tramite browser web moderni (Chrome, Firefox).
+\end{itemize} 
+
+\textbf{Sicurezza}
+
+\begin{itemize}
+    \item L’accesso al sistema deve avvenire tramite autenticazione con credenziali.
+    \item Le password devono essere memorizzate in forma cifrata (hash).
+    \item Un utente può accedere solo ai dati per cui è autorizzato
+\end{itemize}
+
+\textbf{Prestazioni}
+
+\begin{itemize}
+    \item Il sistema deve rispondere alle operazioni principali (login, visualizzazione immobili, registrazione contratto) entro 2 secondi nel 95\% dei casi.
+    \item Il sistema deve supportare almeno 100 utenti contemporanei senza degrado significativo delle prestazioni.
+\end{itemize}
+
+\textbf{Manutenibilità}
+\begin{itemize}
+    \item Il sistema deve essere progettato in modo modulare per facilitare l’aggiunta di nuove funzionalità.
+    \item Le componenti devono essere debolmente accoppiate per consentire modifiche locali senza impatti sull’intero sistema.
+    \item Il codice deve essere organizzato secondo un’architettura che favorisca la manutenibilità.
+\end{itemize}
+
+\textbf{Aspetti economici}
+
+\begin{itemize}
+    \item Il canone di locazione/ prezzo di vendità deve essere espresso in euro.
+\end{itemize}
+
+\textbf{Gestione immobili}
+
+\begin{itemize}
+    \item Ogni immobile deve essere identificato in modo univoco all’interno del sistema.
+\end{itemize}
+
+Aggiungiamo una nota anche legata ai vincoli e assunzioni di progetto; Specifichiamo che questi 
+non sono requisiti non funzionali puri
+
+\textbf{Vincoli di progetto}
+\begin{itemize}
+    \item Il sistema deve essere sviluppato utilizzando tecnologie note al team.
+    \item L’architettura deve rimanere semplice per facilitare manutenzione e sviluppo.
+\end{itemize}
+
+
+

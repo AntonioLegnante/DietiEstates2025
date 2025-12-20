@@ -1,0 +1,34 @@
+In questa sezione si vuole descrivere come è stata pensata l'interfaccia e perchè sono state adottate
+determinate scelte piuttosto che altre.
+L’interfaccia di DietiEstates25 è strutturata come un’applicazione web con una barra di navigazione 
+principale e un’area centrale dedicata alla gestione di immobili
+\\\\
+\textbf{Navigazione}
+
+La navigazione è organizzata tramite un menu principale che consente l’accesso diretto alle 
+funzionalità principali del sistema. Quando l’utente non è autenticato, il menu è limitato alle 
+pagine Home, dalla quale è possibile effettuare la ricerca degli immobili, e alle funzionalità di 
+Registrazione e Accesso.
+
+Un utente autenticato dispone di ulteriori voci di menu; in particolare, un agente immobiliare ha 
+accesso alla funzionalità di inserimento di un nuovo immobile. Tutti gli utenti autenticati possono 
+inoltre accedere allo storico delle chat associate ai singoli immobili tramite un’apposita voce 
+del menu.
+\\\\
+\textbf{Motivazioni delle scelte}
+
+L’interfaccia privilegia una disposizione semplice e lineare al fine di ridurre il carico cognitivo 
+degli utenti, che non sono necessariamente esperti informatici. La pagina principale presenta una 
+barra di ricerca con filtri essenziali, quali città, tipologia dell’operazione (affitto o vendita), 
+prezzo minimo e prezzo massimo; ricerche più specifiche possono essere effettuate tramite l’icona 
+“Altri filtri”.
+
+L’utilizzo di maschere guidate e campi obbligatori riduce la possibilità di inserimento di dati non 
+validi, come date incoerenti o importi errati, migliorando l’affidabilità complessiva del sistema.
+
+La pagina principale, fino all’esecuzione di una ricerca, rimane intenzionalmente vuota per limitare 
+la quantità di informazioni visualizzate e prevenire il disorientamento dei nuovi utenti. Ogni 
+immobile è rappresentato tramite una scheda contenente le informazioni essenziali e una mappa 
+dedicata; tale scelta evita l’uso di una singola mappa sovraccarica con tutti gli immobili della 
+zona di riferimento, risultando di difficile consultazione. Ulteriori dettagli sono accessibili 
+tramite la pagina specifica dell’immobile, raggiungibile selezionando la relativa scheda.

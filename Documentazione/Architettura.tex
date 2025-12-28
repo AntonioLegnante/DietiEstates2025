@@ -184,7 +184,265 @@ Il token JWT è composto da tre parti separate da punti: header, payload e signa
 utilizzato (tipicamente HS256 per HMAC con SHA-256 o RS256 per RSA con SHA-256). Il payload, chiamato anche claims, contiene le informazioni sull'
 utente e metadata del token, come subject (identificatore univoco dell'utente), roles (ruoli dell'utente per l'autorizzazione), issued at timestamp 
 (momento di emissione del token), expiration timestamp (momento di scadenza del token, tipicamente impostato a poche ore o giorni dal momento 
-dell'emissione), e eventualmente altre informazioni custom come nome utente, email, tenant ID in applicazioni multi-tenant, eccetera.
+dell'emissione), e eventualmente altre informazioni custom come nome utente, email, tenant ID in applicazioni multi-tenant, etc.\newline
+La signature è generata applicando l'algoritmo di firma specificato nell'header al contenuto concatenato di header e payload, utilizzando una 
+chiave segreta (nel caso di HMAC) o una chiave privata (nel caso di RSA). Questa firma garantisce che il token non possa essere alterato senza 
+invalidare la signature, fornendo integrità e autenticità. Chiunque possieda la chiave segreta (HMAC) o la chiave pubblica corrispondente (RSA) 
+può verificare che il token sia stato emesso dal server autorizzato e non sia stato modificato.\newline
+Il server restituisce il token JWT generato al client in risposta al login, tipicamente nel corpo della risposta JSON con status 200 OK. Il client 
+memorizza il token localmente per utilizzarlo nelle richieste successive. È fondamentale notare che, diversamente dalle sessioni tradizionali 
+gestite lato server, il token JWT è completamente autonomo e non richiede che il server mantenga stato alcuno riguardo alle sessioni attive. 
+Questo rende l'architettura intrinsecamente scalabile poiché non esiste un single point of failure legato alla gestione delle sessioni.\newline
+
+
+\subsection{Memorizzazione del token sul client}
+
+
+
+\subsection{Autorizzazione delle richieste API}
+
+
+Per ogni richiesta successiva al login che richiede autenticazione, il client include il token JWT nell'header HTTP Authorization usando lo 
+schema Bearer. L'header assume la forma Authorization: Bearer <token>, dove <token> è la stringa del JWT ricevuto durante il login.\newline
+Nel backend Spring Boot, questa verifica è implementata attraverso un filtro personalizzato che estende OncePerRequestFilter o attraverso 
+Spring Security Filter Chain. Il filtro intercetta ogni richiesta HTTP in ingresso prima che raggiunga il controller, estrae il token 
+dall'header Authorization, lo valida verificando la signature per assicurarsi che non sia stato alterato e che sia stato realmente emesso dal 
+server, verifica che il token non sia scaduto controllando il claim exp, e in caso di validazione riuscita, estrae le informazioni sull'utente 
+dal payload del token (subject, roles) e le inserisce nel SecurityContext di Spring Security.\newline
+Una volta che le informazioni di autenticazione sono state caricate nel SecurityContext, Spring Security gestisce automaticamente 
+l'autorizzazione verificando che l'utente abbia i permessi necessari per accedere all'endpoint richiesto. I controller e i metodi possono 
+essere protetti utilizzando annotazioni come @PreAuthorize, @Secured, o @RolesAllowed per specificare i ruoli richiesti. 
+Ad esempio, @PreAuthorize("hasRole('ADMIN')") su un endpoint garantisce che solo utenti con ruolo ADMIN possano accedervi.\newline
+
+In caso di token mancante, invalido o scaduto, il filtro restituisce un errore HTTP 401 Unauthorized senza invocare il controller. 
+Se il token è valido ma l'utente non ha i permessi necessari per l'operazione richiesta, Spring Security restituisce un errore 403 Forbidden. 
+Questi meccanismi garantiscono che tutte le API siano protette in modo uniforme e che la logica di autorizzazione sia centralizzata e 
+facilmente manutenibile.\newline
+
+\subsection{Vantaggi dell'approccio Stateless}
+
+Il meccanismo stateless basato su JWT offre numerosi vantaggi architetturali. La scalabilità orizzontale è enormemente semplificata poiché non 
+esiste stato di sessione da condividere tra i nodi del cluster: ogni istanza del backend può validare autonomamente i token JWT senza necessità di 
+coordinazione con altre istanze o accesso a uno storage condiviso delle sessioni. Questo elimina la necessità di sticky sessions nei load balancer 
+e permette di aggiungere o rimuovere dinamicamente istanze in base al carico.\newline
+La sicurezza è garantita dalla firma crittografica del token, che impedisce la contraffazione, e dalla possibilità di impostare scadenze brevi per minimizzare il 
+danno in caso di token compromesso. L'inclusione dei ruoli e permessi nel token elimina la necessità di interrogare il database per ogni richiesta per recuperare le 
+informazioni di autorizzazione, riducendo significativamente il carico sul database e migliorando i tempi di risposta.\newline
+La flessibilità dell'approccio JWT permette l'implementazione di pattern avanzati come i refresh token per rinnovare l'accesso senza richiedere un nuovo login, 
+token blacklisting per invalidare token specifici prima della loro scadenza naturale (utile per logout o revoca di accesso), e la possibilità di utilizzare algoritmi 
+di firma asimmetrica (RS256) che permettono la verifica del token da parte di servizi terzi senza condividere la chiave segreta.
+
+
+\subsection{Spring Security}
+Spring Security è il framework de facto per la gestione della sicurezza nelle applicazioni Spring e Spring Boot. Fornisce un'implementazione completa ed estensibile 
+di autenticazione, autorizzazione, protezione da attacchi comuni (CSRF, session fixation, clickjacking), gestione delle password con algoritmi di hashing robusti, 
+e integrazione con standard industriali come OAuth2, SAML e OpenID Connect.\newline
+Nel contesto di questa applicazione, Spring Security è configurato per supportare l'autenticazione JWT stateless, disabilitando le sessioni HTTP tradizionali 
+attraverso la configurazione \newline sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS). Il framework gestisce la configurazione dei filtri che 
+intercettano le richieste, valida i token JWT, popola il SecurityContext con le informazioni di autenticazione, e applica le regole di autorizzazione definite nelle 
+configurazioni o nelle annotazioni.\newline
+La configurazione di Spring Security definisce quali endpoint sono pubblici (accessibili senza autenticazione, come login, registrazione, visualizzazione pubblica 
+degli immobili) e quali richiedono autenticazione o ruoli specifici. La protezione CSRF può essere disabilitata per le API RESTful stateless poiché non si utilizzano 
+cookie di sessione tradizionali, mentre la protezione contro altri attacchi come XSS, clickjacking e injection viene gestita attraverso header di sicurezza HTTP 
+appropriati e validazione rigorosa degli input.
+
+
+
+\section{Deployment e infrastruttura}
+
+\subsection{NGINX come Reverse Proxy e Web Server}
+NGINX è utilizzato come reverse proxy e web server davanti all'applicazione Spring Boot e ai file statici del frontend React. 
+NGINX è rinomato per le sue prestazioni eccezionali, l'efficienza nell'uso delle risorse, e la capacità di gestire decine di migliaia di 
+connessioni concorrenti con un footprint di memoria ridotto grazie alla sua architettura event-driven asincrona.
+
+\subsection{Funzioni di NGINX}
+
+Come web server, NGINX serve i file statici del frontend React (HTML, CSS, JavaScript, immagini, font) direttamente, sfruttando la sua 
+velocità ottimizzata per lo static content serving e riducendo il carico sull'applicazione Spring Boot. NGINX può essere configurato per 
+implementare cache HTTP aggressive per i file statici, impostando header di caching appropriati per massimizzare l'efficacia delle cache del 
+browser e delle CDN intermedie.\newline
+Come reverse proxy, NGINX intercetta tutte le richieste HTTP/HTTPS in arrivo e le instrada verso il backend appropriato. Le richieste per 
+API (/api/*) vengono inoltrate (proxied) all'applicazione Spring Boot in esecuzione su una porta interna (tipicamente 8080), 
+mentre le richieste per file statici vengono servite direttamente da NGINX. Questo pattern permette di presentare un'unica interfaccia esterna 
+all'utente evitando problemi CORS (Cross-Origin Resource Sharing), poiché frontend e backend sembrano risiedere sullo stesso dominio dal punto di 
+vista del browser.\newline
+NGINX implementa connection pooling e keep-alive verso il backend, riutilizzando le connessioni TCP e riducendo l'overhead della creazione di 
+nuove connessioni per ogni richiesta. Supporta load balancing con vari algoritmi (round-robin, least connections, IP hash) per distribuire il 
+traffico tra multiple istanze del backend, health checks per rilevare e bypassare istanze non responsive, e failover automatico per garantire 
+alta disponibilità.\newline
+Il reverse proxy può inoltre implementare rate limiting per proteggere il backend da abusi e attacchi DoS, caching di risposte API per ridurre 
+il carico sul backend, compressione gzip/brotli delle risposte per ridurre la banda utilizzata e migliorare i tempi di caricamento, e gestione di 
+header HTTP di sicurezza come HSTS, Content-Security-Policy, X-Frame-Options, X-Content-Type-Options per proteggere da vari attacchi web.
+
+\subsection{Cloudflare per SSL/TLS e CDN}
+
+Cloudflare è utilizzato come layer davanti a NGINX per fornire terminazione SSL/TLS, Content Delivery Network (CDN) globale, protezione DDoS, e 
+altri servizi di sicurezza e performance.
+
+
+\subsection{SSL/TLS}
+
+Cloudflare gestisce i certificati SSL/TLS utilizzando Let's Encrypt o certificati proprietari, fornendo HTTPS per il dominio dell'applicazione 
+senza che l'amministratore debba gestire manualmente rinnovi e configurazioni dei certificati. Cloudflare supporta protocolli moderni come 
+TLS 1.3 e cipher suite ottimizzate per bilanciare sicurezza e prestazioni, implementa HSTS preloading, e offre certificati wildcard per proteggere 
+tutti i sottodomini.\newline
+La connessione tra client e Cloudflare avviene sempre su HTTPS, garantendo la crittografia dei dati in transito e proteggendo da intercettazioni 
+man-in-the-middle. Cloudflare offre diverse modalità di connessione tra i suoi edge server e il server di origine (NGINX): Flexible 
+(HTTPS verso Cloudflare, HTTP verso origine), Full (HTTPS su entrambi i lati ma senza verifica del certificato di origine), e Full Strict 
+(HTTPS su entrambi i lati con verifica completa del certificato). 
+
+\subsection{Content Delivery Network (CDN)}
+
+Cloudflare opera una rete globale di data center distribuiti geograficamente che fungono da cache per i contenuti dell'applicazione. Quando un 
+utente richiede una risorsa, la richiesta viene instradata al data center Cloudflare più vicino geograficamente, che serve il contenuto dalla 
+propria cache se disponibile, riducendo drasticamente la latenza e migliorando i tempi di caricamento per utenti distribuiti globalmente.\newline
+I file statici del frontend React (JavaScript bundles, CSS, immagini, font) sono particolarmente adatti per il caching CDN poiché cambiano raramente e 
+possono essere cachati aggressivamente. Cloudflare permette di configurare regole di cache personalizzate basate su path, header, query string, e altri criteri, 
+controllando cosa viene cachato, per quanto tempo, e in quali circostanze la cache deve essere invalidata.
+
+\subsection{Containerizzazione e Orchestrazione}
+
+Un'applicazione moderna con questa architettura trae enormi benefici dalla containerizzazione usando Docker e dall'orchestrazione tramite Docker Compose (come nel nostro caso)
+o Kubernetes per ambienti più semplici.\newline
+
+\subsection{Docker per la containerizzazione}
+
+Ogni componente dell'applicazione (backend Spring Boot, frontend React, NGINX, PostgreSQL, MinIO) viene eseguito in container Docker indipendenti. Il backend 
+Spring Boot utilizza un'immagine base Java ottimizzata (eclipse-temurin), copia il JAR buildato dell'applicazione nel container, e lo espone sulla porta 8080. 
+Il Dockerfile implementa multi-stage builds per compilare l'applicazione all'interno di un container builder e copia solo gli artifact necessari nel container 
+finale, riducendo drasticamente le dimensioni dell'immagine.\newline
+NGINX utilizza l'immagine ufficiale nginx:alpine come base, copiando i file statici del frontend React nella directory appropriata e includendo file di 
+configurazione custom per il reverse proxying verso il backend. PostgreSQL e MinIO hanno immagini Docker ufficiali pronte all'uso che possono essere configurate 
+tramite variabili d'ambiente.\newline
+I container offrono isolamento, portabilità tra ambienti (development, staging, production), versioning preciso delle dipendenze, e deployment consistente. 
+Docker Compose permette di definire l'intero stack dell'applicazione in un file YAML, orchestrando l'avvio, il networking e il volume management di tutti i container 
+con un singolo comando.
+
+
+\section{Architettura del Frontend}
+
+\subsection{React come Framework Frontend}
+Il frontend dell'applicazione è implementato utilizzando React, una libreria JavaScript sviluppata e mantenuta da Meta (Facebook) che ha rivoluzionato lo sviluppo di 
+interfacce utente moderne. React adotta un approccio component-based, dove l'interfaccia è composta da componenti riutilizzabili e componibili che incapsulano markup, 
+stile e logica in unità coese.
+
+
+\subsection{Paradigma Dichiarativo e Virtual DOM}
+
+React utilizza un paradigma dichiarativo dove gli sviluppatori descrivono come l'interfaccia dovrebbe apparire dato un certo stato, e React si occupa di aggiornare 
+efficacemente il DOM reale per riflettere quello stato. Questo approccio contrasta con la manipolazione imperativa del DOM tipica del JavaScript vanilla o di librerie 
+come jQuery, risultando in codice più leggibile, prevedibile e facile da debuggare.\newline
+Il Virtual DOM è una rappresentazione in memoria della struttura del DOM che React mantiene. Quando lo stato di un componente cambia, React crea un nuovo Virtual DOM, 
+lo confronta con la versione precedente attraverso un algoritmo di diffing ottimizzato, determina il set minimo di cambiamenti necessari per aggiornare il DOM reale, 
+e applica solo quelle modifiche. Questo processo, chiamato reconciliation, garantisce prestazioni eccellenti anche con interfacce complesse e frequenti aggiornamenti.
+
+
+\subsection{Component-Based Architecture}
+
+L'applicazione React è strutturata come un albero di componenti gerarchico. Componenti di alto livello orchestrano la struttura generale dell'applicazione (layout,
+routing, gestione dello stato globale), mentre componenti di livello intermedio rappresentano sezioni funzionali specifiche (lista immobili, dettaglio immobile, chat, 
+profilo utente) e componenti di basso livello sono elementi UI riutilizzabili (bottoni, card, form input, modal, navbar).\newline
+Ogni componente può essere implementato come function component (approccio moderno preferito) o class component (legacy). I function components utilizzano React Hooks 
+per gestire stato locale (useState), effetti collaterali (useEffect), contesto (useContext), memoizzazione (useMemo, useCallback), e riferimenti (useRef). 
+Gli Hooks permettono di riutilizzare logica stateful tra componenti attraverso custom hooks, evitando duplicazione del codice e promuovendo la composizione.\newline
+I componenti comunicano attraverso props (proprietà passate dal parent al child) e callback functions (funzioni passate come props che il child può invocare per 
+notificare eventi al parent). Per gestire stato condiviso tra componenti non direttamente correlati nell'albero, React offre Context API che permette di evitare prop 
+drilling, passando dati attraverso l'albero dei componenti senza doverli passare esplicitamente a ogni livello.
+
+
+\subsection{Single Page Application (SPA)}
+
+L'applicazione è implementata come Single Page Application, dove l'intero codice JavaScript, CSS e HTML viene caricato al primo accesso, e successivamente solo i dati 
+vengono scambiati con il server tramite chiamate API asincrone. Questo approccio elimina i refresh completi della pagina durante la navigazione, offrendo un'esperienza 
+utente fluida e reattiva simile alle applicazioni desktop native.
+
+
+\subsection{React Router per la navigazione}
+
+La navigazione nell'applicazione è gestita da React Router, la libreria de facto per il routing lato client in applicazioni React. React Router permette di definire 
+route dichiarative che mappano URL specifici a componenti React da renderizzare. Per esempio, / potrebbe renderizzare la home page con ricerca immobili, 
+/immobili/:id il dettaglio di un immobile specifico, /profilo il profilo dell'utente autenticato, /chat l'interfaccia di messaggistica, e così via.\newline
+React Router implementa routing lato client intercettando i click sui link e manipolando la History API del browser per cambiare l'URL senza causare un page reload. 
+Quando l'URL cambia, React Router identifica la route corrispondente e renderizza il componente associato, smontando i componenti delle route precedenti e montando i 
+nuovi. Questo processo è estremamente veloce poiché avviene interamente in memoria senza comunicazione con il server.\newline
+Il router supporta nested routes per creare layout gerarchici dove componenti di layout comuni (header, sidebar, footer) rimangono montati mentre solo il contenuto 
+centrale cambia, route parameters per passare dati dinamici tramite l'URL, query parameters per filtri e stato opzionale, programmatic navigation per navigare da 
+codice in risposta a eventi o condizioni, route guards per proteggere route che richiedono autenticazione o autorizzazione, e lazy loading di route per code splitting 
+e ottimizzazione delle prestazioni.
+
+\subsection{Gestione dello stato}
+
+La gestione dello stato è un aspetto critico delle SPA complesse. Lo stato include dati temporanei dell'interfaccia (form input, modal aperti/chiusi, tabs selezionati), 
+dati dell'applicazione (immobili caricati, profilo utente, messaggi chat), stato di autenticazione (token JWT, informazioni utente corrente), e stato delle richieste 
+API (loading, error, success).\newline
+React offre diversi livelli di gestione dello stato. Lo stato locale dei componenti è gestito con useState per dati che appartengono a un singolo componente e non 
+necessitano di essere condivisi. Context API permette di condividere stato tra componenti senza prop drilling, ideale per tema UI, lingua, informazioni utente 
+autenticato, e altre configurazioni globali che cambiano raramente.\newline
+Per applicazioni più complesse con stato globale esteso e logica di aggiornamento complessa, librerie di state management come Redux, Zustand, Jotai o Recoil offrono 
+soluzioni più strutturate. Redux, il più maturo e adottato, implementa un store centralizzato con aggiornamenti gestiti tramite actions e reducers, offrendo 
+predicibilità, debugging avanzato con time-travel tramite Redux DevTools, e middleware per gestire side effects asincroni.\newline
+React Query (TanStack Query) o SWR sono librerie specializzate nella gestione dello stato server-side, gestendo automaticamente caching, invalidazione, refetching, 
+sincronizzazione background, e ottimizzazioni come deduplicazione delle richieste. Queste librerie eliminano gran parte del boilerplate per la gestione delle chiamate 
+API e migliorano significativamente le prestazioni e l'esperienza utente.
+
+
+\subsection{Comunicazione con il backend}
+Il frontend comunica con il backend esclusivamente tramite API RESTful, effettuando richieste HTTP asincrone utilizzando Fetch API nativa del browser o librerie wrapper
+come Axios che offrono funzionalità aggiuntive come interceptor, timeout automatici, cancellazione delle richieste, e trasformazione automatica dei dati.
+
+
+\subsection{Axios e Interceptor}
+Axios è tipicamente configurato con una istanza base che include l'URL di base del backend (es. https://api.tuodominio.com o semplicemente /api se il frontend è servito 
+dallo stesso dominio tramite NGINX), timeout predefiniti, e header comuni. Gli interceptor di Axios permettono di intercettare e modificare richieste e risposte 
+globalmente, implementando logica cross-cutting come l'aggiunta automatica del token JWT all'header Authorization di ogni richiesta autenticata, la gestione 
+centralizzata degli errori con reindirizzamento automatico al login in caso di 401 Unauthorized, il refresh automatico del token quando scaduto, 
+il logging delle richieste per debugging, e la gestione di loading spinner globali.
+
+
+\subsection{Pattern di chiamata API}
+Le chiamate API seguono pattern asincroni gestiti con Promise, async/await, o attraverso librerie di state management. Un pattern comune prevede la definizione di 
+servizi API che incapsulano le chiamate specifiche, separando la logica di networking dalla logica dei componenti UI. Ogni servizio espone metodi che corrispondono 
+agli endpoint backend, gestendo la costruzione delle richieste, la gestione degli errori, e la trasformazione delle risposte.\newline
+I componenti React invocano questi servizi tipicamente all'interno di useEffect per caricare dati al mount del componente, o in risposta ad azioni utente 
+(submit di form, click su bottoni). Durante la chiamata API, il componente mostra uno stato di loading, e al completamento aggiorna lo stato con i dati ricevuti o 
+mostra un messaggio di errore in caso di fallimento.
+
+\subsection{Tailwind CSS per lo Styling}
+Il frontend utilizza Tailwind CSS, un framework CSS utility-first che ha rivoluzionato l'approccio allo styling nelle applicazioni moderne. A differenza di framework 
+component-based tradizionali come Bootstrap o Material-UI che forniscono componenti pre-stilizzati, Tailwind fornisce classi utility atomiche a basso livello 
+che possono essere combinate per costruire qualsiasi design direttamente nel markup.
+
+\subsection{Filosofia Utility-First}
+L'approccio utility-first significa che invece di scrivere CSS custom o utilizzare componenti pre-fatti, gli sviluppatori compongono gli stili applicando classi 
+utility direttamente agli elementi HTML/JSX.\newline
+Questo approccio offre numerosi vantaggi: eliminazione del context-switching tra file HTML/JSX e CSS, nessun problema di naming conventions o collisioni di classi, 
+design system consistente attraverso scale predefinite per spacing, colori, typography, responsive design semplificato con prefissi per breakpoint (sm:, md:, lg:, xl:), 
+pseudo-classi e pseudo-elementi gestiti con prefissi (hover:, focus:, active:, first:, last:), e file CSS finali estremamente ottimizzati grazie al tree-shaking 
+automatico che include solo le classi effettivamente utilizzate.
+
+\subsection{Configurazione e Customizzazione}
+Tailwind è altamente configurabile attraverso il file tailwind.config.js, che permette di estendere o sovrascrivere la configurazione predefinita. È possibile 
+definire palette di colori custom che riflettono il brand dell'applicazione, scale di spacing personalizzate, font families, breakpoint responsive, durate e timing 
+functions per animazioni, e molto altro. La configurazione supporta anche temi multipli (light/dark mode) attraverso la variante dark: che applica stili alternativi 
+basati sulla preferenza di sistema o su uno stato dell'applicazione.\newline
+Il sistema di plugin di Tailwind permette di estendere le funzionalità base, aggiungendo nuove utility, varianti, componenti, o integrando librerie complementari. 
+Tailwind UI offre componenti pre-costruiti utilizzando le utility di Tailwind, fornendo un punto di partenza per UI complesse come form elaborati, tabelle con sorting e 
+filtering, dashboard layouts, e-commerce interfaces, e molto altro.
+
+\subsection{Integrazione con React}
+In progetti React, Tailwind si integra perfettamente attraverso PostCSS, processando le direttive Tailwind (@tailwind base, @tailwind components, @tailwind utilities) 
+nel file CSS principale e generando il file CSS finale ottimizzato. Durante il build process, il PurgeCSS integrato in Tailwind scansiona tutti i file JSX/TSX 
+specificati nella configurazione, identifica le classi utilizzate, e genera un file CSS che contiene solo quelle classi, risultando in bundle CSS minuscoli anche 
+per applicazioni complesse.\newline
+I componenti React possono utilizzare conditional classes attraverso librerie come classnames o clsx per applicare dinamicamente classi basate su props o stato.
+
+\subsection{Responsive Design e Accessibilità}
+Tailwind eccelle nel responsive design attraverso il mobile-first approach. Le classi senza prefisso si applicano a tutte le dimensioni di schermo, 
+mentre prefissi come md:, lg:, xl: applicano stili solo a breakpoint specifici. Questo permette di creare layout complessi che si adattano perfettamente a diverse 
+dimensioni di schermo con classi come flex flex-col md:flex-row lg:grid lg:grid-cols-3.\newline
+Per l'accessibilità, Tailwind fornisce utility per focus states visibili (focus:ring, focus:outline), screen reader utilities (sr-only), e supporta tutte le best 
+practices ARIA. Combinato con componenti React accessibili, si possono costruire interfacce che rispettano gli standard WCAG garantendo usabilità per tutti gli utenti.
+
 
 
 

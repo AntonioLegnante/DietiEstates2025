@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.11.1)  28 DEC 2025 11:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.11.1)  29 DEC 2025 12:07
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -302,7 +302,7 @@ File: pppdftex.def 2025/07/23 v0.6g Pdfpages driver for pdfTeX (AM)
 \c@AM@survey=\count302
 \AM@templatesizebox=\box59
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 27.
+Package hyperref Info: Option `colorlinks' set `true' on input line 55.
  (C:\Users\vinci\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count303
@@ -310,24 +310,24 @@ File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 ) (documentazione.aux (capitolo1.aux) (capitolo2.aux) (capitolo3.aux))
 \openout1 = `documentazione.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 30.
-LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 60.
+LaTeX Font Info:    ... okay on input line 60.
  (C:\Users\vinci\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count304
@@ -347,8 +347,8 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (C:\Users\vinci\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-LaTeX Info: Redefining \it@ocap on input line 30.
-LaTeX Info: Redefining \it@ccap on input line 30.
+LaTeX Info: Redefining \it@ocap on input line 60.
+LaTeX Info: Redefining \it@ccap on input line 60.
 
 
 File italian.ldf warning: 
@@ -356,9 +356,9 @@ italian.ldf    With OT1 encoding guillemets are poorly faked
 italian.ldf    Use T1 encoding
 italian.ldf    or specify a font with command \CaporaliFrom
 italian.ldf    See the documentation concerning the babel-italian typesetting
-italian.ldf    on input line 30.
+italian.ldf    on input line 60.
 
-Package hyperref Info: Link coloring ON on input line 30.
+Package hyperref Info: Link coloring ON on input line 60.
 (documentazione.out) (documentazione.out)
 \@outlinefile=\write3
 \openout3 = `documentazione.out'.
@@ -374,13 +374,13 @@ Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
 Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 77.
+(Font)              <7> on input line 107.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 77.
-<images/FedericoII.png, id=255, 134.75343pt x 139.27031pt>
+(Font)              <5> on input line 107.
+<images/FedericoII.png, id=307, 134.75343pt x 139.27031pt>
 File: images/FedericoII.png Graphic file (type png)
 <use images/FedericoII.png>
-Package pdftex.def Info: images/FedericoII.png  used on input line 105.
+Package pdftex.def Info: images/FedericoII.png  used on input line 135.
 (pdftex.def)             Requested size: 120.7521pt x 124.80234pt.
  [1
 
@@ -431,7 +431,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 40--48
 [4]) (DiagrammaCasiUso.tex
 
 pdfTeX warning: pdflatex (file ./images/UseCasePDF6.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/UseCasePDF6.pdf, id=349, 597.19106pt x 845.07718pt>
+<images/UseCasePDF6.pdf, id=414, 597.19106pt x 845.07718pt>
 File: images/UseCasePDF6.pdf Graphic file (type pdf)
 <use images/UseCasePDF6.pdf>
 Package pdftex.def Info: images/UseCasePDF6.pdf  used on input line 3.
@@ -444,7 +444,7 @@ Overfull \hbox (2.2173pt too wide) in paragraph at lines 3--10
 [5] (requsitiNonFunzionaliEDiDominio.tex [6 <./images/UseCasePDF6.pdf>] [7]) (Personas.tex
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=372, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=437, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf>
 Package pdftex.def Info: images/personatemplate.pdf  used on input line 6.
@@ -455,7 +455,7 @@ pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: fou
 
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=374, page=2, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=439, page=2, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 2>
 Package pdftex.def Info: images/personatemplate.pdf , page2 used on input line 6.
@@ -482,7 +482,7 @@ Package pdftex.def Info: images/personatemplate.pdf , page2 used on input line 6
  <./images/personatemplate.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=422, page=3, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=487, page=3, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 3>
 Package pdftex.def Info: images/personatemplate.pdf , page3 used on input line 6.
@@ -500,7 +500,7 @@ Package pdftex.def Info: images/personatemplate.pdf , page3 used on input line 6
  <./images/personatemplate.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=431, page=4, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=496, page=4, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 4>
 Package pdftex.def Info: images/personatemplate.pdf , page4 used on input line 6.
@@ -518,7 +518,7 @@ Package pdftex.def Info: images/personatemplate.pdf , page4 used on input line 6
  <./images/personatemplate.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=440, page=5, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=505, page=5, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 5>
 Package pdftex.def Info: images/personatemplate.pdf , page5 used on input line 6.
@@ -613,10 +613,30 @@ Overfull \hbox (1.75058pt too wide) in paragraph at lines 310--320
 \OT1/cmr/m/n/10 ker Com-po-se per-met-te di de-fi-ni-re l'in-te-ro stack del-l'ap-pli-ca-zio-ne in un fi-le YAML,
  []
 
-[24] [25] [26] [27] [28]) (DiagrammaClassi.tex
+[24] [25] [26] [27] [28] [29]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 457.
+
+Overfull \hbox (1.22108pt too wide) in paragraph at lines 457--458
+[]\OT1/cmtt/m/n/10 Container Backend (Spring Boot): \OT1/cmr/m/n/10 con-tie-ne l'ap-pli-ca-zio-ne Ja-va Spring
+ []
+
+[30]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <9> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 528.
+ [31]
+LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 559.
+ (C:\Users\vinci\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1cmtt.fd
+File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+) [32] [33] [34] [35]
+Underfull \hbox (badness 10000) in paragraph at lines 730--733
+
+ []
+
+[36]) (DiagrammaClassi.tex
 
 pdfTeX warning: pdflatex (file ./images/DiagrammaClassi.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/DiagrammaClassi.pdf, id=516, 597.19106pt x 845.07718pt>
+<images/DiagrammaClassi.pdf, id=814, 597.19106pt x 845.07718pt>
 File: images/DiagrammaClassi.pdf Graphic file (type pdf)
 <use images/DiagrammaClassi.pdf>
 Package pdftex.def Info: images/DiagrammaClassi.pdf  used on input line 1.
@@ -626,22 +646,22 @@ Overfull \hbox (2.2173pt too wide) in paragraph at lines 1--6
 []  
  []
 
-[29] (ProgettazioneInterfacciaGrafica.tex
+[37] (ProgettazioneInterfacciaGrafica.tex
 Underfull \hbox (badness 10000) in paragraph at lines 1--7
 
  []
 
-[30 <./images/DiagrammaClassi.pdf>]
+[38 <./images/DiagrammaClassi.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 13--19
 
  []
 
-)) [31]
+)) [39]
 \openout2 = `capitolo3.aux'.
 
  (capitolo3.tex
 Capitolo 3.
-) [32
+) [40
 
 
 
@@ -652,20 +672,20 @@ LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
 Package rerunfilecheck Info: File `documentazione.out' has not changed.
-(rerunfilecheck)             Checksum: F1C6E1E0E71547EEB9C6F000DA51BA34;11806.
+(rerunfilecheck)             Checksum: FB6037FB0A9F2DB684CC9A0876ED5CEA;14724.
  ) 
 Here is how much of TeX's memory you used:
- 12868 strings out of 474486
- 210542 string characters out of 5743755
- 1939542 words of memory out of 5000000
- 34856 multiletter control sequences out of 15000+600000
- 562685 words of font info for 51 fonts, out of 8000000 for 9000
+ 13596 strings out of 474486
+ 219218 string characters out of 5743755
+ 2100542 words of memory out of 5000000
+ 35360 multiletter control sequences out of 15000+600000
+ 563784 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,17n,81p,483b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\vinci\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on documentazione.pdf (33 pages, 727923 bytes).
+ 75i,17n,81p,483b,2051s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\vinci\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt0900.pk> <C:\Users\vinci\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmitt10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/vinci/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on documentazione.pdf (41 pages, 837279 bytes).
 PDF statistics:
- 600 PDF objects out of 1000 (max. 8388607)
- 97 named destinations out of 1000 (max. 500000)
- 550 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 959 PDF objects out of 1000 (max. 8388607)
+ 313 named destinations out of 1000 (max. 500000)
+ 654 words of extra memory for PDF output out of 10000 (max. 10000000)
 

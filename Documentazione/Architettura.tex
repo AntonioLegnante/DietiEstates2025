@@ -445,16 +445,316 @@ practices ARIA. Combinato con componenti React accessibili, si possono costruire
 
 
 
+\section{Containerizzazione con Docker}
+
+L'intera applicazione è containerizzata utilizzando Docker, permettendo deployment consistente, isolamento tra componenti, e facilità di sviluppo 
+con ambienti identici in development, staging e production.
+
+\subsection{Architettura Docker Multi-Container}
+L'applicazione è composta da sei container Docker, ognuno incapsulante un componente specifico dello stack tecnologico:
+
+\begin{itemize}
+    \item \texttt{\textbf{Container Backend (Spring Boot):}} contiene l'applicazione Java Spring Boot con tutte le sue dipendenze;
+    \item \texttt{\textbf{Container Frontend (React):}} Contiene il frontend React e tutte le sue dipendenze;
+    \item \texttt{\textbf{Container NGINX:}} Serve i file statici di React e funge da Reverse Proxy verso il backend;
+    \item \texttt{\textbf{Container Database (PostgreSQL):}} Gestisce la persistenza dei dati relazionali;
+    \item \texttt{\textbf{Container Object Storage (MiniIO):}} Gestisce la persistenza delle immagini e file multimediali;
+    \item \texttt{\textbf{Container Network Setting (Cloudflared):}} Consente l'impiego del servizio Cloudflared per connessioni sicure.
+\end{itemize}
+
+\subsection{Dockerfile del Backend}
+
+\begin{lstlisting}[style=react]
+# Stage 1: Build
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
+WORKDIR /app
+
+COPY pom.xml .
+RUN mvn -B dependency:resolve
+
+COPY src ./src
+RUN mvn -B clean package -DskipTests
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+\end{lstlisting}
+
+Il primo stage utilizza un'immagine Maven completa per compilare il codice sorgente, risolvere le dipendenze, ed eseguire il package Maven che 
+produce il JAR eseguibile. Il secondo stage parte da un'immagine JRE minimale (significativamente più piccola del JDK completo), copia solo il 
+JAR compilato dal primo stage, ed esegue l'applicazione. Questo approccio riduce l'immagine finale da oltre 500MB a circa 200MB, migliorando i 
+tempi di pull e deployment.\newline
+L'immagine Alpine Linux è scelta per il runtime per la sua dimensione minuscola (circa 5MB base) e il suo profilo di sicurezza ridotto. L'applicazione 
+Spring Boot è configurata tramite variabili d'ambiente passate al container per connessione database, configurazione MinIO, chiave segreta JWT, 
+profilo Spring attivo (dev, prod), e altre configurazioni environment-specific.
+
+\subsection{Dockerfile del Frontend}
+
+Il Frontend React viene buildato in un multi-stage process simile:
+
+\begin{lstlisting}[style=react]
+# Stage 1: Build
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+# Stage 2: Serve with nginx
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+\end{lstlisting}
 
 
+\subsection{Dockerfile e configurazione NGINX}
+
+\begin{lstlisting}[style=react]
+FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Create directory for certificates (Lets Encrypt)
+RUN mkdir -p /etc/letsencrypt/live \
+    && mkdir -p /etc/letsencrypt/archive \
+    && mkdir -p /var/www/certbot
+
+EXPOSE 80
+EXPOSE 443
+\end{lstlisting}
+
+\newpage
+Il file nginx.conf configura NGINX per servire i file statici React e reindirizzare le richieste API verso il backend:
+
+\begin{lstlisting}[style=react]
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout 65;
+    client_max_body_size 200M;
+
+    server {
+        listen 80;
+
+        # React frontend
+        location / {
+            proxy_pass http://frontend:80;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # API backend
+        location /api/ {
+            proxy_pass http://backend:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Auth backend
+        location /auth/ {
+            proxy_pass http://backend:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Chat backend
+        location /chat/ {
+            proxy_pass http://backend:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # MinIO images
+        location /images/ {
+            proxy_pass http://minio:9000/images/;
+            proxy_http_version 1.1;
+            proxy_set_header Host minio:9000;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+
+        add_header X-Content-Type-Options nosniff;
+        add_header X-Frame-Options SAMEORIGIN;
+    }
+}
+\end{lstlisting}
 
 
+\newpage
+
+\subsection{Docker Compose per l'Orchestrazione}
+
+Docker Compose orchestra l'intero stack dell'applicazione attraverso un file docker-compose.yml che definisce tutti i servizi, le loro configurazioni, 
+le relazioni, i volumi per la persistenza dei dati, e le reti per la comunicazione inter-container.
 
 
+\begin{lstlisting}[style=react]
+services:
+  backend:
+    build:
+      context: ./DietiEstates2025
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      FRONTEND_URL: "https://stars-friends-instead-applies.trycloudflare.com"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/dietiestates2025
+      SPRING_DATASOURCE_USERNAME: antoniolegnante
+      SPRING_DATASOURCE_PASSWORD: lama
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_BUCKET_NAME: images
+    depends_on:
+      - db
+      - minio
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx_proxy
+    restart: unless-stopped
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: antoniolegnante
+      POSTGRES_PASSWORD: lama
+      POSTGRES_DB: dietiestates2025
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio
+    container_name: minio_storage
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --url http://nginx:80
+    depends_on:
+      - nginx
 
 
+volumes:
+  postgres_data:
+  minio_data:
+
+\end{lstlisting}
 
 
+\newpage
+\subsection{Deployment con Docker Compose}
+
+L'intero stack applicativo viene avviato con un singolo comando:
+
+\begin{lstlisting}[style=react]
+docker-compose up -d
+\end{lstlisting}
+
+Questo comando:
+
+\begin{itemize}
+    \item Legge il file docker-compose.yml nella directory corrente;
+    \item Crea i volumi postgres\_data e minio\_data per la persistenza;
+    \item Builda le immagini per backend e frontend se non esistono;
+    \item Pulla le immagini per PostgreSQL e MiniIO dal Docker Hub;
+    \item Avvia i container nell'ordine corretto rispettando le dipendenze definite con depends\_on;
+    \item Esegue gli healthcheck per verificare che i servizi siano pronti prima di avviare i servizi dipendenti;
+    \item Esegue i container in modalità detached (-d), permettendo che continuino a girare in background.
+\end{itemize}
+
+\subsection{Gestione dei volumi per la persistenza}
+I volumi Docker garantiscono che i dati persistano tra riavvii dei container. Il volume postgres\_data mappa la directory /var/lib/postgresql/data 
+del container PostgreSQL, dove il database memorizza tutti i file di dati, indici, WAL logs e configurazioni. Similmente, minio\_data mappa la 
+directory /data di MinIO dove vengono memorizzati tutti gli oggetti (immagini).\newline
+I volumi sono gestiti da Docker e risiedono in una directory speciale del filesystem host (tipicamente /var/lib/docker/volumes/ su Linux). Questo 
+isola completamente i dati dal lifecycle dei container: i container possono essere distrutti, ricreati, aggiornati senza perdita di dati. I volumi 
+possono essere backuppati, migrati tra host, e gestiti indipendentemente dai container.
+
+\subsection{Health Checks e gestione dei fallimenti}
+
+Gli health checks definiti per PostgreSQL e MinIO permettono a Docker di verificare che i servizi siano non solo avviati ma effettivamente 
+funzionanti e pronti ad accettare connessioni. Il backend, configurato con depends\_on e condition: service\_healthy, aspetta che PostgreSQL e MinIO 
+passino i loro health check prima di avviarsi, evitando errori di connessione durante lo startup.\newline
+
+La politica di restart unless-stopped garantisce che i container vengano automaticamente riavviati in caso di crash o errori, implementando una 
+forma base di self-healing. Se il backend crasha per un'eccezione non gestita, Docker lo riavvia automaticamente. Solo un esplicito docker-compose 
+down o docker stop ferma permanentemente i container.
+
+\section{Integrazione con Cloudflared}
+Cloudflare si posiziona come layer più esterno dell'architettura, davanti a NGINX, gestendo il traffico globale verso l'applicazione.
+
+\subsection{Modalità Proxy e SSL/TLS}
+Con il proxy arancione attivo (proxy mode) in Cloudflare, tutto il traffico passa attraverso i server Cloudflare. La configurazione SSL/TLS in 
+modalità "Full (Strict)" garantisce crittografia end-to-end: HTTPS tra client e Cloudflare, e HTTPS tra Cloudflare e il server di origine (NGINX).
+
+\subsection{Regole di Firewall e sicurezza}
+
+Cloudflare permette di configurare regole di firewall (WAF Rules) per bloccare traffico malevolo prima che raggiunga il server. Regole comuni 
+includono il blocco di IP geografici specifici se l'applicazione serve solo determinate regioni, rate limiting per endpoint sensibili come login 
+e registrazione per prevenire brute-force, challenge CAPTCHA per traffico sospetto, e blocco automatico di pattern noti di attacco SQL injection, 
+XSS, e altri vettori dell'OWASP Top 10.
+
+\subsection{Ottimizzazioni delle prestazioni}
+
+Oltre al caching CDN, Cloudflare offre ottimizzazioni come Auto Minify per minimizzare automaticamente HTML, CSS e JavaScript, Brotli compression 
+per compressione superiore rispetto a gzip, HTTP/2 e HTTP/3 support per multiplexing e prestazioni migliorate, Early Hints per inviare header di 
+preload mentre il server sta generando la risposta, e Argo Smart Routing per instradare il traffico attraverso i percorsi di rete meno 
+congestionati.
 
 
 

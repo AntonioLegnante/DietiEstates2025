@@ -21,10 +21,40 @@
 
  \usepackage{pdfpages}
 
+ \lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, switch, var, if, in, while, do, else, case, break, const, let, await, async},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{teal}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{orange}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+
+ \lstdefinestyle{react}{
+  language=JavaScript,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{gray!10},
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{orange},
+  commentstyle=\color{gray}\itshape,
+  showstringspaces=false,
+  frame=single,
+  breaklines=true
+}
+
  \hypersetup{
     colorlinks=true,
     linkcolor=blue,
 }
+
+
     
  
  \begin{document}

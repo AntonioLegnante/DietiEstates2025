@@ -756,7 +756,67 @@ per compressione superiore rispetto a gzip, HTTP/2 e HTTP/3 support per multiple
 preload mentre il server sta generando la risposta, e Argo Smart Routing per instradare il traffico attraverso i percorsi di rete meno 
 congestionati.
 
+\section{Ciclo completo delle richieste}
 
+\subsection{Flusso di una richiesta API}
+Quando un utente autenticato effettua un'azione che richiede comunicazione con il backend (es. caricamento di un nuovo immobile), il flusso completo 
+è:
+
+\begin{enumerate}
+  \item \texttt{\textbf{Client React: }}l'utente compila un form e clicca "Pubblica". Il componente React invoca una funzione handler che previene il submit predefinito, valida i dati lato client, e chiama un servizio API;
+  \item \texttt{\textbf{Servizio API (frontend): }}il servizio costruisce una richiesta HTTP POST con i dati del form serializzati in JSON. Axios interceptor aggiunge automaticamente l'header Authorization: Bearer <token>. La richiesta viene inviata a /api/immobili;
+  \item \texttt{\textbf{NGINX: }}riceve la richiesta sulla porta 80/443. Identifica che il path inizia con /api/ e, basandosi sulla configurazione di reverse proxy, inoltra la richiesta a http://backend:8080/api/immobili attraverso la rete Docker interna, preservando gli header originali e aggiungendo header X-Forwarded-*;
+  \item \texttt{\textbf{Spring Boot - DispatcherServlet: }} il DispatcherServlet (Front Controller) intercetta la richiesta in ingresso, identifica il metodo handler appropriato basandosi sul path e sul verbo HTTP (POST), e la passa attraverso la filter chain;
+  \item \texttt{\textbf{JWT Authentication Filter: }}un filtro custom estrae il token dall'header Authorization, lo valida verificando la signature e la scadenza, estrae le informazioni utente (ID, roles), e popola il SecurityContext di Spring Security;
+  \item \texttt{\textbf{Controller: }}il metodo controller annotato con @PostMapping("/api/immobili") viene invocato. Spring Boot automaticamente deserializza il JSON della richiesta in un oggetto DTO (Data Transfer Object) usando Jackson, applicando validazione con Bean Validation annotations (@NotNull, @Size, @Pattern, ecc);
+  \item \texttt{\textbf{Service Layer: }} il controller delega la logica di business al servizio appropriato (ImmobileService), passando il DTO validato. Il servizio applica ulteriori validazioni di business, converte il DTO in un'entità Immobile, gestisce il caricamento delle immagini su MinIO generando URL di riferimento, e persiste l'entità nel database tramite repository;
+  \item \texttt{\textbf{Repository/JPA/Hibernate: }}il repository (interfaccia che estende JpaRepository) delega a Hibernate, che genera la query SQL INSERT appropriata per PostgreSQL, gestisce la transazione, assegna l'ID generato automaticamente (sequence o identity), e committa la transazione;
+  \item \texttt{\textbf{MinIO: }}: parallelamente o sequenzialmente, il servizio carica le immagini dell'immobile su MinIO utilizzando l'SDK Java, che invia richieste HTTP PUT all'endpoint MinIO con i dati binari delle immagini;
+  \item \texttt{\textbf{Response: }}il servizio ritorna l'entità creata (o un DTO di risposta) al controller. Il controller restituisce un ResponseEntity con status 201 Created e il corpo contenente l'immobile creato serializzato in JSON da Jackson;
+  \item \texttt{\textbf{NGINX: }}riceve la risposta dal backend e la inoltra al client, aggiungendo eventualmente header di caching se appropriato;
+  \item \texttt{\textbf{Client React: }}Axios riceve la risposta con status 201. Il codice gestisce il successo aggiornando lo stato locale per riflettere il nuovo immobile, mostrando una notifica di successo, e navigando alla pagina di dettaglio del nuovo immobile o aggiornando la lista degli immobili dell'utente.
+\end{enumerate}
+
+
+\subsection{Flusso di caricamento iniziale dell'applicazione}
+
+Al primo accesso, il flusso è significativamente diverso:
+
+\begin{enumerate}
+  \item \texttt{\textbf{Browser:}}l'utente inserisce l'URL del dominio (es. https://tuodominio.com) nella barra degli indirizzi;
+  \item \texttt{\textbf{DNS Resolution: }}il browser risolve il dominio interrogando i nameserver di Cloudflare, che restituiscono un IP Anycast puntando al data center Cloudflare più vicino geograficamente;
+  \item \texttt{\textbf{Cloudflare: }}la richiesta HTTPS raggiunge il data center Cloudflare. Se i file statici sono in cache e validi, Cloudflare li serve direttamente senza toccare il server di origine. Altrimenti, Cloudflare inoltra la richiesta al server di origine;
+  \item \texttt{\textbf{NGINX: }}riceve la richiesta per / (root). Basandosi sulla configurazione, serve il file index.html dalla directory /usr/share/nginx/html;
+  \item \texttt{\textbf{Browser: }}riceve l'HTML, lo parsa, e identifica le risorse referenziate (CSS, JavaScript bundles, immagini). Invia richieste parallele per ciascuna risorsa;
+  \item \texttt{\textbf{NGINX/Cloudflare: }}servono le risorse statiche, con Cloudflare che le cacha aggressivamente data l'intestazione Cache-Control impostata da NGINX;
+  \item \texttt{\textbf{Browser: }}una volta scaricati tutti i file JavaScript, esegue il codice React. React renderizza l'interfaccia iniziale, React Router inizializza il routing basandosi sull'URL corrente, e i componenti montati eseguono eventuali chiamate API per caricare dati (es. lista immobili in homepage);
+  \item \texttt{\textbf{Chiamate API Iniziali: }} seguono il flusso descritto precedentemente, caricando dati dal backend tramite NGINX verso Spring Boot verso PostgreSQL, e ritornando JSON al frontend;
+  \item \texttt{\textbf{Render Finale: }} React aggiorna il DOM con i dati ricevuti, mostrando l'interfaccia completa e interattiva all'utente.
+\end{enumerate}
+
+
+Da questo momento, l'applicazione è completamente caricata nel browser e tutte le successive interazioni avvengono senza page reload, 
+con solo scambi di dati JSON con il backend.
+
+\section{Considerazioni di sicurezza}
+
+\subsection{Sicurezza del Backend}
+
+
+Spring Security fornisce protezione completa contro le vulnerabilità più comuni. CSRF protection è disabilitata per le API stateless ma può essere 
+abilitata se necessario per alcune route. XSS protection è fornita attraverso encoding automatico dell'output e Content-Security-Policy headers. 
+SQL Injection è prevenuta automaticamente dall'uso di parametrized queries di JPA/Hibernate.\newline
+La validazione degli input è implementata a più livelli: lato client con React per feedback immediato, nel controller Spring con Bean Validation, 
+e nella logica di business con validazioni custom. Le password sono hashate con BCrypt, un algoritmo robusto che include salting automatico e 
+costo computazionale configurabile, resistente ad attacchi brute-force grazie alle iterazioni multiple.
+
+
+\subsection{Sicurezza del Frontend}
+
+Il frontend React beneficia dell'auto-escaping predefinito di React che previene XSS quando si renderizza contenuto dinamico. Il framework 
+converte automaticamente stringhe in testo sicuro. L'uso di dangerouslySetInnerHTML è evitato a meno che assolutamente necessario e con 
+sanitizzazione appropriata tramite librerie come DOMPurify.\newline
+I token JWT sono memorizzati in modo sicuro considerando i trade-off tra sicurezza e usabilità. 
 
 
 

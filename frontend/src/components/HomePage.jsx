@@ -96,13 +96,11 @@ function EstatesList({ immobili, utenteLoggato }) {
         
         <div>
           {immobili.map((immobile) => (
-            <div onClick={() => handleClick(immobile)}>
                 <CardEstates
                     key={immobile.id}
                     immobile={immobile}
                     utenteLoggato={utenteLoggato}
                 />
-            </div>
             ))}
         </div>
 

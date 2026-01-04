@@ -10,51 +10,124 @@ import { Chats } from './components/Chats.jsx';
 import './index.css'
 import { AdministratorPage } from './components/AdministratorPage.jsx'
 
-
-// Sposta la navbar in un componente separato che può usare useAuth
+// Navbar moderna
 function Navigation() {
   const { isAuthenticated, username, ruolo } = useAuth();
   console.log(`in App: ${username}`);
   console.log(`in App: ${ruolo}`);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.reload();
+  };
+
   return (
-    <nav>
-      <Link to="/">Homepage</Link>
-      {!isAuthenticated ? <Link to="/login">Login</Link> : <span>Benvenuto {username} </span>}
-      {!isAuthenticated ? <Link to="/registration">Registration</Link> : 
-      <span onClick={() => {
-                localStorage.removeItem("token");
-                window.location.reload();
-            }}>
-      Esci</span>}
-      {ruolo == "Amministratore" || ruolo == "nuovoAmministratore" ? <Link to="/paginaAmministratore">Aggiungi amministratore</Link> : null}
-      {isAuthenticated ? <Link to="/insert">Aggiungi immobile</Link> : null}
-      {isAuthenticated ? <Link to="/Chats">Open chats</Link> : null}
-    </nav>
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Navigation buttons - sinistra */}
+            <nav className="flex gap-3 items-center">
+              <Link
+                  to="/"
+                  className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 hover:shadow-md"
+              >
+                🏠 Homepage
+              </Link>
+
+              {!isAuthenticated ? (
+                  <>
+                    <Link
+                        to="/login"
+                        className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 hover:shadow-md"
+                    >
+                      🔑 Login
+                    </Link>
+                    <Link
+                        to="/registration"
+                        className="px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg"
+                    >
+                      ✨ Registration
+                    </Link>
+                  </>
+              ) : (
+                  <>
+                    {isAuthenticated && (
+                        <Link
+                            to="/insert"
+                            className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200 hover:shadow-md"
+                        >
+                          ➕ Aggiungi immobile
+                        </Link>
+                    )}
+
+                    {isAuthenticated && (
+                        <Link
+                            to="/Chats"
+                            className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-200 hover:shadow-md"
+                        >
+                          💬 Chat
+                        </Link>
+                    )}
+
+                    {(ruolo === "Amministratore" || ruolo === "nuovoAmministratore") && (
+                        <Link
+                            to="/paginaAmministratore"
+                            className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-all duration-200 hover:shadow-md"
+                        >
+                          👤 Gestione Admin
+                        </Link>
+                    )}
+                  </>
+              )}
+            </nav>
+
+            {/* Logo/Titolo al centro */}
+            <div className="absolute left-1/2 transform -translate-x-1/2">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                DietiEstates
+              </h1>
+            </div>
+
+            {/* User info e logout - destra */}
+            <div className="flex items-center gap-3">
+              {isAuthenticated && (
+                  <>
+                <span className="text-gray-700 font-medium">
+                  👋 {username}
+                </span>
+                    <button
+                        onClick={handleLogout}
+                        className="px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg"
+                    >
+                      🚪 Esci
+                    </button>
+                  </>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
   );
 }
 
 function App() {
-
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<HomePage />}/>
-          <Route path="/Chat" element={<Chat />}/>
-          <Route path="/paginaAmministratore" element={<AdministratorPage/>} />
-          <Route path="/immobile/:id" element={<ModalDetail />} />
-          <Route path="/login" element={<Login />}/>
-          <Route path="/registration" element={<Registration />}/>
-          <Route path="/insert" element={<EstatesMask />}/>
-          <Route path="/Chats" element={<Chats />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<HomePage />}/>
+            <Route path="/Chat" element={<Chat />}/>
+            <Route path="/paginaAmministratore" element={<AdministratorPage/>} />
+            <Route path="/immobile/:id" element={<ModalDetail />} />
+            <Route path="/login" element={<Login />}/>
+            <Route path="/registration" element={<Registration />}/>
+            <Route path="/insert" element={<EstatesMask />}/>
+            <Route path="/Chats" element={<Chats />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
   )
 }
 
 export default App;
-
-

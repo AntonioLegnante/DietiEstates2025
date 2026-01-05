@@ -4,29 +4,31 @@ import { Login } from "./components/Login.jsx"
 import { Registration } from "./components/Registration.jsx"
 import { EstatesMask } from './components/EstatesMask.jsx'
 import { ModalDetail } from './components/ModalDetail.jsx'
-import { AuthProvider, useAuth } from './components/AuthContext.jsx';
-import { Chat } from './components/Chat.jsx';
-import { Chats } from './components/Chats.jsx';
-import './index.css'
+import { AuthProvider, useAuth } from './components/AuthContext.jsx'
+import { Chat } from './components/Chat.jsx'
+import { Chats } from './components/Chats.jsx'
 import { AdministratorPage } from './components/AdministratorPage.jsx'
+import './index.css'
 
-// Navbar moderna
+// ======================
+// NAVIGATION BAR
+// ======================
 function Navigation() {
-  const { isAuthenticated, username, ruolo } = useAuth();
-  console.log(`in App: ${username}`);
-  console.log(`in App: ${ruolo}`);
+  const { isAuthenticated, username, ruolo } = useAuth()
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.reload();
-  };
+    localStorage.removeItem("token")
+    window.location.reload()
+  }
 
   return (
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Navigation buttons - sinistra */}
-            <nav className="flex gap-3 items-center">
+          {/* GRID A 3 COLONNE */}
+          <div className="grid grid-cols-3 items-center">
+
+            {/* SINISTRA - NAV */}
+            <nav className="flex gap-3 items-center justify-start">
               <Link
                   to="/"
                   className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 hover:shadow-md"
@@ -34,7 +36,7 @@ function Navigation() {
                 🏠 Homepage
               </Link>
 
-              {!isAuthenticated ? (
+              {!isAuthenticated && (
                   <>
                     <Link
                         to="/login"
@@ -42,6 +44,7 @@ function Navigation() {
                     >
                       🔑 Login
                     </Link>
+
                     <Link
                         to="/registration"
                         className="px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg"
@@ -49,9 +52,12 @@ function Navigation() {
                       ✨ Registration
                     </Link>
                   </>
-              ) : (
+              )}
+
+              {isAuthenticated && (
                   <>
-                    {isAuthenticated && (
+                    {/* SOLO AGENTE IMMOBILIARE */}
+                    {ruolo === "agente immobiliare" && (
                         <Link
                             to="/insert"
                             className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200 hover:shadow-md"
@@ -60,14 +66,12 @@ function Navigation() {
                         </Link>
                     )}
 
-                    {isAuthenticated && (
-                        <Link
-                            to="/Chats"
-                            className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-200 hover:shadow-md"
-                        >
-                          💬 Chat
-                        </Link>
-                    )}
+                    <Link
+                        to="/Chats"
+                        className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-200 hover:shadow-md"
+                    >
+                      💬 Chat
+                    </Link>
 
                     {(ruolo === "Amministratore" || ruolo === "nuovoAmministratore") && (
                         <Link
@@ -81,20 +85,21 @@ function Navigation() {
               )}
             </nav>
 
-            {/* Logo/Titolo al centro */}
-            <div className="absolute left-1/2 transform -translate-x-1/2">
+            {/* CENTRO - LOGO */}
+            <div className="flex justify-center">
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                 DietiEstates
               </h1>
             </div>
 
-            {/* User info e logout - destra */}
-            <div className="flex items-center gap-3">
+            {/* DESTRA - USER */}
+            <div className="flex items-center gap-3 justify-end">
               {isAuthenticated && (
                   <>
                 <span className="text-gray-700 font-medium">
                   👋 {username}
                 </span>
+
                     <button
                         onClick={handleLogout}
                         className="px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg"
@@ -104,30 +109,36 @@ function Navigation() {
                   </>
               )}
             </div>
+
           </div>
         </div>
       </header>
-  );
+  )
 }
 
+// ======================
+// APP ROUTES
+// ======================
 function App() {
   return (
       <AuthProvider>
         <BrowserRouter>
           <Navigation />
+
           <Routes>
-            <Route path="/" element={<HomePage />}/>
-            <Route path="/Chat" element={<Chat />}/>
-            <Route path="/paginaAmministratore" element={<AdministratorPage/>} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="/insert" element={<EstatesMask />} />
             <Route path="/immobile/:id" element={<ModalDetail />} />
-            <Route path="/login" element={<Login />}/>
-            <Route path="/registration" element={<Registration />}/>
-            <Route path="/insert" element={<EstatesMask />}/>
+            <Route path="/Chat" element={<Chat />} />
             <Route path="/Chats" element={<Chats />} />
+            <Route path="/paginaAmministratore" element={<AdministratorPage />} />
           </Routes>
+
         </BrowserRouter>
       </AuthProvider>
   )
 }
 
-export default App;
+export default App

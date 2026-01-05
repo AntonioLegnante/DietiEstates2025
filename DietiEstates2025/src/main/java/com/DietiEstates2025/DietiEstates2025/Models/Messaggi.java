@@ -17,19 +17,16 @@ public class Messaggi {
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
-    public Messaggi(Chat chat,  String messageContent) {
+    // NUOVO CAMPO: chi ha inviato il messaggio
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private Utente sender;
+
+    public Messaggi(Chat chat, String messageContent, Utente sender) {
         this.chat = chat;
         this.messageContent = messageContent;
+        this.sender = sender;
     }
-
-  /*  @Override
-    public String toString() {
-        return "Messaggi{" +
-                "messageId=" + messageId +
-                ", messageContent='" + messageContent + '\'' +
-                ", chat=" + chat +
-                '}';
-    }*/
 
     public Messaggi() {
 
@@ -57,5 +54,13 @@ public class Messaggi {
 
     public void setChat(Chat chat) {
         this.chat = chat;
+    }
+
+    public Utente getSender() {
+        return sender;
+    }
+
+    public void setSender(Utente sender) {
+        this.sender = sender;
     }
 }

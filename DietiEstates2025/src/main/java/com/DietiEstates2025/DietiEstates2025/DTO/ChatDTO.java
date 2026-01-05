@@ -14,19 +14,14 @@ import java.util.stream.Collectors;
 public class ChatDTO {
 
     private Integer chatId;
-
     private List<MessaggiDTO> messaggi = new ArrayList<>();
-
     private Integer senderId;
-
     private String usernameSender;
-
     private Integer receiverId;
-
     private String usernameReceiver;
-
     private Integer immobileId;
 
+    // Costruttore normale (per quando il cliente apre la chat)
     public ChatDTO(Chat chat) {
         this.chatId = chat.getChatId();
         this.messaggi = chat.getMessaggi().stream().map(MessaggiDTO::new).collect(Collectors.toList());
@@ -35,6 +30,26 @@ public class ChatDTO {
         this.senderId = chat.getUtente().getId();
         this.receiverId = chat.getVendorId().getId();
         this.immobileId = chat.getImmobileId().getId();
+    }
+
+    // Costruttore che determina chi è il sender in base all'utente loggato
+    public ChatDTO(Chat chat, String currentUsername) {
+        this.chatId = chat.getChatId();
+        this.messaggi = chat.getMessaggi().stream().map(MessaggiDTO::new).collect(Collectors.toList());
+        this.immobileId = chat.getImmobileId().getId();
+
+        // Se l'utente corrente è il vendor, inverti sender e receiver
+        if (chat.getVendorId().getUsername().equals(currentUsername)) {
+            this.senderId = chat.getVendorId().getId();
+            this.usernameSender = chat.getVendorId().getUsername();
+            this.receiverId = chat.getUtente().getId();
+            this.usernameReceiver = chat.getUtente().getUsername();
+        } else {
+            this.senderId = chat.getUtente().getId();
+            this.usernameSender = chat.getUtente().getUsername();
+            this.receiverId = chat.getVendorId().getId();
+            this.usernameReceiver = chat.getVendorId().getUsername();
+        }
     }
 
     public Integer getChatId() {

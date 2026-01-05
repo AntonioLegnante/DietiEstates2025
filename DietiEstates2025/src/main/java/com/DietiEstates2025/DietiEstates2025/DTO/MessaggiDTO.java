@@ -1,20 +1,23 @@
 package com.DietiEstates2025.DietiEstates2025.DTO;
 
-import com.DietiEstates2025.DietiEstates2025.Models.Chat;
 import com.DietiEstates2025.DietiEstates2025.Models.Messaggi;
-import jakarta.persistence.*;
-
 import java.util.Objects;
 
 public class MessaggiDTO {
 
     private String messageContent;
-
     private Integer senderId;
 
     public MessaggiDTO(Messaggi msg) {
         this.messageContent = msg.getMessageContent();
-        this.senderId = msg.getChat().getUtente().getId();
+        // Ora prende il sender corretto dal messaggio
+        this.senderId = msg.getSender() != null ? msg.getSender().getId() : null;
+    }
+
+    // Costruttore aggiuntivo per creare messaggi con senderId specifico
+    public MessaggiDTO(String messageContent, Integer senderId) {
+        this.messageContent = messageContent;
+        this.senderId = senderId;
     }
 
     public String getMessageContent() {

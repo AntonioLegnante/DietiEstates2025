@@ -1,6 +1,5 @@
 package com.DietiEstates2025.DietiEstates2025.Services;
 
-
 import com.DietiEstates2025.DietiEstates2025.Models.Chat;
 import com.DietiEstates2025.DietiEstates2025.Models.Immobile;
 import com.DietiEstates2025.DietiEstates2025.Models.Messaggi;
@@ -22,7 +21,7 @@ public class ChatService {
     private ChatRepository chatRepository;
 
     @Autowired
-    private UtenteRepository  utenteRepository;
+    private UtenteRepository utenteRepository;
 
     @Autowired
     private ImmobileRepository immobileRepository;
@@ -33,7 +32,7 @@ public class ChatService {
         Optional<Utente> venditore = utenteRepository.findByUsername(vendorId);
         Optional<Immobile> casaVendita = immobileRepository.findById(immobile);
 
-        if (user.isPresent() && venditore.isPresent() &&  casaVendita.isPresent()) {
+        if (user.isPresent() && venditore.isPresent() && casaVendita.isPresent()) {
 
             Chat chat = chatEsistente(user.get(), venditore.get(), casaVendita.get());
 
@@ -50,7 +49,6 @@ public class ChatService {
         else{
             throw new IllegalArgumentException("Errore nella creazione della chat");
         }
-
     }
 
     public List<Chat> retrieveChatUser(String username){
@@ -76,17 +74,19 @@ public class ChatService {
         System.out.println("GGG");
         Optional<Chat> userChat = chatRepository.findChat(utente, vendorId, immobile);
         return userChat.orElse(null);
-
     }
 
-    public void updateMessages(Integer chatId, String messaggio) {
+    public Messaggi updateMessages(Integer chatId, String messaggio, String username) {
         Optional<Chat> chat = chatRepository.findById(chatId);
-        if (chat.isPresent()) {
-            Messaggi msg = new Messaggi(chat.get(), messaggio);
+        Optional<Utente> sender = utenteRepository.findByUsername(username);
+
+        if (chat.isPresent() && sender.isPresent()) {
+            Messaggi msg = new Messaggi(chat.get(), messaggio, sender.get());
             chat.get().aggiungiMessaggi(msg);
             chatRepository.save(chat.get());
             System.out.println(chat.get());
+            return msg;
         }
+        return null;
     }
-
 }

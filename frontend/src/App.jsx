@@ -53,7 +53,7 @@ function Navigation() {
 
                 {isAuthenticated && (
                     <>
-                      {ruolo === "AgenteImmobiliare" && (
+                      {ruolo === "agente immobiliare" && (
                           <Link to="/insert" className="nav-btn-green">
                             ➕ Aggiungi immobile
                           </Link>
@@ -109,7 +109,7 @@ function Navigation() {
 
                 {isAuthenticated && (
                     <>
-                      {ruolo === "AgenteImmobiliare" && (
+                      {ruolo === "agente immobiliare" && (
                           <Link to="/insert" onClick={() => setMenuOpen(false)}>
                             ➕ Aggiungi immobile
                           </Link>

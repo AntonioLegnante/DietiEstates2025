@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { useState } from 'react'
 import { HomePage } from "./components/HomePage.jsx"
 import { Login } from "./components/Login.jsx"
 import { Registration } from "./components/Registration.jsx"
@@ -15,6 +16,7 @@ import './index.css'
 // ======================
 function Navigation() {
   const { isAuthenticated, username, ruolo } = useAuth()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const handleLogout = () => {
     localStorage.removeItem("token")
@@ -24,86 +26,64 @@ function Navigation() {
   return (
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          {/* GRID A 3 COLONNE */}
+
+          {/* GRID DESKTOP */}
           <div className="grid grid-cols-3 items-center">
 
-            {/* SINISTRA - NAV */}
-            <nav className="flex gap-3 items-center justify-start">
-              <Link
-                  to="/"
-                  className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 hover:shadow-md"
+            {/* SINISTRA */}
+            <div className="flex items-center gap-3">
+              {/* HAMBURGER MOBILE */}
+              <button
+                  className="md:hidden text-2xl"
+                  onClick={() => setMenuOpen(!menuOpen)}
               >
-                🏠 Homepage
-              </Link>
+                ☰
+              </button>
 
-              {!isAuthenticated && (
-                  <>
-                    <Link
-                        to="/login"
-                        className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 hover:shadow-md"
-                    >
-                      🔑 Login
-                    </Link>
+              {/* NAV DESKTOP */}
+              <nav className="hidden md:flex gap-3 items-center">
+                <Link to="/" className="nav-btn">🏠 Homepage</Link>
 
-                    <Link
-                        to="/registration"
-                        className="px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
-                      ✨ Registration
-                    </Link>
-                  </>
-              )}
+                {!isAuthenticated && (
+                    <>
+                      <Link to="/login" className="nav-btn">🔑 Login</Link>
+                      <Link to="/registration" className="nav-btn-primary">✨ Registration</Link>
+                    </>
+                )}
 
-              {isAuthenticated && (
-                  <>
-                    {/* SOLO AGENTE IMMOBILIARE */}
-                    {ruolo === "agente immobiliare" && (
-                        <Link
-                            to="/insert"
-                            className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200 hover:shadow-md"
-                        >
-                          ➕ Aggiungi immobile
-                        </Link>
-                    )}
+                {isAuthenticated && (
+                    <>
+                      {ruolo === "AgenteImmobiliare" && (
+                          <Link to="/insert" className="nav-btn-green">
+                            ➕ Aggiungi immobile
+                          </Link>
+                      )}
 
-                    <Link
-                        to="/Chats"
-                        className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-all duration-200 hover:shadow-md"
-                    >
-                      💬 Chat
-                    </Link>
+                      <Link to="/Chats" className="nav-btn-purple">💬 Chat</Link>
 
-                    {(ruolo === "Amministratore" || ruolo === "nuovoAmministratore") && (
-                        <Link
-                            to="/paginaAmministratore"
-                            className="px-5 py-2.5 rounded-lg font-semibold text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-all duration-200 hover:shadow-md"
-                        >
-                          👤 Gestione Admin
-                        </Link>
-                    )}
-                  </>
-              )}
-            </nav>
+                      {(ruolo === "Amministratore" || ruolo === "nuovoAmministratore") && (
+                          <Link to="/paginaAmministratore" className="nav-btn-orange">
+                            👤 Gestione Admin
+                          </Link>
+                      )}
+                    </>
+                )}
+              </nav>
+            </div>
 
-            {/* CENTRO - LOGO */}
+            {/* CENTRO */}
             <div className="flex justify-center">
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                 DietiEstates
               </h1>
             </div>
 
-            {/* DESTRA - USER */}
-            <div className="flex items-center gap-3 justify-end">
+            {/* DESTRA */}
+            <div className="hidden md:flex items-center gap-3 justify-end">
               {isAuthenticated && (
                   <>
-                <span className="text-gray-700 font-medium">
-                  👋 {username}
-                </span>
-
-                    <button
-                        onClick={handleLogout}
-                        className="px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
+                    <span className="text-gray-700 font-medium">👋 {username}</span>
+                    <button onClick={handleLogout} className="logout-btn">
                       🚪 Esci
                     </button>
                   </>
@@ -112,12 +92,54 @@ function Navigation() {
 
           </div>
         </div>
+
+        {/* MENU MOBILE */}
+        {menuOpen && (
+            <div className="md:hidden bg-white border-t shadow-lg">
+              <div className="flex flex-col p-4 gap-3">
+
+                <Link to="/" onClick={() => setMenuOpen(false)}>🏠 Homepage</Link>
+
+                {!isAuthenticated && (
+                    <>
+                      <Link to="/login" onClick={() => setMenuOpen(false)}>🔑 Login</Link>
+                      <Link to="/registration" onClick={() => setMenuOpen(false)}>✨ Registration</Link>
+                    </>
+                )}
+
+                {isAuthenticated && (
+                    <>
+                      {ruolo === "AgenteImmobiliare" && (
+                          <Link to="/insert" onClick={() => setMenuOpen(false)}>
+                            ➕ Aggiungi immobile
+                          </Link>
+                      )}
+
+                      <Link to="/Chats" onClick={() => setMenuOpen(false)}>💬 Chat</Link>
+
+                      {(ruolo === "Amministratore" || ruolo === "nuovoAmministratore") && (
+                          <Link to="/paginaAmministratore" onClick={() => setMenuOpen(false)}>
+                            👤 Gestione Admin
+                          </Link>
+                      )}
+
+                      <button
+                          onClick={handleLogout}
+                          className="text-left text-red-600 font-semibold"
+                      >
+                        🚪 Esci
+                      </button>
+                    </>
+                )}
+              </div>
+            </div>
+        )}
       </header>
   )
 }
 
 // ======================
-// APP ROUTES
+// APP
 // ======================
 function App() {
   return (

@@ -125,7 +125,7 @@ export function Chat(){
                 <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
                     <div className="text-6xl mb-4">❌</div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Errore</h2>
-                    <p className="text-gray-600 mb-6">Impossibile caricare la chat. Riprova più tardi.</p>
+                    <p className="text-gray-600 mb-6">Impossibile caricare la chat. Bisogna essere registrati.</p>
                     <button
                         onClick={() => navigate(-1)}
                         className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all"

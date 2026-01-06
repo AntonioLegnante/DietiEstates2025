@@ -153,17 +153,17 @@ export function CardEstates({ immobile, utenteLoggato }) {
                 )}
 
                 <div className="grid grid-cols-2 gap-x-6 gap-y-3 mb-4">
-                  {immobile.locali && (
+                  {immobile.numeroStanze && (
                       <div className="flex items-center gap-2 text-sm text-gray-700">
                         <Home size={16} className="text-gray-500" />
-                        <span>{immobile.locali} locali</span>
+                        <span>{immobile.numeroStanze} locali</span>
                       </div>
                   )}
 
-                  {immobile.superficie && (
+                  {immobile.dimensione && (
                       <div className="flex items-center gap-2 text-sm text-gray-700">
                         <Maximize size={16} className="text-gray-500" />
-                        <span>{immobile.superficie} m²</span>
+                        <span>{immobile.dimensione} m²</span>
                       </div>
                   )}
 
@@ -332,22 +332,22 @@ export function CardEstates({ immobile, utenteLoggato }) {
                     <div className="mb-6">
                       <h3 className="text-lg font-semibold text-gray-800 mb-3">Caratteristiche</h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {immobile.locali && (
+                        {immobile.numeroStanze && (
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                               <Home size={20} className="text-blue-600" />
                               <div>
                                 <div className="text-sm text-gray-500">Locali</div>
-                                <div className="font-semibold text-gray-900">{immobile.locali}</div>
+                                <div className="font-semibold text-gray-900">{immobile.numeroStanze}</div>
                               </div>
                             </div>
                         )}
 
-                        {immobile.superficie && (
+                        {immobile.dimensione && (
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                               <Maximize size={20} className="text-blue-600" />
                               <div>
                                 <div className="text-sm text-gray-500">Superficie</div>
-                                <div className="font-semibold text-gray-900">{immobile.superficie} m²</div>
+                                <div className="font-semibold text-gray-900">{immobile.dimensione} m²</div>
                               </div>
                             </div>
                         )}

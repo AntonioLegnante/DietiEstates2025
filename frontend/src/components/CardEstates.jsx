@@ -1,5 +1,5 @@
-import { MapPin, Home, ChevronLeft, ChevronRight, Maximize, MessageCircle, Calendar, Bath, ParkingCircle, Trees, Armchair, Warehouse, Snowflake, Zap, X } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { MapPin, Home, ChevronLeft, ChevronRight, Maximize, MessageCircle, Bath, ParkingCircle, Trees, Armchair, Warehouse, Snowflake, Zap, X, GraduationCap } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
 import { StaticMapViewWithPOI } from './MapView.jsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +7,8 @@ export function CardEstates({ immobile, utenteLoggato }) {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [showFullImage, setShowFullImage] = useState(false);
+  const [poiData, setPoiData] = useState(null);
   const cardRef = useRef(null);
 
   const allImages = [
@@ -82,6 +84,10 @@ export function CardEstates({ immobile, utenteLoggato }) {
   const handleCardClick = () => {
     setShowModal(true);
   };
+
+  const handlePoiData = useCallback((data) => {
+    setPoiData(data);
+  }, []);
 
   return (
       <>
@@ -188,6 +194,26 @@ export function CardEstates({ immobile, utenteLoggato }) {
                       </div>
                     </div>
                 )}
+
+                {poiData && (poiData.parks > 0 || poiData.schools > 0) && (
+                    <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="text-xs text-green-700 uppercase tracking-wide mb-2 font-semibold">Nei dintorni</div>
+                      <div className="flex flex-col gap-1">
+                        {poiData.parks > 0 && (
+                            <div className="flex items-center gap-2 text-sm text-green-800">
+                              <Trees size={14} className="text-green-600" />
+                              <span>Ci sono {poiData.parks} {poiData.parks === 1 ? 'parco' : 'parchi'}</span>
+                            </div>
+                        )}
+                        {poiData.schools > 0 && (
+                            <div className="flex items-center gap-2 text-sm text-green-800">
+                              <GraduationCap size={14} className="text-green-600" />
+                              <span>Ci sono {poiData.schools} {poiData.schools === 1 ? 'scuola' : 'scuole'}</span>
+                            </div>
+                        )}
+                      </div>
+                    </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between pt-4 border-t border-gray-200">
@@ -201,13 +227,13 @@ export function CardEstates({ immobile, utenteLoggato }) {
             {(immobile.coordinate || immobile.citta || immobile.indirizzo) && (
                 <div className="w-full lg:w-[30%] lg:max-w-[30%] border-t lg:border-t-0 lg:border-l border-gray-200 flex-shrink-0 lg:h-80">
                   <div className="w-full h-64 lg:h-full bg-gray-100 overflow-hidden">
-                    <StaticMapViewWithPOI address={fullAddress} center={true} />
+                    <StaticMapViewWithPOI address={fullAddress} center={true} onPoiData={handlePoiData} />
                   </div>
                 </div>
             )}
           </div>
 
-          <div className="flex gap-3 p-4 border-t border-gray-200 bg-gray-50">
+          <div className="p-4 border-t border-gray-200 bg-gray-50">
             <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -219,29 +245,21 @@ export function CardEstates({ immobile, utenteLoggato }) {
                     }
                   });
                 }}
-                className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-md font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-blue-600 text-white px-4 py-3 rounded-md font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
               <MessageCircle size={18} />
               MESSAGGIO
-            </button>
-
-            <button
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-white border-2 border-blue-600 text-blue-600 px-4 py-3 rounded-md font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
-            >
-              <Calendar size={18} />
-              VISITA
             </button>
           </div>
         </div>
 
         {showModal && (
             <div
-                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto pt-8"
                 onClick={() => setShowModal(false)}
             >
               <div
-                  className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden my-8"
+                  className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden my-8 relative"
                   onClick={(e) => e.stopPropagation()}
               >
                 <div className="relative">
@@ -256,7 +274,8 @@ export function CardEstates({ immobile, utenteLoggato }) {
                     <img
                         src={allImages[currentImageIndex]}
                         alt={immobile.titolo}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover cursor-pointer"
+                        onClick={() => setShowFullImage(true)}
                         onError={(e) => {
                           e.target.src = "https://via.placeholder.com/800x600?text=Immagine+non+disponibile";
                         }}
@@ -266,19 +285,19 @@ export function CardEstates({ immobile, utenteLoggato }) {
                         <>
                           <button
                               onClick={goPrev}
-                              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition"
+                              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition z-10"
                           >
                             <ChevronLeft size={24} className="text-gray-800" />
                           </button>
 
                           <button
                               onClick={goNext}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition"
+                              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition z-10"
                           >
                             <ChevronRight size={24} className="text-gray-800" />
                           </button>
 
-                          <div className="absolute bottom-4 right-4 bg-black/70 text-white text-sm px-3 py-1.5 rounded-full">
+                          <div className="absolute bottom-4 right-4 bg-black/70 text-white text-sm px-3 py-1.5 rounded-full pointer-events-none">
                             {currentImageIndex + 1} / {allImages.length}
                           </div>
                         </>
@@ -365,11 +384,33 @@ export function CardEstates({ immobile, utenteLoggato }) {
                         </div>
                     )}
 
+                    {poiData && (poiData.parks > 0 || poiData.schools > 0) && (
+                        <div className="mb-6">
+                          <h3 className="text-lg font-semibold text-gray-800 mb-3">Servizi nei dintorni</h3>
+                          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div className="flex flex-col gap-2">
+                              {poiData.parks > 0 && (
+                                  <div className="flex items-center gap-3 text-green-800">
+                                    <Trees size={18} className="text-green-600" />
+                                    <span className="text-base">Ci sono {poiData.parks} {poiData.parks === 1 ? 'parco' : 'parchi'} nelle vicinanze</span>
+                                  </div>
+                              )}
+                              {poiData.schools > 0 && (
+                                  <div className="flex items-center gap-3 text-green-800">
+                                    <GraduationCap size={18} className="text-green-600" />
+                                    <span className="text-base">Ci sono {poiData.schools} {poiData.schools === 1 ? 'scuola' : 'scuole'} nelle vicinanze</span>
+                                  </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                    )}
+
                     {(immobile.coordinate || immobile.citta || immobile.indirizzo) && (
                         <div className="mb-6">
                           <h3 className="text-lg font-semibold text-gray-800 mb-3">Posizione</h3>
                           <div className="w-full h-96 rounded-lg overflow-hidden border border-gray-200">
-                            <StaticMapViewWithPOI address={fullAddress} center={true} />
+                            <StaticMapViewWithPOI address={fullAddress} center={true} onPoiData={handlePoiData} />
                           </div>
                         </div>
                     )}
@@ -381,7 +422,7 @@ export function CardEstates({ immobile, utenteLoggato }) {
                   </div>
                 </div>
 
-                <div className="flex gap-3 p-6 border-t border-gray-200 bg-gray-50">
+                <div className="p-6 border-t border-gray-200 bg-gray-50">
                   <button
                       onClick={() => {
                         setShowModal(false);
@@ -393,18 +434,65 @@ export function CardEstates({ immobile, utenteLoggato }) {
                           }
                         });
                       }}
-                      className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                      className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                   >
                     <MessageCircle size={20} />
                     MESSAGGIO
                   </button>
-
-                  <button className="flex-1 bg-white border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
-                    <Calendar size={20} />
-                    VISITA
-                  </button>
                 </div>
               </div>
+            </div>
+        )}
+
+        {showFullImage && (
+            <div
+                className="fixed inset-0 z-[60] bg-black flex items-center justify-center"
+                onClick={() => setShowFullImage(false)}
+            >
+              <button
+                  onClick={() => setShowFullImage(false)}
+                  className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition"
+              >
+                <X size={24} className="text-gray-800" />
+              </button>
+
+              <img
+                  src={allImages[currentImageIndex]}
+                  alt={immobile.titolo}
+                  className="max-w-full max-h-full object-contain"
+                  onClick={(e) => e.stopPropagation()}
+                  onError={(e) => {
+                    e.target.src = "https://via.placeholder.com/1920x1080?text=Immagine+non+disponibile";
+                  }}
+              />
+
+              {allImages.length > 1 && (
+                  <>
+                    <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goPrev(e);
+                        }}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-4 rounded-full shadow-lg transition"
+                    >
+                      <ChevronLeft size={32} className="text-gray-800" />
+                    </button>
+
+                    <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goNext(e);
+                        }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-4 rounded-full shadow-lg transition"
+                    >
+                      <ChevronRight size={32} className="text-gray-800" />
+                    </button>
+
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/70 text-white text-lg px-4 py-2 rounded-full">
+                      {currentImageIndex + 1} / {allImages.length}
+                    </div>
+                  </>
+              )}
             </div>
         )}
       </>

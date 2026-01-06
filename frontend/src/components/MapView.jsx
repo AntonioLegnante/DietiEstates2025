@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-// Sostituisci con la tua chiave API di Geoapify
 const GEOAPIFY_API_KEY = "adc2508ae55d4cde87008f39f29ccbe7";
-
-// Categorie supportate dall'API Geoapify
 const POI_CATEGORIES = "leisure.park,education.school";
-// Raggio di ricerca intorno al punto centrale (in metri)
 const SEARCH_RADIUS_M = 1500;
 
-export function StaticMapViewWithPOI({ address, center = false }) {
+export function StaticMapViewWithPOI({ address, center = false, onPoiData }) {
     const [coords, setCoords] = useState(null);
     const [poiMarkers, setPoiMarkers] = useState('');
     const [loading, setLoading] = useState(true);
@@ -28,7 +24,6 @@ export function StaticMapViewWithPOI({ address, center = false }) {
 
             let lat, lon;
 
-            // --- 1. Geocoding: Indirizzo -> Coordinate ---
             const encodedAddress = encodeURIComponent(address);
             const geocodeUrl = `https://api.geoapify.com/v1/geocode/search?text=${encodedAddress}&apiKey=${GEOAPIFY_API_KEY}`;
 
@@ -53,10 +48,8 @@ export function StaticMapViewWithPOI({ address, center = false }) {
                 return;
             }
 
-            // --- 2. Places API: Coordinate -> POI (Punti di Interesse) ---
             const roundedLon = lon.toFixed(6);
             const roundedLat = lat.toFixed(6);
-
             const filterValue = `circle:${roundedLon},${roundedLat},${SEARCH_RADIUS_M}`;
 
             const params = new URLSearchParams({
@@ -80,6 +73,12 @@ export function StaticMapViewWithPOI({ address, center = false }) {
                 const poiData = await poiResponse.json();
 
                 if (poiData.features && poiData.features.length > 0) {
+                    // Conta i POI per categoria
+                    const poiCounts = {
+                        parks: 0,
+                        schools: 0
+                    };
+
                     const poiMarkerString = poiData.features
                         .map(feature => {
                             const [poiLon, poiLat] = feature.geometry.coordinates;
@@ -89,9 +88,11 @@ export function StaticMapViewWithPOI({ address, center = false }) {
                             if (categories.includes('leisure.park')) {
                                 color = 'green';
                                 icon = 'tree';
+                                poiCounts.parks++;
                             } else if (categories.includes('education.school')) {
                                 color = 'blue';
                                 icon = 'graduation-cap';
+                                poiCounts.schools++;
                             } else {
                                 color = 'orange';
                                 icon = 'map-marker';
@@ -103,18 +104,30 @@ export function StaticMapViewWithPOI({ address, center = false }) {
                         .join('|');
 
                     setPoiMarkers(poiMarkerString);
+
+                    // Invia i dati POI al componente padre
+                    if (onPoiData) {
+                        onPoiData(poiCounts);
+                    }
+                } else {
+                    // Nessun POI trovato
+                    if (onPoiData) {
+                        onPoiData({ parks: 0, schools: 0 });
+                    }
                 }
             } catch (err) {
                 console.error("Errore Places API:", err);
+                if (onPoiData) {
+                    onPoiData({ parks: 0, schools: 0 });
+                }
             } finally {
                 setLoading(false);
             }
         };
 
         geocodeAndFetchPoi();
-    }, [address]);
+    }, [address, onPoiData]);
 
-    // --- Rendering ---
     if (loading) {
         return (
             <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500 text-sm">
@@ -141,8 +154,6 @@ export function StaticMapViewWithPOI({ address, center = false }) {
 
     const mainMarker = `lonlat:${coords.lon},${coords.lat};type:awesome;color:red;icon:home`;
     const allMarkers = [mainMarker, poiMarkers].filter(Boolean).join('|');
-
-    // Usa zoom 14 o 15 per centrare meglio sulla casa quando center=true
     const zoomLevel = center ? 15 : 13;
 
     const mapUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-carto&center=lonlat:${coords.lon},${coords.lat}&zoom=${zoomLevel}&marker=${allMarkers}&width=600&height=400&apiKey=${GEOAPIFY_API_KEY}`;

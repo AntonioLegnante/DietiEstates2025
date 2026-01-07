@@ -4,6 +4,7 @@ import com.DietiEstates2025.DietiEstates2025.DTO.ChatDTO;
 import com.DietiEstates2025.DietiEstates2025.DTO.OffertaDTO;
 import com.DietiEstates2025.DietiEstates2025.Models.Chat;
 import com.DietiEstates2025.DietiEstates2025.Models.Offerta;
+import com.DietiEstates2025.DietiEstates2025.Repositories.ChatRepository;
 import com.DietiEstates2025.DietiEstates2025.Services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ public class ChatController {
 
     @Autowired
     private ChatService chatService;
+    @Autowired
+    private ChatRepository chatRepository;
 
     @GetMapping("/retrieveChatsUser")
     public ResponseEntity<List<ChatDTO>> retrieveChats(@RequestParam("user") String username) {
@@ -50,6 +53,31 @@ public class ChatController {
         Chat chat = chatService.findOrCreateChat(currentUsername, otherUser, immobile);
         ChatDTO chatDTO = new ChatDTO(chat, currentUsername);
 
+        return ResponseEntity.ok(chatDTO);
+    }
+
+    @GetMapping("/getChat")
+    public ResponseEntity<ChatDTO> getChat(
+            @RequestParam Integer chatId,
+            Authentication authentication) {
+
+        String currentUsername = authentication.getName();
+
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new IllegalArgumentException("Chat non trovata"));
+
+        // Verifica che l'utente sia autorizzato a vedere questa chat
+        boolean isAuthorized = chat.getUtente().getUsername().equals(currentUsername) ||
+                chat.getVendorId().getUsername().equals(currentUsername);
+
+        if (!isAuthorized) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Forza il caricamento delle offerte
+        chat.getOfferte().size();
+
+        ChatDTO chatDTO = new ChatDTO(chat, currentUsername);
         return ResponseEntity.ok(chatDTO);
     }
 

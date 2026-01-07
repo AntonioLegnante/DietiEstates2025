@@ -55,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/immobili",
                                 "/chat/openChat",
+                                "/chat/getChat",
                                 "/chat/addMessage",
                                 "/chat/retrieveChatsUser",
                                 "/chat/retrieveChatsAgent",

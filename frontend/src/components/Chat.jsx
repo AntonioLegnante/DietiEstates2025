@@ -54,9 +54,17 @@ export function Chat() {
                 if (initialChat) {
                     console.log("Uso chat già caricata dal modal");
                     chatData = initialChat;
+                } else if (existingChatId) {
+                    // ✅ Se abbiamo il chatId, carica direttamente quella chat specifica
+                    console.log("Carico chat esistente tramite chatId:", existingChatId);
+                    const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/getChat`, {
+                        params: { chatId: existingChatId },
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    chatData = chatResponse.data;
                 } else {
                     // Altrimenti apri/recupera la chat
-                    console.log("Carico chat dal backend");
+                    console.log("Carico chat dal backend tramite openChat");
                     const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/openChat`, {
                         params: {
                             otherUser: agenteImmobiliare,

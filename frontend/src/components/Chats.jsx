@@ -20,23 +20,37 @@ export function Chats() {
         console.log("Utente loggato:", userData.utenteLoggato);
         console.log("Ruolo:", userData.ruolo);
 
-        // Determina chi è l'altro utente in base al ruolo
         const isAgent = userData.ruolo?.toLowerCase().includes('agente');
 
-        // L'agente immobiliare è SEMPRE il vendor
-        const agenteImmobiliare = chat.vendorNome;
+        // ✅ FIX: Determina correttamente l'altro utente
+        let otherUsername;
+        if (isAgent) {
+            // Se sono l'agente, l'altro è l'utente
+            otherUsername = chat.utenteNome;
+        } else {
+            // Se sono l'utente, l'altro è il vendor
+            otherUsername = chat.vendorNome;
+        }
 
         console.log("Sono agente?", isAgent);
-        console.log("Agente immobiliare (vendor):", agenteImmobiliare);
+        console.log("Altro utente:", otherUsername);
+        console.log("Agente immobiliare:", chat.vendorNome);
         console.log("Utente cliente:", chat.utenteNome);
-        console.log("Chi sono io:", userData.utenteLoggato);
+
+        // ✅ IMPORTANTE: Non passare mai userData.utenteLoggato come otherUser!
+        if (otherUsername === userData.utenteLoggato) {
+            console.error("❌ ERRORE: Tentativo di aprire chat con se stesso!");
+            console.error("Chat data:", chat);
+            alert("Errore: impossibile aprire la chat. I dati sono inconsistenti.");
+            return;
+        }
 
         navigate("/Chat", {
             state: {
                 immobile: chat.immobileId,
-                agenteImmobiliare: agenteImmobiliare,  // Sempre il vendor
-                utenteLoggato: userData.utenteLoggato,  // Chi è loggato
-                chatId: chat.chatId  // ✅ Passa anche il chatId per evitare problemi
+                agenteImmobiliare: chat.vendorNome,  // Sempre il vendor
+                utenteLoggato: userData.utenteLoggato,
+                chatId: chat.chatId
             }
         });
     }

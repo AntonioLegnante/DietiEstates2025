@@ -2,6 +2,7 @@ import { MapPin, Home, ChevronLeft, ChevronRight, Maximize, MessageCircle, Bath,
 import { useState, useRef, useCallback } from 'react';
 import { StaticMapViewWithPOI } from './MapView.jsx';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 export function CardEstates({ immobile, utenteLoggato }) {
   const navigate = useNavigate();
@@ -239,7 +240,7 @@ export function CardEstates({ immobile, utenteLoggato }) {
                   e.stopPropagation();
                   navigate('/Chat', {
                     state: {
-                      immobile: immobile.id,
+                      immobile: immobile.id, // l'intero oggetto
                       agenteImmobiliare: immobile.agenteImmobiliare,
                       utenteLoggato
                     }
@@ -424,17 +425,38 @@ export function CardEstates({ immobile, utenteLoggato }) {
 
                 <div className="p-6 border-t border-gray-200 bg-gray-50">
                   <button
-                      onClick={() => {
-                        setShowModal(false);
-                        navigate('/Chat', {
-                          state: {
-                            immobile: immobile.id,
-                            agenteImmobiliare: immobile.agenteImmobiliare,
-                            utenteLoggato
-                          }
-                        });
+                      onClick={async (e) => {
+                        e.stopPropagation();
+
+                        try {
+                          const token = localStorage.getItem("token"); // prendi il JWT salvato
+                          const immobileId = immobile.id;             // solo l'ID, non l'oggetto intero
+
+                          const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/openChat`, {
+                            params: {
+                              otherUser: immobile.agenteImmobiliare,  // corrisponde al @RequestParam "otherUser"
+                              immobile: immobileId                   // corrisponde al @RequestParam "immobile"
+                            },
+                            headers: { Authorization: `Bearer ${token}` }
+                          });
+
+                          const chatData = chatResponse.data;
+
+                          // naviga alla pagina chat con lo stato necessario
+                          navigate('/Chat', {
+                            state: {
+                              chat: chatData,
+                              utenteLoggato,
+                              immobileId
+                            }
+                          });
+
+                        } catch (err) {
+                          console.error("Errore caricamento chat:", err);
+                          alert("Errore durante l'apertura della chat. Controlla la console.");
+                        }
                       }}
-                      className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                      className="w-full bg-blue-600 text-white px-4 py-3 rounded-md font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                   >
                     <MessageCircle size={20} />
                     MESSAGGIO

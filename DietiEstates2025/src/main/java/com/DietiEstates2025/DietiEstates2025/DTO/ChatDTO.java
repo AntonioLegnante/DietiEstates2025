@@ -1,57 +1,42 @@
 package com.DietiEstates2025.DietiEstates2025.DTO;
 
 import com.DietiEstates2025.DietiEstates2025.Models.Chat;
-import com.DietiEstates2025.DietiEstates2025.Models.Immobile;
-import com.DietiEstates2025.DietiEstates2025.Models.Messaggi;
-import com.DietiEstates2025.DietiEstates2025.Models.Utente;
-import jakarta.persistence.*;
+import com.DietiEstates2025.DietiEstates2025.Models.StatoNegoziazione;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ChatDTO {
 
     private Integer chatId;
-    private List<MessaggiDTO> messaggi = new ArrayList<>();
-    private Integer senderId;
-    private String usernameSender;
-    private Integer receiverId;
-    private String usernameReceiver;
+    private Integer utenteId;
+    private String utenteNome;
+    private Integer vendorId;
+    private String vendorNome;
     private Integer immobileId;
+    private String immobileTitolo;
+    private StatoNegoziazione statoNegoziazione;
+    private List<OffertaDTO> offerte;
 
-    // Costruttore normale (per quando il cliente apre la chat)
     public ChatDTO(Chat chat) {
         this.chatId = chat.getChatId();
-        this.messaggi = chat.getMessaggi().stream().map(MessaggiDTO::new).collect(Collectors.toList());
-        this.usernameSender = chat.getUtente().getUsername();
-        this.usernameReceiver = chat.getVendorId().getUsername();
-        this.senderId = chat.getUtente().getId();
-        this.receiverId = chat.getVendorId().getId();
+        this.utenteId = chat.getUtente().getId();
+        this.utenteNome = chat.getUtente().getUsername();
+        this.vendorId = chat.getVendorId().getId();
+        this.vendorNome = chat.getVendorId().getUsername();
         this.immobileId = chat.getImmobileId().getId();
+        this.immobileTitolo = chat.getImmobileId().getTitolo();
+        this.statoNegoziazione = chat.getStatoNegoziazione();
+        this.offerte = chat.getOfferte().stream()
+                .map(OffertaDTO::new)
+                .collect(Collectors.toList());
     }
 
-    // Costruttore che determina chi è il sender in base all'utente loggato
     public ChatDTO(Chat chat, String currentUsername) {
-        this.chatId = chat.getChatId();
-        this.messaggi = chat.getMessaggi().stream().map(MessaggiDTO::new).collect(Collectors.toList());
-        this.immobileId = chat.getImmobileId().getId();
-
-        // Se l'utente corrente è il vendor, inverti sender e receiver
-        if (chat.getVendorId().getUsername().equals(currentUsername)) {
-            this.senderId = chat.getVendorId().getId();
-            this.usernameSender = chat.getVendorId().getUsername();
-            this.receiverId = chat.getUtente().getId();
-            this.usernameReceiver = chat.getUtente().getUsername();
-        } else {
-            this.senderId = chat.getUtente().getId();
-            this.usernameSender = chat.getUtente().getUsername();
-            this.receiverId = chat.getVendorId().getId();
-            this.usernameReceiver = chat.getVendorId().getUsername();
-        }
+        this(chat);
     }
 
+    // Getters e Setters
     public Integer getChatId() {
         return chatId;
     }
@@ -60,28 +45,36 @@ public class ChatDTO {
         this.chatId = chatId;
     }
 
-    public List<MessaggiDTO> getMessaggi() {
-        return messaggi;
+    public Integer getUtenteId() {
+        return utenteId;
     }
 
-    public void setMessaggi(List<MessaggiDTO> messaggi) {
-        this.messaggi = messaggi;
+    public void setUtenteId(Integer utenteId) {
+        this.utenteId = utenteId;
     }
 
-    public Integer getSenderId() {
-        return senderId;
+    public String getUtenteNome() {
+        return utenteNome;
     }
 
-    public void setSenderId(Integer senderId) {
-        this.senderId = senderId;
+    public void setUtenteNome(String utenteNome) {
+        this.utenteNome = utenteNome;
     }
 
-    public Integer getReceiverId() {
-        return receiverId;
+    public Integer getVendorId() {
+        return vendorId;
     }
 
-    public void setReceiverId(Integer receiverId) {
-        this.receiverId = receiverId;
+    public void setVendorId(Integer vendorId) {
+        this.vendorId = vendorId;
+    }
+
+    public String getVendorNome() {
+        return vendorNome;
+    }
+
+    public void setVendorNome(String vendorNome) {
+        this.vendorNome = vendorNome;
     }
 
     public Integer getImmobileId() {
@@ -92,31 +85,27 @@ public class ChatDTO {
         this.immobileId = immobileId;
     }
 
-    public String getUsernameSender() {
-        return usernameSender;
+    public String getImmobileTitolo() {
+        return immobileTitolo;
     }
 
-    public void setUsernameSender(String usernameSender) {
-        this.usernameSender = usernameSender;
+    public void setImmobileTitolo(String immobileTitolo) {
+        this.immobileTitolo = immobileTitolo;
     }
 
-    public String getUsernameReceiver() {
-        return usernameReceiver;
+    public StatoNegoziazione getStatoNegoziazione() {
+        return statoNegoziazione;
     }
 
-    public void setUsernameReceiver(String usernameReceiver) {
-        this.usernameReceiver = usernameReceiver;
+    public void setStatoNegoziazione(StatoNegoziazione statoNegoziazione) {
+        this.statoNegoziazione = statoNegoziazione;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ChatDTO chatDTO = (ChatDTO) o;
-        return Objects.equals(chatId, chatDTO.chatId) && Objects.equals(messaggi, chatDTO.messaggi) && Objects.equals(senderId, chatDTO.senderId) && Objects.equals(usernameSender, chatDTO.usernameSender) && Objects.equals(receiverId, chatDTO.receiverId) && Objects.equals(usernameReceiver, chatDTO.usernameReceiver) && Objects.equals(immobileId, chatDTO.immobileId);
+    public List<OffertaDTO> getOfferte() {
+        return offerte;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(chatId, messaggi, senderId, usernameSender, receiverId, usernameReceiver, immobileId);
+    public void setOfferte(List<OffertaDTO> offerte) {
+        this.offerte = offerte;
     }
 }

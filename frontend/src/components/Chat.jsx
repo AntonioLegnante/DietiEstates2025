@@ -1,131 +1,343 @@
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { Send, ArrowLeft, Home } from 'lucide-react';
+import { ArrowLeft, Home, DollarSign, CheckCircle, XCircle, TrendingUp, Clock } from 'lucide-react';
 
-export function Chat(){
-    const [messaggi, setMessaggi] = useState([]);
-    const [messaggio, setMessaggio] = useState("");
-    const [chatId, setChatId] = useState("");
+export function Chat() {
+    const [chat, setChat] = useState(null);
+    const [offerte, setOfferte] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [sendingMessage, setSendingMessage] = useState(false);
-    const [senderId, setSenderId] = useState("");
-    const [receiverId, setReceiverId] = useState("");
-    const [otherUserName, setOtherUserName] = useState(""); // Nome dell'altro utente
+    const [showOfferModal, setShowOfferModal] = useState(false);
+    const [showCounterOfferModal, setShowCounterOfferModal] = useState(false);
+    const [selectedOfferta, setSelectedOfferta] = useState(null);
+    const [offerAmount, setOfferAmount] = useState("");
+    const [offerNote, setOfferNote] = useState("");
+    const [isAgent, setIsAgent] = useState(false);
+    const [senderId, setSenderId] = useState(null);
+
     const token = localStorage.getItem("token");
-    const messagesEndRef = useRef(null);
+    const offersEndRef = useRef(null);
     const navigate = useNavigate();
-
     const location = useLocation();
-    const { immobile, agenteImmobiliare, utenteLoggato } = location.state || {};
 
-    console.log(`Immobile: ${immobile}, Agente: ${agenteImmobiliare}, Utente: ${utenteLoggato}`);
+    // ✅ GESTISCE ENTRAMBI I CASI: immobile (ID) e immobileId
+    const { immobile, immobileId, agenteImmobiliare, utenteLoggato, chat: initialChat, chatId: existingChatId } = location.state || {};
+
+    // Determina l'ID dell'immobile (può arrivare come "immobile" o "immobileId")
+    const propertyId = immobileId || immobile;
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        offersEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
     useEffect(() => {
         scrollToBottom();
-    }, [messaggi]);
+    }, [offerte]);
 
-    function addMessage(e) {
-        e.preventDefault();
-        if (!messaggio.trim()) return;
+    // Carica chat e offerte iniziali
+    useEffect(() => {
+        const loadChat = async () => {
+            setLoading(true);
+            setError(null);
 
-        setSendingMessage(true);
+            try {
+                console.log("=== DEBUG CARICAMENTO CHAT ===");
+                console.log("Utente loggato:", utenteLoggato);
+                console.log("Agente immobiliare:", agenteImmobiliare);
+                console.log("Immobile ID:", propertyId);
+                console.log("Chat iniziale:", initialChat);
+                console.log("Chat ID esistente:", existingChatId);
 
-        axios.get(`${import.meta.env.VITE_API_URL}/chat/addMessage`, {
-            params: {
-                chatId: chatId,
-                messaggio: messaggio
-            },
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then((response) => {
-                // Il backend ora restituisce il messaggio con il senderId corretto
-                setMessaggi(prev => [...prev, {
-                    messageContent: response.data.messageContent,
-                    senderId: response.data.senderId
-                }]);
-                setMessaggio("");
-            })
-            .catch(err => {
-                console.error("Errore nell'invio del messaggio:", err);
-                alert("Errore nell'invio del messaggio");
-            })
-            .finally(() => {
-                setSendingMessage(false);
-            });
-    }
-
-    useEffect(()=>{
-        setLoading(true);
-        setError(null);
-
-        axios.get(`${import.meta.env.VITE_API_URL}/chat/openChat`,  {
-            params: {
-                user: utenteLoggato,
-                vendor: agenteImmobiliare,
-                immobile: immobile,
-            },
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(response => {
-                console.log('=== DEBUG CHAT ===');
-                console.log('Utente loggato:', utenteLoggato);
-                console.log('Agente:', agenteImmobiliare);
-                console.log('My sender ID:', response.data.senderId);
-                console.log('Receiver ID:', response.data.receiverId);
-                console.log('Username Receiver:', response.data.usernameReceiver);
-                console.log('Messaggi ricevuti:', response.data.messaggi);
-
-                response.data.messaggi?.forEach((msg, idx) => {
-                    console.log(`Msg ${idx}: "${msg.messageContent}" - senderId: ${msg.senderId}`);
-                });
-
-                setChatId(response.data.chatId);
-                setSenderId(response.data.senderId);
-                setReceiverId(response.data.receiverId);
-                setOtherUserName(response.data.usernameReceiver); // Salva il nome dell'altro utente
-                setMessaggi(response.data.messaggi || []);
-            })
-            .catch(err => {
-                console.error("Failed to load chat:", err);
-                if (err.response) {
-                    console.error('Status', err.response.status, 'data', err.response.data);
+                // Se abbiamo già la chat passata dal modal, usala
+                let chatData;
+                if (initialChat) {
+                    console.log("Uso chat già caricata dal modal");
+                    chatData = initialChat;
+                } else {
+                    // Altrimenti apri/recupera la chat
+                    console.log("Carico chat dal backend");
+                    const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/openChat`, {
+                        params: {
+                            otherUser: agenteImmobiliare,
+                            immobile: propertyId
+                        },
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    chatData = chatResponse.data;
                 }
+
+                console.log("Chat ricevuta:", chatData);
+                setChat(chatData);
+
+                // ✅ LOGICA CORRETTA: L'agente è chi ha username === agenteImmobiliare
+                // NON basarsi sui campi vendorNome/utenteNome che potrebbero essere sbagliati
+                const amIAgent = utenteLoggato === agenteImmobiliare;
+                console.log("=== DETERMINAZIONE RUOLO ===");
+                console.log("Sono l'agente? (utenteLoggato === agenteImmobiliare):", amIAgent);
+                console.log("Confronto:", utenteLoggato, "===", agenteImmobiliare);
+
+                // ✅ Determina il mio ID cercandolo nella chat
+                // Se sono l'agente, il mio ID è vendorId, altrimenti è utenteId
+                let myUserId;
+                if (amIAgent) {
+                    myUserId = chatData.vendorId;
+                    console.log("Sono l'agente, uso vendorId:", myUserId);
+                } else {
+                    myUserId = chatData.utenteId;
+                    console.log("Sono l'utente, uso utenteId:", myUserId);
+                }
+
+                console.log("Il mio user ID finale:", myUserId);
+                console.log("VendorId dal backend:", chatData.vendorId, "UtenteId dal backend:", chatData.utenteId);
+                setSenderId(myUserId);
+                setIsAgent(amIAgent);
+
+                // Carica le offerte se la chat esiste
+                if (chatData.chatId) {
+                    const offerteResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/getOffers`, {
+                        params: { chatId: chatData.chatId },
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    console.log("Offerte ricevute:", offerteResponse.data);
+                    setOfferte(offerteResponse.data || []);
+                } else {
+                    console.warn("ChatId non disponibile");
+                    setOfferte([]);
+                }
+
+            } catch (err) {
+                console.error("Errore caricamento chat:", err);
+                console.error("Dettagli errore:", err.response?.data);
                 setError(err);
-            })
-            .finally(() => setLoading(false));
-    }, [immobile, agenteImmobiliare, utenteLoggato]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        // ✅ Verifica che tutti i parametri necessari siano presenti
+        if (utenteLoggato && agenteImmobiliare && propertyId) {
+            loadChat();
+        } else {
+            console.error("Parametri mancanti:", {
+                utenteLoggato,
+                agenteImmobiliare,
+                propertyId,
+                immobile,
+                immobileId
+            });
+            setError(new Error("Parametri mancanti per aprire la chat"));
+            setLoading(false);
+        }
+    }, [propertyId, agenteImmobiliare, utenteLoggato, token, initialChat, existingChatId]);
+
+    // Invia nuova offerta
+    const handleMakeOffer = async (e) => {
+        e.preventDefault();
+
+        console.log("=== DEBUG INVIO OFFERTA ===");
+        console.log("Chat ID:", chat?.chatId);
+        console.log("Importo:", offerAmount);
+        console.log("Note:", offerNote);
+
+        if (!chat?.chatId) {
+            alert("Errore: Chat non trovata");
+            console.error("Chat non disponibile:", chat);
+            return;
+        }
+
+        if (!offerAmount || parseFloat(offerAmount) <= 0) {
+            alert("Inserisci un importo valido");
+            return;
+        }
+
+        try {
+            console.log("Invio richiesta POST a:", `${import.meta.env.VITE_API_URL}/chat/makeOffer`);
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/chat/makeOffer`,
+                null,
+                {
+                    params: {
+                        chatId: chat.chatId,
+                        importo: parseFloat(offerAmount),
+                        note: offerNote || null
+                    },
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            console.log("Offerta inviata con successo:", response.data);
+
+            setOfferte([...offerte, response.data]);
+            setShowOfferModal(false);
+            setOfferAmount("");
+            setOfferNote("");
+
+            alert("Offerta inviata con successo!");
+        } catch (err) {
+            console.error("Errore invio offerta:", err);
+            console.error("Risposta errore:", err.response?.data);
+            alert(`Errore nell'invio dell'offerta: ${err.response?.data?.message || err.message}`);
+        }
+    };
+
+    // Accetta offerta
+    const handleAcceptOffer = async (offertaId) => {
+        if (!window.confirm("Sei sicuro di voler accettare questa offerta?")) return;
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/chat/acceptOffer`,
+                null,
+                {
+                    params: { offertaId: offertaId },
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            // Aggiorna lo stato locale
+            setOfferte(offerte.map(o =>
+                o.offertaId === offertaId ? { ...o, stato: "ACCETTATA" } : o
+            ));
+            setChat({ ...chat, statoNegoziazione: "CHIUSA_ACCETTATA" });
+
+            alert("Offerta accettata con successo!");
+        } catch (err) {
+            console.error("Errore accettazione offerta:", err);
+            alert("Errore nell'accettazione dell'offerta");
+        }
+    };
+
+    // Rifiuta offerta
+    const handleRejectOffer = async (offertaId) => {
+        const motivo = window.prompt("Motivo del rifiuto (opzionale):");
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/chat/rejectOffer`,
+                null,
+                {
+                    params: {
+                        offertaId: offertaId,
+                        motivo: motivo || null
+                    },
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            setOfferte(offerte.map(o =>
+                o.offertaId === offertaId
+                    ? { ...o, stato: "RIFIUTATA", motivoRifiuto: motivo }
+                    : o
+            ));
+
+            alert("Offerta rifiutata");
+        } catch (err) {
+            console.error("Errore rifiuto offerta:", err);
+            alert("Errore nel rifiuto dell'offerta");
+        }
+    };
+
+    // Controfferta
+    const handleCounterOffer = async (e) => {
+        e.preventDefault();
+
+        if (!offerAmount || parseFloat(offerAmount) <= 0) {
+            alert("Inserisci un importo valido");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/chat/counterOffer`,
+                null,
+                {
+                    params: {
+                        offertaId: selectedOfferta.offertaId,
+                        nuovoImporto: parseFloat(offerAmount),
+                        note: offerNote || null
+                    },
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            // Aggiorna l'offerta originale e aggiungi la controfferta
+            setOfferte(offerte.map(o =>
+                o.offertaId === selectedOfferta.offertaId
+                    ? { ...o, stato: "CONTROFFERTA" }
+                    : o
+            ).concat(response.data));
+
+            setShowCounterOfferModal(false);
+            setSelectedOfferta(null);
+            setOfferAmount("");
+            setOfferNote("");
+
+            alert("Controfferta inviata!");
+        } catch (err) {
+            console.error("Errore invio controfferta:", err);
+            alert("Errore nell'invio della controfferta");
+        }
+    };
+
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('it-IT', {
+            style: 'currency',
+            currency: 'EUR',
+            minimumFractionDigits: 0
+        }).format(amount);
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleString('it-IT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    const getStatoBadge = (stato) => {
+        const badges = {
+            IN_ATTESA: { color: 'bg-yellow-100 text-yellow-800', icon: Clock, text: 'In Attesa' },
+            ACCETTATA: { color: 'bg-green-100 text-green-800', icon: CheckCircle, text: 'Accettata' },
+            RIFIUTATA: { color: 'bg-red-100 text-red-800', icon: XCircle, text: 'Rifiutata' },
+            CONTROFFERTA: { color: 'bg-blue-100 text-blue-800', icon: TrendingUp, text: 'Controfferta' }
+        };
+
+        const badge = badges[stato] || badges.IN_ATTESA;
+        const Icon = badge.icon;
+
+        return (
+            <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${badge.color}`}>
+                <Icon size={14} />
+                {badge.text}
+            </span>
+        );
+    };
 
     if (loading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                 <div className="text-center">
                     <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-4"></div>
-                    <p className="text-xl font-semibold text-gray-700">Caricamento conversazione...</p>
+                    <p className="text-xl font-semibold text-gray-700">Caricamento negoziazione...</p>
                 </div>
             </div>
         );
     }
 
     if (error) {
-        console.log('Chat error - immobile:', immobile);
-        console.log('Chat error - vendor:', agenteImmobiliare);
-        console.log('Chat error - utente:', utenteLoggato);
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
                 <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
                     <div className="text-6xl mb-4">❌</div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Errore</h2>
-                    <p className="text-gray-600 mb-6">Impossibile caricare la chat. Bisogna essere registrati.</p>
+                    <p className="text-gray-600 mb-4">Impossibile caricare la negoziazione.</p>
+                    <p className="text-sm text-gray-500 mb-6">{error.message}</p>
                     <button
                         onClick={() => navigate(-1)}
                         className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all"
@@ -137,9 +349,12 @@ export function Chat(){
         );
     }
 
+    const isClosed = chat?.statoNegoziazione?.includes('CHIUSA');
+    const otherUserName = isAgent ? chat?.utenteNome : chat?.vendorNome;
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col">
-            {/* Header Chat */}
+            {/* Header */}
             <div className="bg-white shadow-md">
                 <div className="max-w-4xl mx-auto px-4 py-4">
                     <div className="flex items-center gap-4">
@@ -159,104 +374,266 @@ export function Chat(){
                                 <h2 className="font-bold text-gray-900 truncate">{otherUserName}</h2>
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Home size={14} className="flex-shrink-0" />
-                                    <span className="truncate">Immobile: {immobile}</span>
+                                    <span className="truncate">{chat?.immobileTitolo || `Immobile #${propertyId}`}</span>
+                                </div>
+                                {/* Debug info */}
+                                <div className="text-xs text-gray-400 mt-1">
+                                    {isAgent ? '🏢 Vista Agente' : '👤 Vista Cliente'} |
+                                    Mio ID: {senderId} |
+                                    Chat vendorId: {chat?.vendorId}, utenteId: {chat?.utenteId}
                                 </div>
                             </div>
+                            {isClosed && (
+                                <div className="flex-shrink-0">
+                                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+                                        Negoziazione Chiusa
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Area Messaggi */}
+            {/* Area Offerte */}
             <div className="flex-1 overflow-y-auto px-4 py-6">
                 <div className="max-w-4xl mx-auto space-y-4">
-                    {messaggi && messaggi.length > 0 ? (
-                        messaggi.map((msg, id) => {
-                            // Usa il senderId dal backend
-                            const isMyMessage = msg.senderId === senderId;
+                    {offerte && offerte.length > 0 ? (
+                        offerte.map((offerta, idx) => {
+                            const isMyOffer = offerta.offerenteId === senderId;
+                            const canRespond = isAgent && !isMyOffer && offerta.stato === 'IN_ATTESA';
 
-                            console.log(`Rendering msg ${id}:`, {
-                                content: msg.messageContent,
-                                msgSenderId: msg.senderId,
+                            console.log(`Offerta ${idx + 1}:`, {
+                                offertaId: offerta.offertaId,
+                                offerenteId: offerta.offerenteId,
                                 mySenderId: senderId,
-                                isMyMessage: isMyMessage
+                                isMyOffer,
+                                isAgent,
+                                stato: offerta.stato,
+                                canRespond
                             });
-
-                            // Determina il nome da mostrare
-                            let displayName = '';
-                            if (isMyMessage) {
-                                displayName = 'Tu';
-                            } else {
-                                displayName = otherUserName || 'Altro utente';
-                            }
 
                             return (
                                 <div
-                                    key={id}
-                                    className={`flex ${isMyMessage ? 'justify-end' : 'justify-start'}`}
+                                    key={idx}
+                                    className={`bg-white rounded-2xl shadow-md p-6 border-2 ${
+                                        offerta.stato === 'ACCETTATA' ? 'border-green-300' :
+                                            offerta.stato === 'RIFIUTATA' ? 'border-red-300' :
+                                                offerta.stato === 'CONTROFFERTA' ? 'border-blue-300' :
+                                                    'border-gray-200'
+                                    }`}
                                 >
-                                    <div className={`flex flex-col gap-1 ${isMyMessage ? 'items-end' : 'items-start'}`}>
-                                        {/* Nome mittente */}
-                                        <span className={`text-xs font-semibold px-2 ${
-                                            isMyMessage ? 'text-blue-600' : 'text-gray-600'
-                                        }`}>
-                                            {displayName}
-                                        </span>
-
-                                        {/* Bolla messaggio */}
-                                        <div
-                                            className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-md ${
-                                                isMyMessage
-                                                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-br-none'
-                                                    : 'bg-white text-gray-900 rounded-bl-none border border-gray-200'
-                                            }`}
-                                        >
-                                            <p className="break-words">{msg.messageContent}</p>
+                                    {/* Header Offerta */}
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-gradient-to-r from-green-600 to-green-700 rounded-full flex items-center justify-center">
+                                                <DollarSign size={20} className="text-white" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-gray-600">
+                                                    {isMyOffer ? 'La tua offerta' : `Offerta da ${offerta.offerenteNome}`}
+                                                </p>
+                                                <p className="text-xs text-gray-500">{formatDate(offerta.dataCreazione)}</p>
+                                            </div>
                                         </div>
+                                        {getStatoBadge(offerta.stato)}
                                     </div>
+
+                                    {/* Importo */}
+                                    <div className="mb-4">
+                                        <p className="text-3xl font-bold text-gray-900">{formatCurrency(offerta.importoOfferto)}</p>
+                                    </div>
+
+                                    {/* Note */}
+                                    {offerta.note && (
+                                        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                                            <p className="text-sm text-gray-700">{offerta.note}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Motivo Rifiuto */}
+                                    {offerta.stato === 'RIFIUTATA' && offerta.motivoRifiuto && (
+                                        <div className="mb-4 p-3 bg-red-50 rounded-lg border border-red-200">
+                                            <p className="text-sm text-red-800">
+                                                <strong>Motivo rifiuto:</strong> {offerta.motivoRifiuto}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Azioni (solo per agente su offerte in attesa non proprie) */}
+                                    {canRespond && !isClosed && (
+                                        <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => handleAcceptOffer(offerta.offertaId)}
+                                                    className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <CheckCircle size={18} />
+                                                    Accetta
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedOfferta(offerta);
+                                                        setShowCounterOfferModal(true);
+                                                    }}
+                                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <TrendingUp size={18} />
+                                                    Controfferta
+                                                </button>
+                                                <button
+                                                    onClick={() => handleRejectOffer(offerta.offertaId)}
+                                                    className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <XCircle size={18} />
+                                                    Rifiuta
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })
                     ) : (
-                        <div className="text-center py-12">
-                            <div className="text-6xl mb-4">💬</div>
-                            <p className="text-gray-500 text-lg">Nessun messaggio ancora</p>
-                            <p className="text-gray-400 text-sm mt-2">Inizia la conversazione!</p>
+                        <div className="text-center py-12 bg-white rounded-2xl shadow-md">
+                            <div className="text-6xl mb-4">💰</div>
+                            <p className="text-gray-500 text-lg">Nessuna offerta ancora</p>
+                            <p className="text-gray-400 text-sm mt-2">Inizia la negoziazione!</p>
                         </div>
                     )}
-                    <div ref={messagesEndRef} />
+                    <div ref={offersEndRef} />
                 </div>
             </div>
 
-            {/* Input Messaggio */}
-            <div className="bg-white border-t border-gray-200 sticky bottom-0">
-                <div className="max-w-4xl mx-auto px-4 py-4">
-                    <form onSubmit={addMessage} className="flex gap-3">
-                        <input
-                            type="text"
-                            value={messaggio}
-                            onChange={e => setMessaggio(e.target.value)}
-                            placeholder="Scrivi un messaggio..."
-                            disabled={sendingMessage}
-                            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:bg-gray-100"
-                        />
+            {/* Bottone Nuova Offerta (solo se utente e non chiusa) */}
+            {!isAgent && !isClosed && (
+                <div className="bg-white border-t border-gray-200 sticky bottom-0">
+                    <div className="max-w-4xl mx-auto px-4 py-4">
                         <button
-                            type="submit"
-                            disabled={sendingMessage || !messaggio.trim()}
-                            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-md hover:shadow-lg"
+                            onClick={() => setShowOfferModal(true)}
+                            disabled={!chat || !chat.chatId}
+                            className="w-full px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {sendingMessage ? (
-                                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                            ) : (
-                                <>
-                                    <Send size={20} />
-                                    <span className="hidden sm:inline">Invia</span>
-                                </>
-                            )}
+                            <DollarSign size={20} />
+                            Fai un'offerta
                         </button>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            )}
+
+            {/* Modal Nuova Offerta */}
+            {showOfferModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setShowOfferModal(false)}>
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4">Fai un'offerta</h3>
+                        <div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Importo offerto (€)
+                                </label>
+                                <input
+                                    type="number"
+                                    value={offerAmount}
+                                    onChange={(e) => setOfferAmount(e.target.value)}
+                                    placeholder="Es. 250000"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Note (opzionale)
+                                </label>
+                                <textarea
+                                    value={offerNote}
+                                    onChange={(e) => setOfferNote(e.target.value)}
+                                    placeholder="Aggiungi dettagli o condizioni..."
+                                    rows={3}
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                                />
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => {
+                                        setShowOfferModal(false);
+                                        setOfferAmount("");
+                                        setOfferNote("");
+                                    }}
+                                    className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors"
+                                >
+                                    Annulla
+                                </button>
+                                <button
+                                    onClick={handleMakeOffer}
+                                    className="flex-1 px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg font-semibold transition-all"
+                                >
+                                    Invia Offerta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Controfferta */}
+            {showCounterOfferModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setShowCounterOfferModal(false)}>
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Fai una controfferta</h3>
+                        <p className="text-sm text-gray-600 mb-4">
+                            Offerta originale: <strong>{formatCurrency(selectedOfferta?.importoOfferto)}</strong>
+                        </p>
+                        <div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Nuovo importo (€)
+                                </label>
+                                <input
+                                    type="number"
+                                    value={offerAmount}
+                                    onChange={(e) => setOfferAmount(e.target.value)}
+                                    placeholder="Es. 270000"
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Motivazione (opzionale)
+                                </label>
+                                <textarea
+                                    value={offerNote}
+                                    onChange={(e) => setOfferNote(e.target.value)}
+                                    placeholder="Spiega la tua controfferta..."
+                                    rows={3}
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                />
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => {
+                                        setShowCounterOfferModal(false);
+                                        setSelectedOfferta(null);
+                                        setOfferAmount("");
+                                        setOfferNote("");
+                                    }}
+                                    className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors"
+                                >
+                                    Annulla
+                                </button>
+                                <button
+                                    onClick={handleCounterOffer}
+                                    className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition-all"
+                                >
+                                    Invia Controfferta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -14,9 +14,14 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     Optional<List<Chat>> findByUtente_Id(Integer utente);
     Optional<List<Chat>> findByVendorId_Id(Integer vendorId);
 
-    @Query("SELECT c FROM Chat c WHERE c.utente = :utente AND c.vendorId = :vendorId AND c.immobileId = :immobileId")
+    @Query("SELECT c FROM Chat c WHERE " +
+            "((c.utente = :utente AND c.vendorId = :vendorId) OR " +
+            " (c.utente = :vendorId AND c.vendorId = :utente)) " +
+            "AND c.immobileId = :immobileId")
     Optional<Chat> findChat(@Param("utente") Utente utente,
                             @Param("vendorId") Utente vendorId,
                             @Param("immobileId") Immobile immobileId);
 
+    Optional<Chat> findByImmobileId_IdAndVendorId_Id(Integer immobileId, Integer vendorId);
+    Optional<Chat> findByImmobileId_IdAndUtente_Id(Integer immobileId, Integer utenteId);
 }

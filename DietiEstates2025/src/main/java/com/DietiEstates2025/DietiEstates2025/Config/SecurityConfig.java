@@ -5,7 +5,6 @@ import com.DietiEstates2025.DietiEstates2025.JWT.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,7 +32,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedOriginPatterns(List.of("*")); // mantiene tutti i domini possibili
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -52,7 +51,19 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/immobili/ricerca").permitAll()
                         .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/assets/**", "/vite.svg", "/manifest.json").permitAll()
-                        .requestMatchers("/api/immobili", "/chat/openChat", "/chat/addMessage", "/chat/retrieveChatsUser", "/chat/retrieveChatsAgent").authenticated()
+                        // ENDPOINT SPECIFICI AUTENTICATI
+                        .requestMatchers(
+                                "/api/immobili",
+                                "/chat/openChat",
+                                "/chat/addMessage",
+                                "/chat/retrieveChatsUser",
+                                "/chat/retrieveChatsAgent",
+                                "/chat/makeOffer",
+                                "/chat/acceptOffer",
+                                "/chat/rejectOffer",
+                                "/chat/counterOffer",
+                                "/chat/getOffers"
+                        ).authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -73,4 +84,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-

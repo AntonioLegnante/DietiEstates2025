@@ -21,10 +21,8 @@ export function Chat() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // ✅ GESTISCE ENTRAMBI I CASI: immobile (ID) e immobileId
     const { immobile, immobileId, agenteImmobiliare, utenteLoggato, chat: initialChat, chatId: existingChatId } = location.state || {};
 
-    // Determina l'ID dell'immobile (può arrivare come "immobile" o "immobileId")
     const propertyId = immobileId || immobile;
 
     const scrollToBottom = () => {
@@ -35,7 +33,51 @@ export function Chat() {
         scrollToBottom();
     }, [offerte]);
 
-    // Carica chat e offerte iniziali
+    // ✅ POLLING: Aggiorna offerte ogni 3 secondi (più frequente per mobile)
+    useEffect(() => {
+        if (!chat?.chatId || !token) return;
+
+        const pollInterval = setInterval(async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/chat/getOffers`, {
+                    params: { chatId: chat.chatId },
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const newOfferte = response.data || [];
+
+                // Confronta in modo più robusto
+                const oldIds = offerte.map(o => o.offertaId).sort().join(',');
+                const newIds = newOfferte.map(o => o.offertaId).sort().join(',');
+                const oldStates = offerte.map(o => `${o.offertaId}-${o.stato}`).sort().join(',');
+                const newStates = newOfferte.map(o => `${o.offertaId}-${o.stato}`).sort().join(',');
+
+                if (oldIds !== newIds || oldStates !== newStates) {
+                    console.log("🔄 Offerte aggiornate - Vecchie:", offerte.length, "Nuove:", newOfferte.length);
+                    setOfferte(newOfferte);
+
+                    // Ricarica anche i dati della chat per aggiornare lo stato
+                    if (chat.statoNegoziazione !== newOfferte[newOfferte.length - 1]?.stato) {
+                        const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/getChat`, {
+                            params: { chatId: chat.chatId },
+                            headers: { Authorization: `Bearer ${token}` }
+                        });
+                        setChat(chatResponse.data);
+                    }
+                }
+            } catch (err) {
+                console.error("Errore polling offerte:", err);
+            }
+        }, 3000); // Ogni 3 secondi (più reattivo)
+
+        console.log("✅ Polling avviato per chat", chat.chatId);
+
+        return () => {
+            console.log("🛑 Polling fermato");
+            clearInterval(pollInterval);
+        };
+    }, [chat?.chatId, token]); // ⚠️ Rimosso 'offerte' dalle dipendenze per evitare loop
+
     useEffect(() => {
         const loadChat = async () => {
             setLoading(true);
@@ -49,13 +91,11 @@ export function Chat() {
                 console.log("Chat iniziale:", initialChat);
                 console.log("Chat ID esistente:", existingChatId);
 
-                // Se abbiamo già la chat passata dal modal, usala
                 let chatData;
                 if (initialChat) {
                     console.log("Uso chat già caricata dal modal");
                     chatData = initialChat;
                 } else if (existingChatId) {
-                    // ✅ Se abbiamo il chatId, carica direttamente quella chat specifica
                     console.log("Carico chat esistente tramite chatId:", existingChatId);
                     const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/getChat`, {
                         params: { chatId: existingChatId },
@@ -63,7 +103,6 @@ export function Chat() {
                     });
                     chatData = chatResponse.data;
                 } else {
-                    // Altrimenti apri/recupera la chat
                     console.log("Carico chat dal backend tramite openChat");
                     const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/openChat`, {
                         params: {
@@ -78,15 +117,11 @@ export function Chat() {
                 console.log("Chat ricevuta:", chatData);
                 setChat(chatData);
 
-                // ✅ LOGICA CORRETTA: L'agente è chi ha username === agenteImmobiliare
-                // NON basarsi sui campi vendorNome/utenteNome che potrebbero essere sbagliati
                 const amIAgent = utenteLoggato === agenteImmobiliare;
                 console.log("=== DETERMINAZIONE RUOLO ===");
                 console.log("Sono l'agente? (utenteLoggato === agenteImmobiliare):", amIAgent);
                 console.log("Confronto:", utenteLoggato, "===", agenteImmobiliare);
 
-                // ✅ Determina il mio ID cercandolo nella chat
-                // Se sono l'agente, il mio ID è vendorId, altrimenti è utenteId
                 let myUserId;
                 if (amIAgent) {
                     myUserId = chatData.vendorId;
@@ -101,7 +136,6 @@ export function Chat() {
                 setSenderId(myUserId);
                 setIsAgent(amIAgent);
 
-                // Carica le offerte se la chat esiste
                 if (chatData.chatId) {
                     const offerteResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/getOffers`, {
                         params: { chatId: chatData.chatId },
@@ -124,7 +158,6 @@ export function Chat() {
             }
         };
 
-        // ✅ Verifica che tutti i parametri necessari siano presenti
         if (utenteLoggato && agenteImmobiliare && propertyId) {
             loadChat();
         } else {
@@ -140,7 +173,6 @@ export function Chat() {
         }
     }, [propertyId, agenteImmobiliare, utenteLoggato, token, initialChat, existingChatId]);
 
-    // Invia nuova offerta
     const handleMakeOffer = async (e) => {
         e.preventDefault();
 
@@ -191,7 +223,6 @@ export function Chat() {
         }
     };
 
-    // Accetta offerta
     const handleAcceptOffer = async (offertaId) => {
         if (!window.confirm("Sei sicuro di voler accettare questa offerta?")) return;
 
@@ -205,7 +236,6 @@ export function Chat() {
                 }
             );
 
-            // Aggiorna lo stato locale
             setOfferte(offerte.map(o =>
                 o.offertaId === offertaId ? { ...o, stato: "ACCETTATA" } : o
             ));
@@ -218,7 +248,6 @@ export function Chat() {
         }
     };
 
-    // Rifiuta offerta
     const handleRejectOffer = async (offertaId) => {
         const motivo = window.prompt("Motivo del rifiuto (opzionale):");
 
@@ -248,7 +277,6 @@ export function Chat() {
         }
     };
 
-    // Controfferta
     const handleCounterOffer = async (e) => {
         e.preventDefault();
 
@@ -271,7 +299,6 @@ export function Chat() {
                 }
             );
 
-            // Aggiorna l'offerta originale e aggiungi la controfferta
             setOfferte(offerte.map(o =>
                 o.offertaId === selectedOfferta.offertaId
                     ? { ...o, stato: "CONTROFFERTA" }
@@ -384,12 +411,6 @@ export function Chat() {
                                     <Home size={14} className="flex-shrink-0" />
                                     <span className="truncate">{chat?.immobileTitolo || `Immobile #${propertyId}`}</span>
                                 </div>
-                                {/* Debug info */}
-                                <div className="text-xs text-gray-400 mt-1">
-                                    {isAgent ? '🏢 Vista Agente' : '👤 Vista Cliente'} |
-                                    Mio ID: {senderId} |
-                                    Chat vendorId: {chat?.vendorId}, utenteId: {chat?.utenteId}
-                                </div>
                             </div>
                             {isClosed && (
                                 <div className="flex-shrink-0">
@@ -409,17 +430,7 @@ export function Chat() {
                     {offerte && offerte.length > 0 ? (
                         offerte.map((offerta, idx) => {
                             const isMyOffer = offerta.offerenteId === senderId;
-                            const canRespond = isAgent && !isMyOffer && offerta.stato === 'IN_ATTESA';
-
-                            console.log(`Offerta ${idx + 1}:`, {
-                                offertaId: offerta.offertaId,
-                                offerenteId: offerta.offerenteId,
-                                mySenderId: senderId,
-                                isMyOffer,
-                                isAgent,
-                                stato: offerta.stato,
-                                canRespond
-                            });
+                            const canRespond = !isMyOffer && offerta.stato === 'IN_ATTESA' && !isClosed;
 
                             return (
                                 <div
@@ -468,33 +479,39 @@ export function Chat() {
                                         </div>
                                     )}
 
-                                    {/* Azioni (solo per agente su offerte in attesa non proprie) */}
-                                    {canRespond && !isClosed && (
+                                    {/* Azioni - Responsive: colonna su mobile, riga su desktop */}
+                                    {canRespond && (
                                         <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
-                                            <div className="flex gap-2">
+                                            <div className="text-xs text-blue-600 mb-1">
+                                                💡 Puoi rispondere a questa {isAgent ? 'offerta' : 'controfferta'}
+                                            </div>
+                                            {/* Layout responsive: tutto a colonna su mobile per evitare overflow */}
+                                            <div className="flex flex-col gap-2 w-full">
                                                 <button
                                                     onClick={() => handleAcceptOffer(offerta.offertaId)}
-                                                    className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                                                    className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
                                                 >
-                                                    <CheckCircle size={18} />
-                                                    Accetta
+                                                    <CheckCircle size={18} className="flex-shrink-0" />
+                                                    <span>Accetta</span>
                                                 </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setSelectedOfferta(offerta);
-                                                        setShowCounterOfferModal(true);
-                                                    }}
-                                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-                                                >
-                                                    <TrendingUp size={18} />
-                                                    Controfferta
-                                                </button>
+                                                {isAgent && (
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedOfferta(offerta);
+                                                            setShowCounterOfferModal(true);
+                                                        }}
+                                                        className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                                                    >
+                                                        <TrendingUp size={18} className="flex-shrink-0" />
+                                                        <span>Controfferta</span>
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={() => handleRejectOffer(offerta.offertaId)}
-                                                    className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                                                    className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white px-4 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
                                                 >
-                                                    <XCircle size={18} />
-                                                    Rifiuta
+                                                    <XCircle size={18} className="flex-shrink-0" />
+                                                    <span>Rifiuta</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -513,7 +530,7 @@ export function Chat() {
                 </div>
             </div>
 
-            {/* Bottone Nuova Offerta (solo se utente e non chiusa) */}
+            {/* Bottone Nuova Offerta */}
             {!isAgent && !isClosed && (
                 <div className="bg-white border-t border-gray-200 sticky bottom-0">
                     <div className="max-w-4xl mx-auto px-4 py-4">

@@ -175,17 +175,26 @@ public class ChatService {
 
         Chat chat = offerta.getChat();
 
-        // ✅ FIX
-        if (!chat.getVendorId().getId().equals(utente.getId())) {
-            throw new IllegalArgumentException("Solo l'agente può accettare l'offerta");
+        // ✅ FIX: Può accettare solo chi NON ha fatto l'offerta
+        if (offerta.getOfferente().getId().equals(utente.getId())) {
+            throw new IllegalArgumentException("Non puoi accettare la tua stessa offerta");
+        }
+
+        // ✅ Verifica che l'utente sia parte della chat
+        boolean isPartOfChat = chat.getVendorId().getId().equals(utente.getId()) ||
+                chat.getUtente().getId().equals(utente.getId());
+
+        if (!isPartOfChat) {
+            throw new IllegalArgumentException("Non sei autorizzato a rispondere a questa offerta");
         }
 
         offerta.setStato(StatoOfferta.ACCETTATA);
         offerta.setDataRisposta(LocalDateTime.now());
 
-        // 🔥 rifiuta automaticamente le altre
+        // 🔥 rifiuta automaticamente le altre offerte
         for (Offerta o : chat.getOfferte()) {
-            if (!o.getOffertaId().equals(offerta.getOffertaId())) {
+            if (!o.getOffertaId().equals(offerta.getOffertaId()) &&
+                    o.getStato() == StatoOfferta.IN_ATTESA) {
                 o.setStato(StatoOfferta.RIFIUTATA);
             }
         }
@@ -194,7 +203,6 @@ public class ChatService {
 
         return offertaRepository.save(offerta);
     }
-
 
     @Transactional
     public Offerta rifiutaOfferta(Integer offertaId, String motivo, String username) {
@@ -206,9 +214,17 @@ public class ChatService {
 
         Chat chat = offerta.getChat();
 
-        // ✅ FIX
-        if (!chat.getVendorId().getId().equals(utente.getId())) {
-            throw new IllegalArgumentException("Solo l'agente può rifiutare l'offerta");
+        // ✅ FIX: Può rifiutare solo chi NON ha fatto l'offerta
+        if (offerta.getOfferente().getId().equals(utente.getId())) {
+            throw new IllegalArgumentException("Non puoi rifiutare la tua stessa offerta");
+        }
+
+        // ✅ Verifica che l'utente sia parte della chat
+        boolean isPartOfChat = chat.getVendorId().getId().equals(utente.getId()) ||
+                chat.getUtente().getId().equals(utente.getId());
+
+        if (!isPartOfChat) {
+            throw new IllegalArgumentException("Non sei autorizzato a rispondere a questa offerta");
         }
 
         offerta.setStato(StatoOfferta.RIFIUTATA);

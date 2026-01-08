@@ -281,4 +281,64 @@ public class ChatService {
 
         return offerte;
     }
+
+    @Transactional
+    public Offerta creaOffertaManuale(Integer chatId, Double importo, String note, String agentUsername) {
+        Optional<Chat> chatOpt = chatRepository.findById(chatId);
+        Optional<Utente> agenteOpt = utenteRepository.findByUsername(agentUsername);
+
+        if (chatOpt.isPresent() && agenteOpt.isPresent()) {
+            Chat chat = chatOpt.get();
+            Utente agente = agenteOpt.get();
+
+            // Verifica che sia l'agente della chat
+            if (!chat.getVendorId().getId().equals(agente.getId())) {
+                throw new IllegalArgumentException("Solo l'agente può registrare offerte esterne");
+            }
+
+            // L'offerta viene creata come se fosse dell'utente
+            Utente utente = chat.getUtente();
+
+            Offerta offerta = new Offerta(chat, utente, importo, note);
+            chat.aggiungiOfferta(offerta);
+            chatRepository.save(chat);
+
+            return offerta;
+        }
+        return null;
+    }
+
+    @Transactional
+    public Chat creaOffertaEsternaConNuovaChat(
+            String agentUsername,
+            String clienteUsername,
+            Integer immobileId,
+            Double importo,
+            String note) {
+
+        // Recupera utenti e immobile
+        Utente agente = utenteRepository.findByUsername(agentUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Agente non trovato"));
+
+        Utente cliente = utenteRepository.findByUsername(clienteUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente non trovato"));
+
+        Immobile immobile = immobileRepository.findById(immobileId)
+                .orElseThrow(() -> new IllegalArgumentException("Immobile non trovato"));
+
+        // Verifica che l'agente sia autorizzato
+        if (!isAgent(agente)) {
+            throw new IllegalArgumentException("Solo gli agenti possono registrare offerte esterne");
+        }
+
+        // Cerca o crea la chat
+        Chat chat = findOrCreateChat(agentUsername, clienteUsername, immobileId);
+
+        // Crea l'offerta come se fosse del cliente
+        Offerta offerta = new Offerta(chat, cliente, importo, note);
+        chat.aggiungiOfferta(offerta);
+        chatRepository.save(chat);
+
+        return chat;
+    }
 }

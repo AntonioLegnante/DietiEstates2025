@@ -10,28 +10,23 @@ export function Chat() {
     const [error, setError] = useState(null);
     const [showOfferModal, setShowOfferModal] = useState(false);
     const [showCounterOfferModal, setShowCounterOfferModal] = useState(false);
+    const [showManualOfferModal, setShowManualOfferModal] = useState(false);
     const [selectedOfferta, setSelectedOfferta] = useState(null);
     const [offerAmount, setOfferAmount] = useState("");
     const [offerNote, setOfferNote] = useState("");
+    const [manualOfferAmount, setManualOfferAmount] = useState("");
+    const [manualOfferNote, setManualOfferNote] = useState("");
+    const [manualOfferSource, setManualOfferSource] = useState("");
     const [isAgent, setIsAgent] = useState(false);
     const [senderId, setSenderId] = useState(null);
 
     const token = localStorage.getItem("token");
-    const offersEndRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
 
     const { immobile, immobileId, agenteImmobiliare, utenteLoggato, chat: initialChat, chatId: existingChatId } = location.state || {};
 
     const propertyId = immobileId || immobile;
-
-    const scrollToBottom = () => {
-        offersEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
-    useEffect(() => {
-        scrollToBottom();
-    }, [offerte]);
 
     // ✅ POLLING: Aggiorna offerte ogni 3 secondi (più frequente per mobile)
     useEffect(() => {
@@ -317,6 +312,49 @@ export function Chat() {
         }
     };
 
+    // ✅ NUOVO: Registra offerta manuale (solo agenti)
+    const handleManualOffer = async (e) => {
+        e.preventDefault();
+
+        if (!manualOfferAmount || parseFloat(manualOfferAmount) <= 0) {
+            alert("Inserisci un importo valido");
+            return;
+        }
+
+        if (!manualOfferSource || manualOfferSource.trim() === "") {
+            alert("Inserisci la fonte dell'offerta (es: telefono, email, visita)");
+            return;
+        }
+
+        try {
+            const noteCompleta = `[OFFERTA ESTERNA - ${manualOfferSource}] ${manualOfferNote || 'Nessuna nota aggiuntiva'}`;
+
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/chat/manualOffer`,
+                null,
+                {
+                    params: {
+                        chatId: chat.chatId,
+                        importo: parseFloat(manualOfferAmount),
+                        note: noteCompleta
+                    },
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            setOfferte([...offerte, response.data]);
+            setShowManualOfferModal(false);
+            setManualOfferAmount("");
+            setManualOfferNote("");
+            setManualOfferSource("");
+
+            alert("Offerta esterna registrata con successo!");
+        } catch (err) {
+            console.error("Errore registrazione offerta manuale:", err);
+            alert(`Errore: ${err.response?.data?.message || err.message}`);
+        }
+    };
+
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('it-IT', {
             style: 'currency',
@@ -526,7 +564,6 @@ export function Chat() {
                             <p className="text-gray-400 text-sm mt-2">Inizia la negoziazione!</p>
                         </div>
                     )}
-                    <div ref={offersEndRef} />
                 </div>
             </div>
 
@@ -541,6 +578,22 @@ export function Chat() {
                         >
                             <DollarSign size={20} />
                             Fai un'offerta
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Bottone Registra Offerta Esterna (solo agenti, sempre visibile) */}
+            {isAgent && (
+                <div className="bg-white border-t border-gray-200 sticky bottom-0">
+                    <div className="max-w-4xl mx-auto px-4 py-4">
+                        <button
+                            onClick={() => setShowManualOfferModal(true)}
+                            disabled={!chat || !chat.chatId}
+                            className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <DollarSign size={20} />
+                            📝 Registra offerta esterna
                         </button>
                     </div>
                 </div>
@@ -656,6 +709,93 @@ export function Chat() {
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal Registra Offerta Esterna (solo agenti) */}
+            {showManualOfferModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setShowManualOfferModal(false)}>
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">📝 Registra offerta esterna</h3>
+                        <p className="text-sm text-gray-600 mb-4">
+                            Inserisci i dettagli di un'offerta ricevuta al di fuori del sistema
+                        </p>
+                        <form onSubmit={handleManualOffer}>
+                            <div className="mb-4">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Importo offerto (€) *
+                                </label>
+                                <input
+                                    type="number"
+                                    value={manualOfferAmount}
+                                    onChange={(e) => setManualOfferAmount(e.target.value)}
+                                    placeholder="Es. 250000"
+                                    required
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Fonte dell'offerta *
+                                </label>
+                                <select
+                                    value={manualOfferSource}
+                                    onChange={(e) => setManualOfferSource(e.target.value)}
+                                    required
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                >
+                                    <option value="">Seleziona fonte...</option>
+                                    <option value="Telefono">📞 Telefono</option>
+                                    <option value="Email">✉️ Email</option>
+                                    <option value="Visita">🏠 Visita in loco</option>
+                                    <option value="Ufficio">🏢 Visita in ufficio</option>
+                                    <option value="WhatsApp">💬 WhatsApp</option>
+                                    <option value="Altro">📋 Altro</option>
+                                </select>
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    Note aggiuntive (opzionale)
+                                </label>
+                                <textarea
+                                    value={manualOfferNote}
+                                    onChange={(e) => setManualOfferNote(e.target.value)}
+                                    placeholder="Es: Cliente interessato, vuole risposta entro 3 giorni..."
+                                    rows={3}
+                                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                                />
+                            </div>
+
+                            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 mb-4">
+                                <p className="text-xs text-purple-800">
+                                    💡 <strong>Nota:</strong> Questa offerta verrà registrata come proveniente dall'utente associato a questa chat. L'utente la vedrà nel sistema.
+                                </p>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowManualOfferModal(false);
+                                        setManualOfferAmount("");
+                                        setManualOfferNote("");
+                                        setManualOfferSource("");
+                                    }}
+                                    className="flex-1 px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors"
+                                >
+                                    Annulla
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg font-semibold transition-all"
+                                >
+                                    Registra
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

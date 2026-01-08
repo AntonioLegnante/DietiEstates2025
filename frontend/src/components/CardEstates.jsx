@@ -1,4 +1,5 @@
-import { MapPin, Home, ChevronLeft, ChevronRight, Maximize, MessageCircle, Bath, ParkingCircle, Trees, Armchair, Warehouse, Snowflake, Zap, X, GraduationCap } from 'lucide-react';
+import { MapPin, Bus, Home, ChevronLeft, ChevronRight, Maximize, MessageCircle,
+  Bath, ParkingCircle, Trees, Armchair, Warehouse, Snowflake, Zap, X, GraduationCap } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
 import { StaticMapViewWithPOI } from './MapView.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -196,7 +197,7 @@ export function CardEstates({ immobile, utenteLoggato }) {
                     </div>
                 )}
 
-                {poiData && (poiData.parks > 0 || poiData.schools > 0) && (
+                {poiData && (poiData.parks > 0 || poiData.schools > 0 || poiData.transport > 0) && (
                     <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                       <div className="text-xs text-green-700 uppercase tracking-wide mb-2 font-semibold">Nei dintorni</div>
                       <div className="flex flex-col gap-1">
@@ -210,6 +211,12 @@ export function CardEstates({ immobile, utenteLoggato }) {
                             <div className="flex items-center gap-2 text-sm text-green-800">
                               <GraduationCap size={14} className="text-green-600" />
                               <span>Ci sono {poiData.schools} {poiData.schools === 1 ? 'scuola' : 'scuole'}</span>
+                            </div>
+                        )}
+                        {poiData.transport > 0 && (
+                            <div className="flex items-center gap-2 text-sm text-green-800">
+                              <Bus size={14} className="text-green-600" />
+                              <span>Ci sono {poiData.transport} fermate di mezzi pubblici</span>
                             </div>
                         )}
                       </div>
@@ -385,7 +392,7 @@ export function CardEstates({ immobile, utenteLoggato }) {
                         </div>
                     )}
 
-                    {poiData && (poiData.parks > 0 || poiData.schools > 0) && (
+                    {poiData && (poiData.parks > 0 || poiData.schools > 0 || poiData.transport > 0) && (
                         <div className="mb-6">
                           <h3 className="text-lg font-semibold text-gray-800 mb-3">Servizi nei dintorni</h3>
                           <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
@@ -400,6 +407,12 @@ export function CardEstates({ immobile, utenteLoggato }) {
                                   <div className="flex items-center gap-3 text-green-800">
                                     <GraduationCap size={18} className="text-green-600" />
                                     <span className="text-base">Ci sono {poiData.schools} {poiData.schools === 1 ? 'scuola' : 'scuole'} nelle vicinanze</span>
+                                  </div>
+                              )}
+                              {poiData.transport > 0 && (
+                                  <div className="flex items-center gap-3 text-green-800">
+                                    <Bus size={18} className="text-green-600" />
+                                    <span>Ci sono {poiData.transport} fermate di mezzi pubblici nelle vicinanze</span>
                                   </div>
                               )}
                             </div>

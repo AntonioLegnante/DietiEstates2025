@@ -147,4 +147,49 @@ public class ChatController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(offerteDTO);
     }
+
+    @PostMapping("/manualOffer")
+    public ResponseEntity<OffertaDTO> manualOffer(
+            @RequestParam Integer chatId,
+            @RequestParam Double importo,
+            @RequestParam(required = false) String note,
+            Authentication authentication) {
+
+        String agentUsername = authentication.getName();
+
+        // Crea offerta manuale per conto dell'utente
+        Offerta offerta = chatService.creaOffertaManuale(chatId, importo, note, agentUsername);
+
+        if (offerta != null) {
+            return ResponseEntity.ok(new OffertaDTO(offerta));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @PostMapping("/newExternalOffer")
+    public ResponseEntity<ChatDTO> newExternalOffer(
+            @RequestParam String clienteUsername,
+            @RequestParam Integer immobileId,
+            @RequestParam Double importo,
+            @RequestParam(required = false) String note,
+            Authentication authentication) {
+
+        String agentUsername = authentication.getName();
+
+        try {
+            // Crea o recupera chat e aggiungi l'offerta
+            Chat chat = chatService.creaOffertaEsternaConNuovaChat(
+                    agentUsername,
+                    clienteUsername,
+                    immobileId,
+                    importo,
+                    note
+            );
+
+            return ResponseEntity.ok(new ChatDTO(chat, agentUsername));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+    }
 }

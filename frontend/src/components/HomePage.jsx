@@ -308,6 +308,7 @@ function EstatesList({ immobili, utenteLoggato }) {
                             key={immobile.id}
                             immobile={immobile}
                             utenteLoggato={utenteLoggato}
+                            preview
                         />
                     ))}
                 </div>

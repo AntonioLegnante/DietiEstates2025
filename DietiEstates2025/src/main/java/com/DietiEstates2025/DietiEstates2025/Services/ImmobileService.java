@@ -46,7 +46,7 @@ public class ImmobileService {
     @Transactional
     public Immobile createImmobile(String titolo, String descrizione, Double prezzo, String dimensione, String citta,
                                    String indirizzo, Boolean affitto, Boolean vendita, Integer numeroStanze, String piano,
-                                   String classeEnergetica, MultipartFile imageFile, List<MultipartFile> galleryImages,
+                                   String classeEnergetica, Boolean gargae, Integer numeroBagni, MultipartFile imageFile, List<MultipartFile> galleryImages,
                                    String username) throws Exception {
 
         System.out.println("Questo problema è sicuramente indecidibile");
@@ -81,6 +81,8 @@ public class ImmobileService {
                 immobile.setNumeroStanze(numeroStanze);
                 immobile.setPiano(piano);
                 immobile.setClasseEnergetica(classeEnergetica);
+                immobile.setGarage(gargae);
+                immobile.setNumeroBagni(numeroBagni);
                 immobile.setCoverImage(imageUrl);
                 immobile.setGalleryImages(galleryUrls);  // NUOVO: Salva le gallery images
                 immobile.setUtente(utente.get());
@@ -111,9 +113,9 @@ public class ImmobileService {
 
     @Transactional
     public List<Immobile> applicaRicerca(String localita, Double minPrezzo, Double maxPrezzo, Boolean affitta, Boolean vendita,
-                                         Integer numeroStanze, String dimensione, String piano, String classeEnergetica) {
+                                         Integer numeroStanze, String dimensione, String piano, String classeEnergetica, Integer numeroBagni) {
         return immobileRepository.ricercaAvanzata(localita, minPrezzo, maxPrezzo, affitta, vendita,
-                numeroStanze, dimensione, piano, classeEnergetica);
+                numeroStanze, dimensione, piano, classeEnergetica, numeroBagni);
     }
 
     private String extractFilenameFromUrl(String url) {

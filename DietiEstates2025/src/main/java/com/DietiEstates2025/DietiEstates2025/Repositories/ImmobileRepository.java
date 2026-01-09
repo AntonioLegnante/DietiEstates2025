@@ -31,6 +31,8 @@ public interface ImmobileRepository extends JpaRepository<Immobile, Integer> {
          AND (:piano IS NULL OR i.piano = :piano)
          
          AND (:classeEnergetica IS NULL OR i.classeEnergetica = :classeEnergetica)
+         
+         AND (:numeroBagni IS NULL OR i.numeroBagni = :numeroBagni)
     """)
     List<Immobile> ricercaAvanzata(
             @Param("localita") String localita,
@@ -41,6 +43,7 @@ public interface ImmobileRepository extends JpaRepository<Immobile, Integer> {
             @Param("numeroStanze") Integer numeroStanze,
             @Param("dimensione") String dimensione,
             @Param("piano") String piano,
-            @Param("classeEnergetica") String classeEnergetica
+            @Param("classeEnergetica") String classeEnergetica,
+            @Param("numeroBagni") Integer numeroBagni
     );
 }

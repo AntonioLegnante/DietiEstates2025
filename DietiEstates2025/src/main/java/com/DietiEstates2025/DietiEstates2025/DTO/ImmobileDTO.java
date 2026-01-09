@@ -11,42 +11,31 @@ import java.util.Objects;
 public class ImmobileDTO {
 
     private Integer id;
-
     private String titolo;
-
     private String descrizione;
-
     private String citta;
-
-    private String coverImage;
-
-    private List<String> galleryImages;  // NUOVO: Lista delle immagini della gallery
-
+    private String linkImmagine;  // ← RINOMINATO da coverImage
+    private List<String> galleryImages;
     private Double prezzo;
-
     private String indirizzo;
-
     private Boolean affitto;
-
     private Boolean vendita;
-
     private Integer numeroStanze;
-
     private String dimensione;
-
     private String piano;
-
     private String agenteImmobiliare;
-
     private String classeEnergetica;
+    private Integer numeroBagni;
+    private Boolean garage;
+
 
     public ImmobileDTO(Immobile immobile) {
         this.id = immobile.getId();
         this.titolo = immobile.getTitolo();
         this.descrizione = immobile.getDescrizione();
         this.citta = immobile.getCitta();
-        this.coverImage = immobile.getCoverImage();
-        this.galleryImages = immobile.getGalleryImages() != null ? immobile.getGalleryImages() : new ArrayList<>();  // NUOVO
+        this.linkImmagine = immobile.getCoverImage();  // ← coverImage -> linkImmagine
+        this.galleryImages = immobile.getGalleryImages() != null ? immobile.getGalleryImages() : new ArrayList<>();
         this.prezzo = immobile.getPrezzo();
         this.indirizzo = immobile.getIndirizzo();
         this.affitto = immobile.getAffitto();
@@ -56,7 +45,11 @@ public class ImmobileDTO {
         this.piano = immobile.getPiano();
         this.agenteImmobiliare = immobile.getUtente().getUsername();
         this.classeEnergetica = immobile.getClasseEnergetica();
+        this.numeroBagni = immobile.getNumeroBagni();  // ← AGGIUNTO
+        this.garage = immobile.getGarage();              // ← AGGIUNTO
     }
+
+    // Getter e Setter esistenti...
 
     public Integer getId() {
         return id;
@@ -91,14 +84,13 @@ public class ImmobileDTO {
     }
 
     public String getLinkImmagine() {
-        return coverImage;
+        return linkImmagine;
     }
 
     public void setLinkImmagine(String linkImmagine) {
-        this.coverImage = linkImmagine;
+        this.linkImmagine = linkImmagine;
     }
 
-    // NUOVO: Getter e Setter per galleryImages
     public List<String> getGalleryImages() {
         return galleryImages;
     }
@@ -179,6 +171,22 @@ public class ImmobileDTO {
         this.classeEnergetica = classeEnergetica;
     }
 
+    public Integer getNumeroBagni() {
+        return numeroBagni;
+    }
+
+    public void setNumeroBagni(Integer numeroBagni) {
+        this.numeroBagni = numeroBagni;
+    }
+
+    public Boolean getGarage() {
+        return garage;
+    }
+
+    public void setGarage(Boolean garage) {
+        this.garage = garage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -187,8 +195,8 @@ public class ImmobileDTO {
                 Objects.equals(titolo, that.titolo) &&
                 Objects.equals(descrizione, that.descrizione) &&
                 Objects.equals(citta, that.citta) &&
-                Objects.equals(coverImage, that.coverImage) &&
-                Objects.equals(galleryImages, that.galleryImages) &&  // NUOVO
+                Objects.equals(linkImmagine, that.linkImmagine) &&
+                Objects.equals(galleryImages, that.galleryImages) &&
                 Objects.equals(prezzo, that.prezzo) &&
                 Objects.equals(indirizzo, that.indirizzo) &&
                 Objects.equals(affitto, that.affitto) &&
@@ -197,12 +205,15 @@ public class ImmobileDTO {
                 Objects.equals(dimensione, that.dimensione) &&
                 Objects.equals(piano, that.piano) &&
                 Objects.equals(agenteImmobiliare, that.agenteImmobiliare) &&
-                Objects.equals(classeEnergetica, that.classeEnergetica);
+                Objects.equals(classeEnergetica, that.classeEnergetica) &&
+                Objects.equals(numeroBagni, that.numeroBagni) &&  // ← AGGIUNTO
+                Objects.equals(garage, that.garage);                // ← AGGIUNTO
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, titolo, descrizione, citta, coverImage, galleryImages, prezzo, indirizzo,
-                affitto, vendita, numeroStanze, dimensione, piano, agenteImmobiliare, classeEnergetica);
+        return Objects.hash(id, titolo, descrizione, citta, linkImmagine, galleryImages, prezzo, indirizzo,
+                affitto, vendita, numeroStanze, dimensione, piano, agenteImmobiliare, classeEnergetica,
+                numeroBagni, garage);  // ← AGGIUNTI
     }
 }

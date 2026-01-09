@@ -55,6 +55,8 @@ public class ImmobileControllerTest {
         Boolean vendita = true;
         Integer numeroStanze = 3;
         String piano = "3";
+        Boolean garage = true;
+        Integer numeroBagni = 2;
         String classeEnergetica = "B";
         String username = "mario.rossi";
 
@@ -91,10 +93,10 @@ public class ImmobileControllerTest {
         Mockito.when(immobileService.createImmobile(
                 eq(titolo), eq(descrizione), eq(prezzo), eq(dimensione), eq(citta),
                 eq(indirizzo), eq(affitto), eq(vendita), eq(numeroStanze), eq(piano),
-                eq(classeEnergetica), any(MultipartFile.class), anyList(), eq(username)))
+                eq(classeEnergetica), eq(garage), eq(numeroBagni), any(MultipartFile.class), anyList(), eq(username)))
                 .thenReturn(new Immobile(1, titolo, descrizione, citta, "imageFile",
                         List.of("gallery1", "gallery2", "gallery3"), prezzo, indirizzo,
-                        affitto, vendita, numeroStanze, dimensione, piano, classeEnergetica, new Utente()));
+                        affitto, vendita, numeroStanze, dimensione, piano, classeEnergetica, garage, numeroBagni, new Utente()));
 
         mockMvc.perform(multipart("/api/immobili")
                         .file(imageFile)
@@ -111,6 +113,8 @@ public class ImmobileControllerTest {
                         .param("vendita", vendita.toString())
                         .param("numeroStanze", numeroStanze.toString())
                         .param("piano", piano)
+                        .param("garage", garage.toString())
+                        .param("numeroBagni", numeroBagni.toString())
                         .param("classeEnergetica", classeEnergetica)
                         .with(user(username))
                         .with(csrf()))

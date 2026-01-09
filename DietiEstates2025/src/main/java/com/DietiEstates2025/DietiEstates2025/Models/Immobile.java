@@ -45,17 +45,27 @@ public class Immobile {
     @Column(nullable = false)
     private Boolean vendita;
 
+    @Column(nullable = false)
     private Integer numeroStanze;
 
+    @Column(nullable = false)
     private String dimensione;
 
+    @Column(nullable = false)
     private String piano;
+
+    @Column(nullable = false)
+    private String classeEnergetica;
+
+    @Column(nullable = false)
+    private Boolean garage;
+
+    @Column(nullable = false)
+    private Integer numeroBagni;
 
     @ManyToOne
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
-
-    private String classeEnergetica;
 
     public Immobile() {
 
@@ -64,7 +74,7 @@ public class Immobile {
 
     public Immobile(Integer id, String titolo, String descrizione, String citta, String coverImage, List<String> galleryImages,
                     Double prezzo, String indirizzo, Boolean affitto, Boolean vendita, Integer numeroStanze,
-                    String dimensione, String piano, String classeEnergetica, Utente utente) {
+                    String dimensione, String piano, String classeEnergetica, Boolean garage, Integer numeroBagni, Utente utente) {
         this.id = id;
         this.titolo = titolo;
         this.descrizione = descrizione;
@@ -79,6 +89,8 @@ public class Immobile {
         this.dimensione = dimensione;
         this.piano = piano;
         this.classeEnergetica = classeEnergetica;
+        this.garage = garage;
+        this.numeroBagni = numeroBagni;
         this.utente = utente;
     }
 
@@ -194,6 +206,22 @@ public class Immobile {
         this.classeEnergetica = classeEnergetica;
     }
 
+    public Integer getNumeroBagni() {
+        return numeroBagni;
+    }
+
+    public void setNumeroBagni(Integer numeroBagni) {
+        this.numeroBagni = numeroBagni;
+    }
+
+    public Boolean getGarage() {
+        return garage;
+    }
+
+    public void setGarage(Boolean garage) {
+        this.garage = garage;
+    }
+
     public Utente getUtente() {
         return utente;
     }
@@ -206,11 +234,11 @@ public class Immobile {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Immobile immobile = (Immobile) o;
-        return Objects.equals(id, immobile.id) && Objects.equals(titolo, immobile.titolo) && Objects.equals(descrizione, immobile.descrizione) && Objects.equals(citta, immobile.citta) && Objects.equals(coverImage, immobile.coverImage) && Objects.equals(galleryImages, immobile.galleryImages) && Objects.equals(prezzo, immobile.prezzo) && Objects.equals(indirizzo, immobile.indirizzo) && Objects.equals(affitto, immobile.affitto) && Objects.equals(vendita, immobile.vendita) && Objects.equals(numeroStanze, immobile.numeroStanze) && Objects.equals(dimensione, immobile.dimensione) && Objects.equals(piano, immobile.piano) && Objects.equals(utente, immobile.utente) && Objects.equals(classeEnergetica, immobile.classeEnergetica);
+        return Objects.equals(id, immobile.id) && Objects.equals(titolo, immobile.titolo) && Objects.equals(descrizione, immobile.descrizione) && Objects.equals(citta, immobile.citta) && Objects.equals(coverImage, immobile.coverImage) && Objects.equals(galleryImages, immobile.galleryImages) && Objects.equals(prezzo, immobile.prezzo) && Objects.equals(indirizzo, immobile.indirizzo) && Objects.equals(affitto, immobile.affitto) && Objects.equals(vendita, immobile.vendita) && Objects.equals(numeroStanze, immobile.numeroStanze) && Objects.equals(dimensione, immobile.dimensione) && Objects.equals(piano, immobile.piano) && Objects.equals(garage, immobile.garage) && Objects.equals(numeroBagni, immobile.numeroBagni) && Objects.equals(utente, immobile.utente) && Objects.equals(classeEnergetica, immobile.classeEnergetica);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, titolo, descrizione, citta, coverImage, galleryImages, prezzo, indirizzo, affitto, vendita, numeroStanze, dimensione, piano, utente, classeEnergetica);
+        return Objects.hash(id, titolo, descrizione, citta, coverImage, galleryImages, prezzo, indirizzo, affitto, vendita, numeroStanze, dimensione, piano, classeEnergetica, garage, numeroBagni, utente);
     }
 }

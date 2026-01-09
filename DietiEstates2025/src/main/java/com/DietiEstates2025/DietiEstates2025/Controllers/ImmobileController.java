@@ -40,6 +40,8 @@ public class ImmobileController {
             @RequestParam("numeroStanze") Integer numeroStanze,
             @RequestParam("piano") String piano,
             @RequestParam("classeEnergetica") String classeEnergetica,
+            @RequestParam("garage") Boolean garage,
+            @RequestParam("numeroBagni")  Integer numeroBagni,
             Authentication authentication
     ) {
         System.out.println("Guarda quanti integrali!");
@@ -51,7 +53,7 @@ public class ImmobileController {
             // Passa anche le gallery images al service
             Immobile immobile = immobileService.createImmobile(
                     titolo, descrizione, prezzo, dimensione, citta, indirizzo,
-                    affitto, vendita, numeroStanze, piano, classeEnergetica, file, galleryImages, username
+                    affitto, vendita, numeroStanze, piano, classeEnergetica, garage, numeroBagni, file, galleryImages, username
             );
 
             System.out.println("Immobile created! " + immobile.getUtente().getUsername());
@@ -77,7 +79,8 @@ public class ImmobileController {
             @RequestParam(value="numeroStanze", required = false) Integer numeroStanze,
             @RequestParam(value="dimensione", required = false) String dimensione,
             @RequestParam(value="piano", required = false) String piano,
-            @RequestParam(value="classeEnergetica", required = false) String classeEnergetica
+            @RequestParam(value="classeEnergetica", required = false) String classeEnergetica,
+            @RequestParam(value="numeroBagni", required = false) Integer numeroBagni
     ) {
         System.out.println("In ImmobileController Localita " + localita);
         System.out.println("In ImmobileController minPrezzo " + minPrezzo);
@@ -87,7 +90,7 @@ public class ImmobileController {
         System.out.println("In ImmobileController Piano " + piano);
 
         List<Immobile> immobili = immobileService.applicaRicerca(localita, minPrezzo, maxPrezzo, affitta, vendita,
-                numeroStanze, dimensione, piano, classeEnergetica);
+                numeroStanze, dimensione, piano, classeEnergetica, numeroBagni);
         return ResponseEntity.ok(immobili.stream().map(immobile -> new ImmobileDTO(immobile)).collect(Collectors.toList()));
     }
 

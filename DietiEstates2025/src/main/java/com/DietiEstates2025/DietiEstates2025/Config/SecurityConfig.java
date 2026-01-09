@@ -32,7 +32,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*")); // mantiene tutti i domini possibili
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -48,9 +48,14 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        // ENDPOINT PUBBLICI
+                        .requestMatchers("/auth/login", "/auth/registrazione", "/auth/cambiaPassword").permitAll()
                         .requestMatchers("/api/immobili/ricerca").permitAll()
                         .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/assets/**", "/vite.svg", "/manifest.json").permitAll()
+
+                        // ENDPOINT PROTETTI PER AMMINISTRATORI
+                        .requestMatchers("/auth/aggiungiAgente").hasAuthority("Amministratore")
+
                         // ENDPOINT SPECIFICI AUTENTICATI
                         .requestMatchers(
                                 "/api/immobili",

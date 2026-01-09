@@ -8,4 +8,7 @@ import java.util.Optional;
 public interface UtenteRepository extends JpaRepository<Utente, Integer> {
     Optional<Utente> findByUsername(String username);
 
+    // Nuovi metodi per la registrazione
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }

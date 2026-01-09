@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react';
-import { CardEstates } from './CardEstates.jsx';
-import { Home } from 'lucide-react';
+import { Home, Users, Building2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 
@@ -204,39 +203,90 @@ function SearchFilter({ setImmobili }) {
     );
 }
 
-function EstatesList({ immobili, utenteLoggato }) {
+function RegistrationBlocks() {
     const navigate = useNavigate();
-
-    const handleClick = (immobile) => {
-        navigate(`/immobile/${immobile.id}`, {
-            state: { immobile }
-        });
-    };
 
     return (
         <div className="px-4 py-12">
-            <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-12 text-center">
-                    I Nostri Immobili
-                </h1>
+            <div className="max-w-6xl mx-auto">
+                <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
+                    Unisciti a DietiEstates
+                </h2>
+                <p className="text-xl text-gray-600 mb-12 text-center">
+                    Scegli il tipo di account più adatto alle tue esigenze
+                </p>
 
-                <div>
-                    {immobili.map((immobile) => (
-                        <CardEstates
-                            key={immobile.id}
-                            immobile={immobile}
-                            utenteLoggato={utenteLoggato}
-                        />
-                    ))}
-                </div>
-
-                {immobili.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-                        <Home size={80} className="mb-6 opacity-40" strokeWidth={1.5} />
-                        <p className="text-2xl font-semibold text-gray-700">Nessun immobile disponibile</p>
-                        <p className="text-base mt-3 text-gray-500">Prova a modificare i filtri di ricerca</p>
+                <div className="grid md:grid-cols-2 gap-8">
+                    {/* Blocco Utenti */}
+                    <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-100 hover:border-blue-500 transition-all duration-300 transform hover:scale-[1.02]">
+                        <div className="flex flex-col items-center text-center">
+                            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mb-6">
+                                <Users size={40} className="text-white" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                Sono un Utente
+                            </h3>
+                            <p className="text-gray-600 mb-6 leading-relaxed">
+                                Cerca la tua casa ideale tra migliaia di annunci. Contatta direttamente gli agenti immobiliari e trova l'immobile perfetto per te.
+                            </p>
+                            <ul className="text-left space-y-3 mb-8 w-full">
+                                <li className="flex items-start gap-3">
+                                    <span className="text-green-500 mt-1">✓</span>
+                                    <span className="text-gray-700">Ricerca avanzata con filtri personalizzati</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="text-green-500 mt-1">✓</span>
+                                    <span className="text-gray-700">Contatto diretto con gli agenti</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="text-green-500 mt-1">✓</span>
+                                    <span className="text-gray-700">Salva i tuoi immobili preferiti</span>
+                                </li>
+                            </ul>
+                            <button
+                                onClick={() => navigate('/registration', { state: { userType: 'utente' } })}
+                                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                            >
+                                Registrati come Utente
+                            </button>
+                        </div>
                     </div>
-                )}
+
+                    {/* Blocco Gestori */}
+                    <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-100 hover:border-orange-500 transition-all duration-300 transform hover:scale-[1.02]">
+                        <div className="flex flex-col items-center text-center">
+                            <div className="w-20 h-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mb-6">
+                                <Building2 size={40} className="text-white" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                Sono un Gestore
+                            </h3>
+                            <p className="text-gray-600 mb-6 leading-relaxed">
+                                Gestisci la tua agenzia immobiliare, crea il tuo team di agenti e pubblica annunci per raggiungere migliaia di potenziali clienti.
+                            </p>
+                            <ul className="text-left space-y-3 mb-8 w-full">
+                                <li className="flex items-start gap-3">
+                                    <span className="text-green-500 mt-1">✓</span>
+                                    <span className="text-gray-700">Crea e gestisci la tua agenzia</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="text-green-500 mt-1">✓</span>
+                                    <span className="text-gray-700">Aggiungi agenti al tuo team</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="text-green-500 mt-1">✓</span>
+                                    <span className="text-gray-700">Pubblica e gestisci annunci immobiliari</span>
+                                </li>
+                            </ul>
+                            <button
+                                onClick={() => navigate('/registration', { state: { userType: 'nuovoAmministratore' } })}
+                                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                            >
+                                Registrati come Gestore
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -261,24 +311,8 @@ export function HomePage() {
         }
     }, []);
 
-    const [immobili, setImmobili] = useState([{
-        id: 'IMM001',
-        titolo: 'Elegante Appartamento in Centro Storico',
-        citta: "Milano",
-        indirizzo: 'Via Dante, 15',
-        prezzo: 450000,
-        descrizione: 'Splendido appartamento di 120 mq situato nel cuore del centro storico di Milano. L\'immobile si trova al terzo piano di un elegante palazzo d\'epoca con ascensore e si compone di ingresso, ampio salone, cucina abitabile, tre camere da letto e due bagni. Completamente ristrutturato con finiture di pregio.',
-        linkImmagine: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800',
-        coordinate: {
-            lat: 45.4642,
-            lng: 9.1900
-        },
-        agenteImmobiliare: 'gormita'
-    }]);
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-
             {/* Benvenuto utente */}
             {userData && (
                 <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 text-center shadow-md">
@@ -286,8 +320,8 @@ export function HomePage() {
                 </div>
             )}
 
-            <SearchFilter setImmobili={setImmobili}/>
-            <EstatesList immobili={immobili} utenteLoggato={userData}/>
+            <SearchFilter />
+            <RegistrationBlocks />
         </div>
     );
 }

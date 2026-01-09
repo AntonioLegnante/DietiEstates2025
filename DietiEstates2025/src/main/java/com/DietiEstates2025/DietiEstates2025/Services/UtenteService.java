@@ -55,4 +55,8 @@ public class UtenteService {
 
         return result;
     }
+
+    public Optional<Utente> findByUsername(String username) {
+        return utenteRepository.findByUsername(username);
+    }
 }

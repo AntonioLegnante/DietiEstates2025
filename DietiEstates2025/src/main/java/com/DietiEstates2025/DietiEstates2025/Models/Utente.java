@@ -27,8 +27,20 @@ public class Utente {
     @OneToMany(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Immobile> immobili;
 
-    public Utente() {
+    @Column(nullable = false, unique = true)
+    private String email;
 
+    // Per gli agenti immobiliari: l'agenzia a cui appartengono
+    @ManyToOne
+    @JoinColumn(name = "agenzia_id")
+    private Agenzia agenzia;
+
+    // Per i gestori: l'agenzia che gestiscono (relazione inversa di Agenzia.gestore)
+    @OneToOne(mappedBy = "gestore", cascade = CascadeType.ALL)
+    private Agenzia agenziaGestita;
+
+    // Costruttori
+    public Utente() {
     }
 
     public Utente(String username, String password, String numeroDiTelefono, String ruolo) {
@@ -38,6 +50,7 @@ public class Utente {
         this.ruolo = ruolo;
     }
 
+    // Getter e Setter esistenti
     public Integer getId() {
         return id;
     }
@@ -86,15 +99,46 @@ public class Utente {
         this.immobili = immobili;
     }
 
+    // Getter e Setter per i NUOVI campi
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Agenzia getAgenzia() {
+        return agenzia;
+    }
+
+    public void setAgenzia(Agenzia agenzia) {
+        this.agenzia = agenzia;
+    }
+
+    public Agenzia getAgenziaGestita() {
+        return agenziaGestita;
+    }
+
+    public void setAgenziaGestita(Agenzia agenziaGestita) {
+        this.agenziaGestita = agenziaGestita;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Utente utente = (Utente) o;
-        return Objects.equals(id, utente.id) && Objects.equals(username, utente.username) && Objects.equals(password, utente.password) && Objects.equals(numeroDiTelefono, utente.numeroDiTelefono) && Objects.equals(ruolo, utente.ruolo) && Objects.equals(immobili, utente.immobili);
+        return Objects.equals(id, utente.id) &&
+                Objects.equals(username, utente.username) &&
+                Objects.equals(password, utente.password) &&
+                Objects.equals(numeroDiTelefono, utente.numeroDiTelefono) &&
+                Objects.equals(ruolo, utente.ruolo) &&
+                Objects.equals(email, utente.email) &&
+                Objects.equals(immobili, utente.immobili);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, numeroDiTelefono, ruolo, immobili);
+        return Objects.hash(id, username, password, numeroDiTelefono, ruolo, email, immobili);
     }
 }

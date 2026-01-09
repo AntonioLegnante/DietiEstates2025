@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react';
 import { Home, Users, Building2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { CardEstates } from "./CardEstates.jsx";
 import { jwtDecode } from "jwt-decode";
 
 function SearchFilter({ setImmobili }) {
@@ -229,26 +230,18 @@ function RegistrationBlocks() {
                             <p className="text-gray-600 mb-6 leading-relaxed">
                                 Cerca la tua casa ideale tra migliaia di annunci. Contatta direttamente gli agenti immobiliari e trova l'immobile perfetto per te.
                             </p>
-                            <ul className="text-left space-y-3 mb-8 w-full">
-                                <li className="flex items-start gap-3">
-                                    <span className="text-green-500 mt-1">✓</span>
-                                    <span className="text-gray-700">Ricerca avanzata con filtri personalizzati</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <span className="text-green-500 mt-1">✓</span>
-                                    <span className="text-gray-700">Contatto diretto con gli agenti</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <span className="text-green-500 mt-1">✓</span>
-                                    <span className="text-gray-700">Salva i tuoi immobili preferiti</span>
-                                </li>
-                            </ul>
                             <button
                                 onClick={() => navigate('/registration', { state: { userType: 'utente' } })}
                                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
                             >
                                 Registrati come Utente
                             </button>
+                            <ul className="text-left space-y-3 mb-8 w-full">
+                                <li className="flex items-start gap-3">
+                                    <span className="text-green-500 mt-1">✓</span>
+                                    <span className="text-gray-700">Contatto diretto con gli agenti</span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
 
@@ -264,6 +257,12 @@ function RegistrationBlocks() {
                             <p className="text-gray-600 mb-6 leading-relaxed">
                                 Gestisci la tua agenzia immobiliare, crea il tuo team di agenti e pubblica annunci per raggiungere migliaia di potenziali clienti.
                             </p>
+                            <button
+                                onClick={() => navigate('/registration', { state: { userType: 'nuovoAmministratore' } })}
+                                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                            >
+                                Registrati come Gestore
+                            </button>
                             <ul className="text-left space-y-3 mb-8 w-full">
                                 <li className="flex items-start gap-3">
                                     <span className="text-green-500 mt-1">✓</span>
@@ -278,12 +277,7 @@ function RegistrationBlocks() {
                                     <span className="text-gray-700">Pubblica e gestisci annunci immobiliari</span>
                                 </li>
                             </ul>
-                            <button
-                                onClick={() => navigate('/registration', { state: { userType: 'nuovoAmministratore' } })}
-                                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
-                            >
-                                Registrati come Gestore
-                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -292,9 +286,49 @@ function RegistrationBlocks() {
     );
 }
 
+function EstatesList({ immobili, utenteLoggato }) {
+    const navigate = useNavigate();
+
+    const handleClick = (immobile) => {
+        navigate(`/immobile/${immobile.id}`, {
+            state: { immobile }
+        });
+    };
+
+    return (
+        <div className="px-4 py-12">
+            <div>
+                <h1 className="text-4xl font-bold text-gray-900 mb-12 text-center">
+                    I Nostri Immobili
+                </h1>
+
+                <div>
+                    {immobili.map((immobile) => (
+                        <CardEstates
+                            key={immobile.id}
+                            immobile={immobile}
+                            utenteLoggato={utenteLoggato}
+                        />
+                    ))}
+                </div>
+
+                {immobili.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+                        <Home size={80} className="mb-6 opacity-40" strokeWidth={1.5} />
+                        <p className="text-2xl font-semibold text-gray-700">Nessun immobile disponibile</p>
+                        <p className="text-base mt-3 text-gray-500">Prova a modificare i filtri di ricerca</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+
 export function HomePage() {
     const [userData, setUserData] = useState(null);
     const [ruolo, setRuolo] = useState(null);
+    const [immobili, setImmobili] = useState([]);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -313,6 +347,7 @@ export function HomePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+
             {/* Benvenuto utente */}
             {userData && (
                 <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 text-center shadow-md">
@@ -320,8 +355,22 @@ export function HomePage() {
                 </div>
             )}
 
-            <SearchFilter />
-            <RegistrationBlocks />
+            {/* Filtro ricerca */}
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                <SearchFilter setImmobili={setImmobili} />
+            </div>
+
+            {/* Lista immobili */}
+            {immobili.length > 0 ? (
+                <EstatesList immobili={immobili} utenteLoggato={userData} />
+            ) : (
+                /* Mostra blocchi registrazione se utente non loggato e nessun immobile */
+                !userData && (
+                    <div className="max-w-7xl mx-auto px-4 py-16">
+                        <RegistrationBlocks />
+                    </div>
+                )
+            )}
         </div>
     );
 }

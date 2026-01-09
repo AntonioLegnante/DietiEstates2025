@@ -99,9 +99,9 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
             }`}
             onClick={handleCardClick}
         >
-          <div className="relative max-h-[420px] overflow-hidden">
-            <div className="flex flex-col lg:flex-row h-full">
-              <div className="relative w-full lg:w-[40%] h-[420px] bg-gradient-to-br ...">
+          <div className="relative overflow-hidden lg:max-h-[420px]">
+            <div className="flex flex-col lg:flex-row">
+            <div className="relative w-full lg:w-[40%] h-[420px] bg-gradient-to-br ...">
                 <img
                   src={allImages[currentImageIndex]}
                   alt={immobile.titolo}
@@ -330,8 +330,8 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                   </div>
                 </div>
 
-                <div className="max-h-[60vh] overflow-y-auto">
-                  <div className="flex-1 p-6 lg:w-[35%] flex flex-col justify-between">
+                <div className="overflow-y-auto">
+                  <div className="p-6 flex flex-col gap-6">
                   <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-3">
                       {formatPrice(immobile.prezzo)}
                     </div>
@@ -463,8 +463,14 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                     {(immobile.coordinate || immobile.citta || immobile.indirizzo) && (
                         <div className="mb-6">
                           <h3 className="text-lg font-semibold text-gray-800 mb-3">Posizione</h3>
-                          <div className="w-full h-96 rounded-xl overflow-hidden border-2 border-gray-200">
-                            <StaticMapViewWithPOI address={fullAddress} center={true} onPoiData={handlePoiData} />
+                          <div className="w-full h-[420px] rounded-xl overflow-hidden border-2 border-gray-200">
+                            <div className="w-full h-full">
+                              <StaticMapViewWithPOI
+                                  address={fullAddress}
+                                  center={true}
+                                  onPoiData={handlePoiData}
+                              />
+                            </div>
                           </div>
                         </div>
                     )}

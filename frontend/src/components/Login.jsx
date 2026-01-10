@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx';
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
+import { GoogleLogin } from '@react-oauth/google';
 
 export function Login() {
     const [username, setUsername] = useState("");
@@ -38,6 +39,39 @@ export function Login() {
             });
     }
 
+    const handleGoogleSuccess = async (credentialResponse) => {
+        setIsLoading(true);
+        try {
+            console.log("Google credential:", credentialResponse.credential);
+
+            // Invia il token Google al backend
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google-login`, {
+                token: credentialResponse.credential
+            });
+
+            console.log("Backend response:", response.data);
+            login(response.data.token);
+
+            let ruolo = jwtDecode(response.data.token)?.roles;
+
+            if (ruolo === "Amministratore" || ruolo === "nuovoAmministratore") {
+                navigate("/paginaAmministratore");
+            } else {
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Errore durante il login con Google:", error);
+            alert("Errore nel login con Google. Riprova.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleGoogleError = () => {
+        console.error("Login Google fallito");
+        alert("Errore nel login con Google");
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12">
             <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-100">
@@ -48,6 +82,30 @@ export function Login() {
                     </div>
                     <h2 className="text-3xl font-bold text-gray-900 mb-2">Accedi</h2>
                     <p className="text-gray-600">Benvenuto su DietiEstates</p>
+                </div>
+
+                {/* Google Login Button */}
+                <div className="mb-6">
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={handleGoogleError}
+                        useOneTap
+                        theme="outline"
+                        size="large"
+                        text="continue_with"
+                        shape="rectangular"
+                        width="100%"
+                    />
+                </div>
+
+                {/* Divider */}
+                <div className="relative mb-6">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-white text-gray-500 font-medium">Oppure</span>
+                    </div>
                 </div>
 
                 {/* Form */}

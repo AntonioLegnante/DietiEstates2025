@@ -88,7 +88,7 @@ function Navigation() {
             {/* CENTRO */}
             <div className="flex justify-center">
               <Link to="/" className="text-xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent hover:from-blue-700 hover:to-blue-900 transition-all">
-                DietiEstates
+                DietiEstates🏠
               </Link>
             </div>
 

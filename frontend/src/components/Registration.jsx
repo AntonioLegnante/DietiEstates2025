@@ -1,11 +1,68 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios'
+import { GoogleLogin } from '@react-oauth/google';
+
 
 export function Registration() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            // 🔒 Deve aver scelto il ruolo
+            if (!user.ruolo) {
+                alert("Seleziona prima il tipo di account");
+                return;
+            }
+
+            // 🏢 Se è gestore → controlla i dati agenzia
+            if (user.ruolo === 'nuovoAmministratore') {
+                const errorsAgenzia = [];
+
+                if (agenziaData.nomeAgenzia.length < 3) errorsAgenzia.push("Nome agenzia");
+                if (agenziaData.indirizzoAgenzia.length < 5) errorsAgenzia.push("Indirizzo");
+                if (agenziaData.cittaAgenzia.length < 2) errorsAgenzia.push("Città");
+                if (!validatePhone(agenziaData.telefonoAgenzia)) errorsAgenzia.push("Telefono");
+                if (!validateEmail(agenziaData.emailAgenzia)) errorsAgenzia.push("Email");
+                if (!validatePartitaIVA(agenziaData.partitaIVA)) errorsAgenzia.push("Partita IVA");
+
+                if (errorsAgenzia.length > 0) {
+                    alert(
+                        "Compila tutti i dati dell'agenzia prima di registrarti con Google:\n\n" +
+                        errorsAgenzia.join(", ")
+                    );
+                    return;
+                }
+            }
+
+            const googleToken = credentialResponse.credential;
+
+            const registrationData =
+                user.ruolo === 'nuovoAmministratore'
+                    ? { token: googleToken, ruolo: user.ruolo, agenzia: agenziaData }
+                    : { token: googleToken, ruolo: user.ruolo };
+
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/auth/google-register`,
+                registrationData
+            );
+
+            alert("✅ Registrazione con Google completata!");
+            navigate("/login");
+
+        } catch (err) {
+            console.error(err.response?.data);
+            alert("❌ Errore durante la registrazione con Google");
+        }
+    };
+
+
+    const handleGoogleError = () => {
+        alert("Login Google annullato");
+    };
+
 
     // Preleva il tipo di utente passato dalla HomePage
     const preselectedUserType = location.state?.userType || "";
@@ -253,6 +310,20 @@ export function Registration() {
                             ? 'Crea il tuo account e la tua agenzia immobiliare'
                             : 'Crea il tuo account su DietiEstates'}
                     </p>
+                </div>
+                {/* GOOGLE REGISTRATION */}
+                <div className="mb-6 flex justify-center">
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={handleGoogleError}
+                        text="signup_with"
+                        size="large"
+                        shape="rectangular"
+                    />
+                </div>
+
+                <div className="text-center text-gray-400 mb-6">
+                    oppure
                 </div>
 
                 {/* Form */}

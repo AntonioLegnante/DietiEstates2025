@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // ENDPOINT PUBBLICI
-                        .requestMatchers("/auth/login", "/auth/registrazione", "/auth/cambiaPassword").permitAll()
+                        .requestMatchers("/auth/login", "/auth/registrazione", "/auth/cambiaPassword", "/auth/google-login", "/auth/google-register").permitAll()
                         .requestMatchers("/api/immobili/ricerca").permitAll()
                         .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/assets/**", "/vite.svg", "/manifest.json").permitAll()
 

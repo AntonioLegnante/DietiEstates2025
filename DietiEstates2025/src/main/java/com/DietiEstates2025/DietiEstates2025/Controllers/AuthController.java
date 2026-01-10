@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -244,7 +245,16 @@ public class AuthController {
             utente.setUsername(username);
             utente.setEmail(email);
             utente.setPassword(passwordEncoder.encode("GOOGLE_AUTH_" + System.currentTimeMillis()));
-            utente.setNumeroDiTelefono("");
+
+            // ⭐ FIX: Genera telefono fittizio unico invece di stringa vuota
+            String telefonoUnico;
+            do {
+                telefonoUnico = "GOOGLE_" + UUID.randomUUID().toString().substring(0, 10);
+            } while (utenteRepository.existsByNumeroDiTelefono(telefonoUnico));
+
+            utente.setNumeroDiTelefono(telefonoUnico);
+            System.out.println("📱 Telefono generato: " + telefonoUnico);
+
             utente.setRuolo(request.getRuolo() != null ? request.getRuolo() : "utente");
 
             if ("nuovoAmministratore".equals(request.getRuolo())) {

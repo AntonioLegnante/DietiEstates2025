@@ -18,7 +18,7 @@ public class Utente {
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true)
     private String numeroDiTelefono;
 
     @Column(nullable = false)

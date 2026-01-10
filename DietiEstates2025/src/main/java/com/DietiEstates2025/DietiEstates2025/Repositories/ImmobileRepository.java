@@ -24,15 +24,15 @@ public interface ImmobileRepository extends JpaRepository<Immobile, Integer> {
             OR (:affitta IS NULL AND :vendita IS NULL)
          )
          
-         AND (:numeroStanze IS NULL OR i.numeroStanze = :numeroStanze)
+         AND (:numeroStanze IS NULL OR i.numeroStanze >= :numeroStanze)
          
-         AND (:dimensione IS NULL OR i.dimensione = :dimensione)
+         AND (:dimensione IS NULL OR i.dimensione >= :dimensione)
          
          AND (:piano IS NULL OR i.piano = :piano)
          
          AND (:classeEnergetica IS NULL OR i.classeEnergetica = :classeEnergetica)
          
-         AND (:numeroBagni IS NULL OR i.numeroBagni = :numeroBagni)
+         AND (:numeroBagni IS NULL OR i.numeroBagni >= :numeroBagni)
     """)
     List<Immobile> ricercaAvanzata(
             @Param("localita") String localita,

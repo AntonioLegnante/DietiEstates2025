@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Collections;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -80,7 +82,7 @@ public class AuthController {
                     .body("Errore durante il login: " + e.getMessage());
         }
     }
-
+    
     @PostMapping("/registrazione")
     public ResponseEntity<?> registrazione(@RequestBody RegistrazioneRequest request) {
         try {

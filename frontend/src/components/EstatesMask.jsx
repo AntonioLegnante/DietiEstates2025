@@ -1,12 +1,11 @@
 import { useState } from "react"
 import axios from 'axios'
-import imageCompression from "browser-image-compression";   // 🆕 IMPORT COMPRESSIONE
+import imageCompression from "browser-image-compression";
 
-// 🆕 Funzione per comprimere le immagini
 async function compressImage(file) {
     const options = {
-        maxSizeMB: 0.8,              // 🌟 MODIFICA QUI (prima era 2)
-        maxWidthOrHeight: 1920,      // 🌟 MODIFICA QUI (prima era 1920)
+        maxSizeMB: 0.8,
+        maxWidthOrHeight: 1920,
         useWebWorker: true
     };
 
@@ -15,7 +14,7 @@ async function compressImage(file) {
         return compressedFile;
     } catch (err) {
         console.error("Errore compressione:", err);
-        return file; // fallback
+        return file;
     }
 }
 
@@ -29,11 +28,11 @@ export function EstatesMask() {
         indirizzo: "",
         affitto: false,
         vendita: false,
-        numeroStanze: 0,
+        numeroStanze: "",
         piano: "",
         classeEnergetica: "",
         garage: false,
-        numeroBagni: 0
+        numeroBagni: ""
     });
 
     const [file, setFile] = useState(null);
@@ -57,7 +56,6 @@ export function EstatesMask() {
         }))
     }
 
-    // 🆕 Foto di copertina compressa
     const handleFileChange = async (e) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile) return;
@@ -68,7 +66,6 @@ export function EstatesMask() {
         setCoverPreview(URL.createObjectURL(compressed));
     };
 
-    // 🆕 Foto gallery compresse
     const handleGalleryChange = async (e) => {
         const files = Array.from(e.target.files);
         const remainingSlots = 5 - galleryFiles.length;
@@ -102,7 +99,7 @@ export function EstatesMask() {
             alert("Seleziona un'immagine di copertina!");
             return;
         }
-        console.log(`NumeroStanze in EstatesMask is: ${formData.numeroStanze}`);
+
         const data = new FormData();
         data.append("file", file);
 
@@ -118,11 +115,16 @@ export function EstatesMask() {
         data.append("indirizzo", formData.indirizzo);
         data.append("affitto", formData.affitto);
         data.append("vendita", formData.vendita);
-        data.append("numeroStanze", formData.numeroStanze);
+        data.append("numeroStanze", formData.numeroStanze || 0);
         data.append("piano", formData.piano);
         data.append("classeEnergetica", formData.classeEnergetica);
         data.append("garage", formData.garage);
-        data.append("numeroBagni", formData.numeroBagni);
+        data.append("numeroBagni", formData.numeroBagni || 0);
+
+        console.log("FormData prima dell'invio:", {
+            numeroStanze: formData.numeroStanze,
+            numeroBagni: formData.numeroBagni
+        });
 
         axios.post(`${import.meta.env.VITE_API_URL}/api/immobili`, data, {
             headers: {
@@ -143,11 +145,11 @@ export function EstatesMask() {
                     indirizzo: "",
                     affitto: false,
                     vendita: false,
-                    numeroStanze: 0,
+                    numeroStanze: "",
                     piano: "",
                     classeEnergetica: "",
                     garage: false,
-                    numeroBagni: 0
+                    numeroBagni: ""
                 });
                 setFile(null);
                 setCoverPreview(null);
@@ -162,7 +164,9 @@ export function EstatesMask() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-6 space-y-6 bg-white rounded-xl shadow-lg">
+
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Inserisci Nuovo Immobile</h2>
 
             <div>
                 <label className="block mb-2 font-semibold text-gray-700">Titolo:</label>
@@ -188,137 +192,163 @@ export function EstatesMask() {
                 />
             </div>
 
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Prezzo (€):</label>
-                <input
-                    type="number"
-                    name="prezzo"
-                    value={formData.prezzo}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                />
-            </div>
-
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Dimensione:</label>
-                <input
-                    type="text"
-                    name="dimensione"
-                    value={formData.dimensione}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                />
-            </div>
-
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Città:</label>
-                <input
-                    type="text"
-                    name="citta"
-                    value={formData.citta}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                />
-            </div>
-
-            <div>
-                <label className="block mb-2 font-semibold text-gray-700">Indirizzo:</label>
-                <input
-                    type="text"
-                    name="indirizzo"
-                    value={formData.indirizzo}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                />
-            </div>
-
-            <div className="flex gap-6">
-                <label className="flex items-center gap-2 cursor-pointer">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block mb-2 font-semibold text-gray-700">Prezzo (€):</label>
                     <input
-                        type="checkbox"
-                        name="affitto"
-                        checked={formData.affitto}
-                        onChange={handleBooleanInputChange}
-                        className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        type="number"
+                        name="prezzo"
+                        value={formData.prezzo}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
                     />
-                    <span className="font-medium text-gray-700">Affitto</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                </div>
+
+                <div>
+                    <label className="block mb-2 font-semibold text-gray-700">Dimensione (m²):</label>
                     <input
-                        type="checkbox"
-                        name="vendita"
-                        checked={formData.vendita}
-                        onChange={handleBooleanInputChange}
-                        className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        type="number"
+                        name="dimensione"
+                        value={formData.dimensione}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
                     />
-                    <span className="font-medium text-gray-700">Vendita</span>
-                </label>
+                </div>
             </div>
-            <div className="flex gap-6">
-                <label className="flex items-center gap-2 cursor-pointer">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label className="block mb-2 font-semibold text-gray-700">Città:</label>
                     <input
-                        type="checkbox"
-                        name="garage"
-                        checked={formData.garage}
-                        onChange={handleBooleanInputChange}
-                        className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        type="text"
+                        name="citta"
+                        value={formData.citta}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
                     />
-                    <span className="font-medium text-gray-700">Garage</span>
-                </label>
+                </div>
+
+                <div>
+                    <label className="block mb-2 font-semibold text-gray-700">Indirizzo:</label>
+                    <input
+                        type="text"
+                        name="indirizzo"
+                        value={formData.indirizzo}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                    />
+                </div>
             </div>
 
-            <div>
-                <label htmlFor="numeroStanze">
-                    Numero stanze: 
-                </label>
-                <input
-                    id="numeroStanze"
-                    name="numeroStanze"
-                    type="number" 
-                    onChange={handleInputChange}
-                />
+            <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-gray-700 mb-3">Tipo di annuncio:</h3>
+                <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="affitto"
+                            checked={formData.affitto}
+                            onChange={handleBooleanInputChange}
+                            className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        />
+                        <span className="font-medium text-gray-700">Affitto</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="vendita"
+                            checked={formData.vendita}
+                            onChange={handleBooleanInputChange}
+                            className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        />
+                        <span className="font-medium text-gray-700">Vendita</span>
+                    </label>
+                </div>
             </div>
 
-            <div>
-                <label htmlFor="numeroBagni">
-                    Numero bagni:
-                </label>
-                <input
-                    id="numeroBagno"
-                    name="numeroBagno"
-                    type="number"
-                    onChange={handleInputChange}
-                />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label htmlFor="numeroStanze" className="block mb-2 font-semibold text-gray-700">
+                        Numero stanze:
+                    </label>
+                    <input
+                        id="numeroStanze"
+                        name="numeroStanze"
+                        type="number"
+                        min="0"
+                        value={formData.numeroStanze}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="numeroBagni" className="block mb-2 font-semibold text-gray-700">
+                        Numero bagni:
+                    </label>
+                    <input
+                        id="numeroBagni"
+                        name="numeroBagni"
+                        type="number"
+                        min="0"
+                        value={formData.numeroBagni}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="piano" className="block mb-2 font-semibold text-gray-700">
+                        Piano:
+                    </label>
+                    <input
+                        id="piano"
+                        name="piano"
+                        type="number"
+                        value={formData.piano}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                </div>
             </div>
 
-            <div>
-                <label htmlFor="piano">
-                    piano: 
-                </label>
-                <input
-                    id="piano"
-                    name="piano"
-                    onChange={handleInputChange}
-                />
-            </div>
-
-            <div>
-               <label htmlFor="classeEnergetica">Classe energetica:</label>
-               <select 
-                    id="classeEnergetica"
-                    name="classeEnergetica" 
-                    onChange={handleInputChange}>
-                    Classe energetica:
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label htmlFor="classeEnergetica" className="block mb-2 font-semibold text-gray-700">
+                        Classe energetica:
+                    </label>
+                    <select
+                        id="classeEnergetica"
+                        name="classeEnergetica"
+                        value={formData.classeEnergetica}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option value="">Seleziona...</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
                         <option value="D">D</option>
                         <option value="E">E</option>
-                </select>
+                    </select>
+                </div>
+
+                <div className="flex items-center">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                            type="checkbox"
+                            name="garage"
+                            checked={formData.garage}
+                            onChange={handleBooleanInputChange}
+                            className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                        />
+                        <span className="font-semibold text-gray-700">Garage disponibile</span>
+                    </label>
+                </div>
             </div>
 
             <div>
@@ -332,7 +362,7 @@ export function EstatesMask() {
                 />
                 {coverPreview && (
                     <div className="mt-4 max-w-md">
-                        <img src={coverPreview} alt="Cover preview" className="w-full rounded-lg border-2 border-gray-300" />
+                        <img src={coverPreview} alt="Cover preview" className="w-full rounded-lg border-2 border-gray-300 shadow-md" />
                     </div>
                 )}
             </div>

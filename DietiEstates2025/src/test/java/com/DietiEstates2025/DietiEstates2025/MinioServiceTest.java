@@ -53,7 +53,8 @@ class MinioServiceTest {
 
         verify(minioClient).bucketExists(any(BucketExistsArgs.class));
         verify(minioClient, never()).makeBucket(any(MakeBucketArgs.class));
-        verify(minioClient, never()).setBucketPolicy(any(SetBucketPolicyArgs.class));
+        // La policy viene impostata anche se il bucket esiste (comportamento intenzionale)
+        verify(minioClient).setBucketPolicy(any(SetBucketPolicyArgs.class));
     }
 
     @Test

@@ -77,8 +77,8 @@
 \contentsline {section}{\numberline {2.15}Progettazione interfaccia utente}{48}{section.2.15}%
 \contentsline {section}{\numberline {2.16}Diagramma delle classi}{48}{section.2.16}%
 \contentsline {section}{\numberline {2.17}Diagramma di sequenza}{51}{section.2.17}%
-\contentsline {chapter}{\numberline {3}Testing}{52}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Test del Controller}{52}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Test del Service}{52}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Test End-to-end}{52}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Test Usabilita}{52}{section.3.4}%
+\contentsline {chapter}{\numberline {3}Testing}{56}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Test del Controller}{56}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Test del Service}{56}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Test End-to-end}{56}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Test Usabilita}{56}{section.3.4}%

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.1)  16 JAN 2026 15:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.1)  18 JAN 2026 13:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -895,12 +895,104 @@ Package pdftex.def Info: images/Diagramma classi chatController.pdf , page1 used
 (pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
 [50
 
- <./images/Diagramma classi chatController.pdf>])) [51]
+ <./images/Diagramma classi chatController.pdf>]) (SequenceDiagram.tex
+
+pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/sequence diagram.pdf, id=1056, 597.55246pt x 845.07718pt>
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf>
+Package pdftex.def Info: images/sequence diagram.pdf  used on input line 1.
+(pdftex.def)             Requested size: 597.551pt x 845.07512pt.
+
+
+pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+
+
+pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/sequence diagram.pdf, id=1058, page=1, 597.55246pt x 845.07718pt>
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 1>
+Package pdftex.def Info: images/sequence diagram.pdf , page1 used on input line 1.
+(pdftex.def)             Requested size: 614.34616pt x 794.97873pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 1>
+Package pdftex.def Info: images/sequence diagram.pdf , page1 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+[51]
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 1>
+Package pdftex.def Info: images/sequence diagram.pdf , page1 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 1>
+Package pdftex.def Info: images/sequence diagram.pdf , page1 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 1>
+Package pdftex.def Info: images/sequence diagram.pdf , page1 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+ [52
+
+ <./images/sequence diagram.pdf>]
+
+pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/sequence diagram.pdf, id=1087, page=2, 597.55246pt x 845.07718pt>
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 2>
+Package pdftex.def Info: images/sequence diagram.pdf , page2 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 2>
+Package pdftex.def Info: images/sequence diagram.pdf , page2 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 2>
+Package pdftex.def Info: images/sequence diagram.pdf , page2 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+[53
+
+ <./images/sequence diagram.pdf>]
+
+pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/sequence diagram.pdf, id=1098, page=3, 597.55246pt x 845.07718pt>
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 3>
+Package pdftex.def Info: images/sequence diagram.pdf , page3 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 3>
+Package pdftex.def Info: images/sequence diagram.pdf , page3 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 3>
+Package pdftex.def Info: images/sequence diagram.pdf , page3 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+[54
+
+ <./images/sequence diagram.pdf>]
+
+pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<images/sequence diagram.pdf, id=1105, page=4, 597.55246pt x 845.07718pt>
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 4>
+Package pdftex.def Info: images/sequence diagram.pdf , page4 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 4>
+Package pdftex.def Info: images/sequence diagram.pdf , page4 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+File: images/sequence diagram.pdf Graphic file (type pdf)
+<use images/sequence diagram.pdf, page 4>
+Package pdftex.def Info: images/sequence diagram.pdf , page4 used on input line 1.
+(pdftex.def)             Requested size: 597.83365pt x 845.47485pt.
+[55
+
+ <./images/sequence diagram.pdf>]))
 \openout2 = `capitolo3.aux'.
 
  (capitolo3.tex
 Capitolo 3.
-) [52
+) [56
 
 
 
@@ -914,17 +1006,17 @@ Package rerunfilecheck Info: File `documentazione.out' has not changed.
 (rerunfilecheck)             Checksum: 9F4C231A780CD3C2E05869187D313949;16018.
  ) 
 Here is how much of TeX's memory you used:
- 13729 strings out of 474486
- 221857 string characters out of 5743755
+ 13762 strings out of 474486
+ 222994 string characters out of 5743755
  2100542 words of memory out of 5000000
- 35448 multiletter control sequences out of 15000+600000
+ 35474 multiletter control sequences out of 15000+600000
  563784 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,17n,81p,546b,2051s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\anton\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt0900.pk> <C:\Users\anton\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmitt10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on documentazione.pdf (53 pages, 1203290 bytes).
+Output written on documentazione.pdf (57 pages, 1381913 bytes).
 PDF statistics:
- 1186 PDF objects out of 1200 (max. 8388607)
- 352 named destinations out of 1000 (max. 500000)
- 792 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1239 PDF objects out of 1440 (max. 8388607)
+ 356 named destinations out of 1000 (max. 500000)
+ 822 words of extra memory for PDF output out of 10000 (max. 10000000)
 

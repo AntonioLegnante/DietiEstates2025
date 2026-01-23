@@ -85,6 +85,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- 🗄️ H2 Database for Tests (In-Memory) -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

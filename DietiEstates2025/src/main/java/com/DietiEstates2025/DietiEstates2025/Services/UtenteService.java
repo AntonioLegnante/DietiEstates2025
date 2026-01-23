@@ -39,6 +39,7 @@ public class UtenteService {
         Boolean result = true;
         String password = passwordEncoder.encode(rawPassword);
         Optional<Utente> utente = utenteRepository.findByUsername(username);
+        System.out.println("ruolo " + ruolo);
 
         if (utente.isEmpty()) {
             return false;

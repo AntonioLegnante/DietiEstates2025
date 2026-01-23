@@ -16,6 +16,7 @@ import com.DietiEstates2025.DietiEstates2025.Services.GoogleAuthService;
 import com.DietiEstates2025.DietiEstates2025.Repositories.UtenteRepository;
 import com.DietiEstates2025.DietiEstates2025.Repositories.AgenziaRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -102,6 +103,7 @@ public class AuthController {
 
     @PostMapping("/registrazione")
     public ResponseEntity<?> registrazione(@RequestBody RegistrazioneRequest request) {
+        System.out.println("Sono dentro registrazione");
         try {
             Utente utente = authService.registrazione(request);
             RegistrazioneResponse response = new RegistrazioneResponse(
@@ -117,6 +119,7 @@ public class AuthController {
 
     @PostMapping("/aggiungiAgente")
     public ResponseEntity<?> aggiungiAgente(@RequestBody RegistrazioneRequest request) {
+        System.out.println("Sono dentro aggiungiAgente");
         try {
             request.setRuolo("agente immobiliare");
 
@@ -149,7 +152,7 @@ public class AuthController {
     }
 
     @PostMapping("/cambiaPassword")
-    public ResponseEntity<JwtResponse> cambiaPassword(@RequestBody Utente utente) {
+    public ResponseEntity<JwtResponse> cambiaPassword(@NotNull @RequestBody Utente utente) {
         boolean result = utenteService.cambiaPassword(
                 utente.getUsername(),
                 utente.getPassword(),

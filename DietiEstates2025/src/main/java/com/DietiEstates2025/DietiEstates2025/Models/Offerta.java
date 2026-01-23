@@ -69,7 +69,7 @@ public class Offerta {
     public void setNote(String note) { this.note = note; }
 
     public LocalDateTime getDataCreazione() { return dataCreazione; }
-    public LocalDateTime getDataCreazione(LocalDateTime dataCreazione) {
+    public LocalDateTime setDataCreazione(LocalDateTime dataCreazione) {
         return dataCreazione;
     }
 

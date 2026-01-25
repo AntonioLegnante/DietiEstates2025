@@ -1,0 +1,107 @@
+\textbf{Test Registrazione Cliente valida}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    1 & Nessuna & username=newuser, \newline email=newuser@test.com, \newline password=securePassword123, \newline ruolo=cliente & 
+    result=true, \newline result.username=newuser, \newline result.email=newuser@test.com, \newline result.ruolo=cliente \\
+    \hline
+    \end{tabular}
+\end{table}
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Registrazione Cliente valida")
+    void testRegistrazioneClienteSuccess() {
+        // Arrange
+        registrazioneRequest = new RegistrazioneRequest();
+        registrazioneRequest.setUsername("newuser");
+        registrazioneRequest.setEmail("newuser@test.com");
+        registrazioneRequest.setPassword("securePassword123");
+        registrazioneRequest.setNumeroDiTelefono("3891234567");
+        registrazioneRequest.setRuolo("cliente");
+        when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
+        when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword");
+        when(utenteRepository.save(any(Utente.class))).thenReturn(utente);
+        // Act
+        Utente result = authService.registrazione(registrazioneRequest);
+        // Assert
+        assertNotNull(result);
+        assertEquals("newuser", result.getUsername());
+        assertEquals("newuser@test.com", result.getEmail());
+        assertEquals("cliente", result.getRuolo());
+        verify(utenteRepository, times(1)).save(any(Utente.class));
+\end{lstlisting}
+
+\textbf{Test Registrazione con username duplicato}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    2 & utente con username=newuser già presente & username=newuser, \newline email=newuser@test.com, \newline password=securePassword123, \newline ruolo=cliente & 
+    lancia IllegalArgumentException \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Registrazione con username duplicato")
+    void testRegistrazioneFailureDuplicateUsername() {
+        // Arrange
+        registrazioneRequest = new RegistrazioneRequest();
+        registrazioneRequest.setUsername("newuser");
+        registrazioneRequest.setEmail("newuser@test.com");
+        registrazioneRequest.setPassword("securePassword123");
+        registrazioneRequest.setNumeroDiTelefono("3891234567");
+        registrazioneRequest.setRuolo("cliente");
+        when(utenteRepository.existsByUsername("newuser")).thenReturn(true);
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            authService.registrazione(registrazioneRequest);
+        }, "Username gia esistente");
+        verify(utenteRepository, never()).save(any());
+    }
+\end{lstlisting}
+
+\newpage
+\textbf{Test Registrazione con email duplicata}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{4cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    3 & utente con username diverso da newuser e email=newuser@test.- com già presente & username=newuser, \newline email=newuser@test.com, \newline password=securePassword123, \newline ruolo=cliente & 
+    lancia IllegalArgumentException \\
+    \hline
+    \end{tabular}
+\end{table}
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Registrazione con email duplicata")
+    void testRegistrazioneFailureDuplicateEmail() {
+        // Arrange
+        registrazioneRequest = new RegistrazioneRequest();
+        registrazioneRequest.setUsername("newuser");
+        registrazioneRequest.setEmail("newuser@test.com");
+        registrazioneRequest.setPassword("securePassword123");
+        registrazioneRequest.setNumeroDiTelefono("3891234567");
+        registrazioneRequest.setRuolo("cliente");
+        when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
+        when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(true);
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            authService.registrazione(registrazioneRequest);
+        }, "Email gia registrata");
+        verify(utenteRepository, never()).save(any());
+    }
+\end{lstlisting}
+

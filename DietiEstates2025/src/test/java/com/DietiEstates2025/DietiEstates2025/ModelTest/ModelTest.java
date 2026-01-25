@@ -80,13 +80,6 @@ class ModelTest {
         chat.setMessaggi(new ArrayList<>());
         chat.setOfferte(new ArrayList<>());
 
-     /*   // Setup Messaggio
-        messaggio = new Messaggi();
-        messaggio.setId(1);
-        messaggio.setChat(chat);
-        messaggio.setMittente(utente);
-        messaggio.setTesto("Sono interessato");
-        messaggio.setDataOraInvio(LocalDateTime.now());*/
 
         // Setup Offerta
         offerta = new Offerta();
@@ -197,15 +190,6 @@ class ModelTest {
         assertEquals(StatoNegoziazione.APERTA, chat.getStatoNegoziazione());
     }
 
- /*   @Test
-    @DisplayName("✅ Test Aggiunta messaggi a Chat")
-    void testChatAddMessages() {
-        chat.getMessaggi().add(messaggio);
-        
-        assertEquals(1, chat.getMessaggi().size());
-        assertEquals("Sono interessato", chat.getMessaggi().get(0).getTesto());
-    }*/
-
     @Test
     @DisplayName("✅ Test Aggiunta offerte a Chat")
     void testChatAddOffers() {
@@ -225,22 +209,6 @@ class ModelTest {
         assertEquals(StatoNegoziazione.CHIUSA_ACCETTATA, chat.getStatoNegoziazione());
     }
 
-  /*  @Test
-    @DisplayName("✅ Test Creazione Messaggio valido")
-    void testMessaggioCreation() {
-        assertEquals(1, messaggio.getId());
-        assertEquals("Sono interessato", messaggio.getTesto());
-        assertEquals("testuser", messaggio.getMittente().getUsername());
-        assertNotNull(messaggio.getDataOraInvio());
-    }*/
-
-  /*  @Test
-    @DisplayName("✅ Test Modifica testo messaggio")
-    void testMessaggioUpdate() {
-        messaggio.setTesto("Nuovo testo messaggio");
-        assertEquals("Nuovo testo messaggio", messaggio.getTesto());
-    }
-*/
     @Test
     @DisplayName("✅ Test Creazione Offerta valida")
     void testOffertaCreation() {
@@ -303,20 +271,14 @@ class ModelTest {
     @Test
     @DisplayName("✅ Test Chat con multipli messaggi e offerte")
     void testChatWithMultipleItems() {
-       // Messaggi msg2 = new Messaggi();
-      //  msg2.setId(2);
-      //  msg2.setTesto("Secondo messaggio");
         
         Offerta off2 = new Offerta();
         off2.setOffertaId(2);
         off2.setImportoOfferto(330000.0);
-        
-       // chat.getMessaggi().add(messaggio);
-       // chat.getMessaggi().add(msg2);
+
         chat.getOfferte().add(offerta);
         chat.getOfferte().add(off2);
-        
-       // assertEquals(2, chat.getMessaggi().size());
+
         assertEquals(2, chat.getOfferte().size());
     }
 
@@ -330,11 +292,4 @@ class ModelTest {
         assertEquals("A", classA.getClasseEnergetica());
     }
 
-   /* @Test
-    @DisplayName("✅ Test Data creazione non nulla")
-    void testDatesNotNull() {
-        assertNotNull(chat.getDataCreazion());
-        assertNotNull(messaggio.getDataOraInvio());
-        assertNotNull(offerta.getDataCreazione());
-    }*/
 }

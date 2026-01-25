@@ -276,33 +276,7 @@ class ImmobileServiceTest {
         assertEquals(0, result.size());
     }
 
-  /*  @Test
-    @DisplayName("✅ Test Ottenimento dettagli immobile")
-    void testGetImmobileById() {
-        // Arrange
-        when(immobileRepository.findById(1)).thenReturn(Optional.of(immobile));
 
-        // Act
-        Immobile result = immobileService.getImmobileById(1);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.getId());
-        assertEquals("Appartamento Lusso", result.getTitolo());
-    }
-
-    @Test
-    @DisplayName("❌ Test Ottenimento immobile inesistente")
-    void testGetNonExistentImmobile() {
-        // Arrange
-        when(immobileRepository.findById(999)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> {
-            immobileService.getImmobileById(999);
-        });
-    }
-*/
     @Test
     @DisplayName("✅ Test Creazione Immobile senza gallery")
     void testCreateImmobileWithoutGallery() throws Exception {

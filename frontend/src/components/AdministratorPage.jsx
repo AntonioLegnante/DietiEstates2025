@@ -56,7 +56,9 @@ export function AdministratorPage() {
 
         axios.post(`${import.meta.env.VITE_API_URL}/auth/cambiaPassword`, payload)
             .then(res => {
+                console.log("In AdministratorPage cambiaPassword");
                 console.log(res.data);
+                console.log("In AdministratorPage cambiaPassword dopo res.data");
                 alert("✅ " + res.data);
                 if(res.data.token) {
                     localStorage.setItem("token", res.data.token); // salva nuovo JWT
@@ -101,6 +103,7 @@ export function AdministratorPage() {
         setErrors({});
 
         const token = localStorage.getItem("token");
+        console.log("Sto per chiamare aggiungiAgente sul back-end");
         axios.post(`${import.meta.env.VITE_API_URL}/auth/aggiungiAgente`, newAgent,{
             headers: {
                 Authorization: `Bearer ${token}`

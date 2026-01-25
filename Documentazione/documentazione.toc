@@ -79,8 +79,8 @@
 \contentsline {section}{\numberline {2.17}Diagramma di sequenza}{51}{section.2.17}%
 \contentsline {section}{\numberline {2.18}Analisi del codice con SonarQube}{56}{section.2.18}%
 \contentsline {chapter}{\numberline {3}Testing}{57}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Testing con Postman}{57}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Test del Controller}{57}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Test del Service}{57}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Test End-to-end}{57}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Test Usabilita}{57}{section.3.5}%
+\contentsline {section}{\numberline {3.1}Strategie adottate}{57}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Unit Test}{58}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Test del Service}{60}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Test End-to-end}{60}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Test Usabilita}{60}{section.3.5}%

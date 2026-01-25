@@ -1,0 +1,36 @@
+La suite di test del progetto DietiEstates2025 adotta un approccio multi-livello combinando 
+diverse strategie di testing secondo il modello Testing Pyramid:
+\begin{enumerate}
+    \item Unit Testing (base): Isolamento dei componenti singoli
+    \item Integration Testing (middle): Test di flussi completi
+    \item Controller Testing (top): Test dell'interfaccia HTTP
+\end{enumerate}
+
+Sono stati individuati diversi scenari positivi e negativi
+\begin{enumerate}
+    \item Scenari positivi verificano che le operazioni funzionino correttamente con input validi, 
+    coprendone il maggior numero per singolo test
+    \item Scenari negativi testano la gestione degli errori, isolando ogni singolo input errato per singolo test   
+\end{enumerate}
+
+Ogni test segue rigorosamente il pattern Arrange, Act, Assert:
+\begin{enumerate}
+    \item Arrange: setup dei mock e dei dati di test
+    \item Act: esecuzione del metodo da testare
+    \item Assert: verifica dei risultati attesi
+\end{enumerate}
+
+Sono state testate le seguenti funzionalità
+\begin{enumerate}
+    \item Registrazione
+    \item Login
+    \item Ricerca immobili
+    \item Caricamento immobili
+    \item Avvio di una trattativa
+\end{enumerate}
+
+La maggior parte dei test segue l'approccio WECT (Weak Equivalence Class Testing) 
+mantenendo gli altri valori costanti
+La suite utilizza @MockBean per isolare il service layer dalle sue dipendenze (repository, MinIO service). 
+Questo permette di testare la logica del servizio senza dipendere da database o servizi esterni reali.
+

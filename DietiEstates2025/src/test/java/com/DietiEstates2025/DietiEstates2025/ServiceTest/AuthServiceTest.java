@@ -62,7 +62,7 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Registrazione Cliente valida")
+    @DisplayName("Test Registrazione Cliente valida")
     void testRegistrazioneClienteSuccess() {
         // Arrange
         when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
@@ -82,7 +82,7 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("❌ Test Registrazione con username duplicato")
+    @DisplayName("Test Registrazione con username duplicato")
     void testRegistrazioneFailureDuplicateUsername() {
         // Arrange
         when(utenteRepository.existsByUsername("newuser")).thenReturn(true);
@@ -96,22 +96,20 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("❌ Test Registrazione con email duplicata")
+    @DisplayName("Test Registrazione con email duplicata")
     void testRegistrazioneFailureDuplicateEmail() {
         // Arrange
         when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
         when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(true);
-
         // Act & Assert
         assertThrows(RuntimeException.class, () -> {
             authService.registrazione(registrazioneRequest);
         }, "Email già registrata");
-
         verify(utenteRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("✅ Test Registrazione Gestore con Agenzia valida")
+    @DisplayName("Test Registrazione Gestore con Agenzia valida")
     void testRegistrazioneGestoreSuccess() {
         // Arrange
         registrazioneRequest.setRuolo("nuovoAmministratore");
@@ -153,15 +151,13 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("❌ Test Registrazione Gestore senza dati agenzia")
+    @DisplayName("Test Registrazione Gestore senza dati agenzia")
     void testRegistrazioneGestoreFailureNoAgencyData() {
         // Arrange
         registrazioneRequest.setRuolo("nuovoAmministratore");
         registrazioneRequest.setAgenzia(null);
-
         when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
         when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(false);
-
         // Act & Assert
         assertThrows(RuntimeException.class, () -> {
             authService.registrazione(registrazioneRequest);
@@ -169,7 +165,7 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("❌ Test Registrazione con partita IVA duplicata")
+    @DisplayName("Test Registrazione con partita IVA duplicata")
     void testRegistrazioneGestoreFailureDuplicateIVA() {
         // Arrange
         registrazioneRequest.setRuolo("nuovoAmministratore");
@@ -190,7 +186,7 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Registrazione Agente Immobiliare")
+    @DisplayName("Test Registrazione Agente Immobiliare")
     void testRegistrazioneAgenteSuccess() {
         // Arrange
         //registrazioneRequest.setRuolo("agente immobiliare");
@@ -217,7 +213,7 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Password crittografata durante registrazione")
+    @DisplayName("Test Password crittografata durante registrazione")
     void testPasswordEncryption() {
         // Arrange
         when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
@@ -236,7 +232,7 @@ class AuthServiceTest {
     }
 
     @Test
-    @DisplayName("❌ Test Registrazione con nome agenzia duplicato")
+    @DisplayName("Test Registrazione con nome agenzia duplicato")
     void testRegistrazioneGestoreFailureDuplicateAgencyName() {
         // Arrange
         registrazioneRequest.setRuolo("nuovoAmministratore");
@@ -244,11 +240,9 @@ class AuthServiceTest {
         agenziaDTO.setNomeAgenzia("Existing Agency");
         agenziaDTO.setPartitaIVA("99999999999");
         registrazioneRequest.setAgenzia(agenziaDTO);
-
         when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
         when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(false);
         when(agenziaRepository.existsByNomeAgenzia("Existing Agency")).thenReturn(true);
-
         // Act & Assert
         assertThrows(RuntimeException.class, () -> {
             authService.registrazione(registrazioneRequest);

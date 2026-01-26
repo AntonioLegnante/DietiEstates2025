@@ -7,7 +7,7 @@
     \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
     \hline
     1 & Nessuna & username=newuser, \newline email=newuser@test.com, \newline password=securePassword123, \newline ruolo=cliente & 
-    result=true, \newline result.username=newuser, \newline result.email=newuser@test.com, \newline result.ruolo=cliente \\
+    result!=null, \newline result.username=newuser, \newline result.email=newuser@test.com, \newline result.ruolo=cliente \\
     \hline
     \end{tabular}
 \end{table}
@@ -75,7 +75,7 @@
 \begin{table}[!h]
     \centering
     \small 
-    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{4cm}|}
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
     \hline
     \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
     \hline
@@ -104,4 +104,125 @@
         verify(utenteRepository, never()).save(any());
     }
 \end{lstlisting}
+
+\newpage
+\textbf{Test Registrazione Gestore con Agenzia valida}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    4 & Nessuna & username=newuser, \newline email=newuser@test.com, \newline password=securePassword123, \newline ruolo=nuovoAmministratore,
+    \newline nomeAgenzia=Test Agency, \newline indirizzoAgenzia=Via Test 1, \newline cittaAgenzia=Napoli, \newline telefonoAgenzia=0815551234, 
+    \newline emailAgenzia=agency@test.com, \newline partitaIVA=12345678901 & 
+    result!=null, \newline result.ruolo=nuovoAmministratore, \newline result.agenziaGestita.nomeAgenzia -=Test Agency \\
+    \hline
+    \end{tabular}
+\end{table}
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Registrazione Gestore con Agenzia valida")
+    void testRegistrazioneGestoreSuccess() {
+        // Arrange
+        registrazioneRequest.setRuolo("nuovoAmministratore");
+        AgenziaDTO agenziaDTO = new AgenziaDTO();
+        agenziaDTO.setNomeAgenzia("Test Agency");
+        agenziaDTO.setIndirizzoAgenzia("Via Test 1");
+        agenziaDTO.setCittaAgenzia("Napoli");
+        agenziaDTO.setTelefonoAgenzia("0815551234");
+        agenziaDTO.setEmailAgenzia("agency@test.com");
+        agenziaDTO.setPartitaIVA("12345678901");
+        registrazioneRequest.setAgenzia(agenziaDTO);
+        Agenzia agenzia = new Agenzia();
+        agenzia.setId(1L);
+        agenzia.setNomeAgenzia("Test Agency");
+        agenzia.setPartitaIVA("12345678901");
+        Utente gestore = new Utente();
+        gestore.setId(1);
+        gestore.setUsername("newuser");
+        gestore.setRuolo("nuovoAmministratore");
+        gestore.setAgenziaGestita(agenzia);
+        when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
+        when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(false);
+        when(agenziaRepository.existsByNomeAgenzia("Test Agency")).thenReturn(false);
+        when(agenziaRepository.existsByPartitaIVA("12345678901")).thenReturn(false);
+        when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword");
+        when(utenteRepository.save(any(Utente.class))).thenReturn(gestore);
+        when(agenziaRepository.save(any(Agenzia.class))).thenReturn(agenzia);
+        // Act
+        Utente result = authService.registrazione(registrazioneRequest);
+        // Assert
+        assertNotNull(result);
+        assertEquals("nuovoAmministratore", result.getRuolo());
+        assertEquals("Test Agency", result.getAgenziaGestita().getNomeAgenzia());
+    }
+\end{lstlisting}
+
+\textbf{Test Registrazione Gestore senza dati agenzia}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    5 & Nessuna & username=newuser, \newline email=newuser@test.com, \newline password=securePassword123, \newline ruolo=nuovoAmministratore,
+    \newline agenzia=null & lancia IllegalArgumentException \\
+    \hline
+    \end{tabular}
+\end{table}
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Registrazione Gestore senza dati agenzia")
+    void testRegistrazioneGestoreFailureNoAgencyData() {
+        // Arrange
+        registrazioneRequest.setRuolo("nuovoAmministratore");
+        registrazioneRequest.setAgenzia(null);
+        when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
+        when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(false);
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            authService.registrazione(registrazioneRequest);
+        }, "Dati agenzia mancanti");
+    }
+\end{lstlisting}
+
+\newpage
+\textbf{Test Registrazione Gestore senza dati agenzia}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    6 & Agenzia con nome Existing Agency già presente nel sistema & username=newuser, \newline email=newuser@test.com, \newline password=securePassword123, \newline ruolo=nuovoAmministratore,
+    \newline nomeAgenzia=Existing Agency \newline indirizzoAgenzia=Via Test 1, \newline cittaAgenzia=Napoli, \newline telefonoAgenzia=0815551234, 
+    \newline emailAgenzia=agency@test.com, \newline partitaIVA=99999999999 & lancia RuntimeException \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Registrazione con nome agenzia duplicato")
+    void testRegistrazioneGestoreFailureDuplicateAgencyName() {
+        // Arrange
+        registrazioneRequest.setRuolo("nuovoAmministratore");
+        AgenziaDTO agenziaDTO = new AgenziaDTO();
+        agenziaDTO.setNomeAgenzia("Existing Agency");
+        agenziaDTO.setPartitaIVA("99999999999");
+        registrazioneRequest.setAgenzia(agenziaDTO);
+        when(utenteRepository.existsByUsername("newuser")).thenReturn(false);
+        when(utenteRepository.existsByEmail("newuser@test.com")).thenReturn(false);
+        when(agenziaRepository.existsByNomeAgenzia("Existing Agency")).thenReturn(true);
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> {
+            authService.registrazione(registrazioneRequest);
+        }, "Nome agenzia gia esistente");
+    }
+\end{lstlisting}
+
 

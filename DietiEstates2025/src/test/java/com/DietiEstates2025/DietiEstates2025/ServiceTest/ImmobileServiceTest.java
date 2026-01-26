@@ -91,7 +91,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Creazione Immobile valido")
+    @DisplayName("Test Creazione Immobile valido")
     void testCreateImmobileSuccess() throws Exception {
         // Arrange
         when(utenteRepository.findByUsername("agent1")).thenReturn(Optional.of(agente));

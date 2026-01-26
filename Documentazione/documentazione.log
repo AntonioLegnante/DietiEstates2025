@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.1)  26 JAN 2026 00:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.1)  26 JAN 2026 14:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1049,16 +1049,41 @@ Overfull \hbox (3.6814pt too wide) in paragraph at lines 82--82
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 83--84
-[]\OT1/cmr/m/n/9 lancia Il-le-ga-lAr-gu-men-tEx-
- []
-
-
-Overfull \hbox (58.65942pt too wide) in paragraph at lines 78--86
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 78--86
  [][] 
  []
 
-)) [60] (documentazione.aux (capitolo1.aux) (capitolo2.aux) (capitolo3.aux))
+[60]
+Overfull \hbox (1.04495pt too wide) in paragraph at lines 120--121
+\OT1/cmr/m/n/9 result.ruolo=nuovoAmministratore, 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 120--121
+\OT1/cmr/m/n/9 result.agenziaGestita.nomeAgenzia
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 113--123
+ [][] 
+ []
+
+[61]
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 167--175
+ [][] 
+ []
+
+[62]
+Underfull \hbox (badness 5331) in paragraph at lines 201--201
+[]\OT1/cmr/m/n/9 Agenzia con no-me
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 197--206
+ [][] 
+ []
+
+)) [63] (documentazione.aux (capitolo1.aux) (capitolo2.aux) (capitolo3.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -1067,17 +1092,17 @@ Package rerunfilecheck Info: File `documentazione.out' has not changed.
 (rerunfilecheck)             Checksum: 514B23BC3657B7C1B7332F741DB09F44;16341.
  ) 
 Here is how much of TeX's memory you used:
- 13931 strings out of 474486
- 225920 string characters out of 5743755
- 2100542 words of memory out of 5000000
- 35549 multiletter control sequences out of 15000+600000
+ 14024 strings out of 474486
+ 227483 string characters out of 5743755
+ 2137542 words of memory out of 5000000
+ 35570 multiletter control sequences out of 15000+600000
  565616 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,17n,81p,546b,2051s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\anton\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt0900.pk> <C:\Users\anton\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmitt10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on documentazione.pdf (61 pages, 1973322 bytes).
+Output written on documentazione.pdf (64 pages, 1997708 bytes).
 PDF statistics:
- 1370 PDF objects out of 1440 (max. 8388607)
- 435 named destinations out of 1000 (max. 500000)
+ 1465 PDF objects out of 1728 (max. 8388607)
+ 507 named destinations out of 1000 (max. 500000)
  848 words of extra memory for PDF output out of 10000 (max. 10000000)
 

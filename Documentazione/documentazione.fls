@@ -463,6 +463,16 @@ INPUT C:\Users\anton\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmmi6.tfm
 INPUT C:\Users\anton\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmsy9.tfm
 INPUT C:\Users\anton\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmsy6.tfm
 INPUT C:\Users\anton\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx9.tfm
+INPUT .\UnitTestRicercaImmobile.tex
+INPUT .\UnitTestRicercaImmobile.tex
+INPUT .\UnitTestRicercaImmobile.tex
+INPUT .\UnitTestRicercaImmobile.tex
+INPUT UnitTestRicercaImmobile.tex
+INPUT .\UnitTestAvvioTrattativa.tex
+INPUT .\UnitTestAvvioTrattativa.tex
+INPUT .\UnitTestAvvioTrattativa.tex
+INPUT .\UnitTestAvvioTrattativa.tex
+INPUT UnitTestAvvioTrattativa.tex
 INPUT documentazione.aux
 INPUT .\capitolo1.aux
 INPUT .\capitolo1.aux

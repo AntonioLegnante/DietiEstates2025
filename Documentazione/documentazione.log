@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.1)  26 JAN 2026 14:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.1)  29 JAN 2026 16:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -377,7 +377,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 108.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 108.
-<images/FedericoII.png, id=339, 134.75343pt x 139.27031pt>
+<images/FedericoII.png, id=343, 134.75343pt x 139.27031pt>
 File: images/FedericoII.png Graphic file (type png)
 <use images/FedericoII.png>
 Package pdftex.def Info: images/FedericoII.png  used on input line 136.
@@ -431,7 +431,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 40--48
 [5]) (DiagrammaCasiUso.tex
 
 pdfTeX warning: pdflatex (file ./images/Use-case Diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Use-case Diagram.pdf, id=458, 597.19106pt x 845.07718pt>
+<images/Use-case Diagram.pdf, id=463, 597.19106pt x 845.07718pt>
 File: images/Use-case Diagram.pdf Graphic file (type pdf)
 <use images/Use-case Diagram.pdf>
 Package pdftex.def Info: images/Use-case Diagram.pdf  used on input line 3.
@@ -444,7 +444,7 @@ Overfull \hbox (2.2173pt too wide) in paragraph at lines 3--10
 [6] (requsitiNonFunzionaliEDiDominio.tex [7 <./images/Use-case Diagram.pdf>] [8]) (Personas.tex
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=481, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=486, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf>
 Package pdftex.def Info: images/personatemplate.pdf  used on input line 6.
@@ -455,7 +455,7 @@ pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: fou
 
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=483, page=2, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=488, page=2, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 2>
 Package pdftex.def Info: images/personatemplate.pdf , page2 used on input line 6.
@@ -482,7 +482,7 @@ Package pdftex.def Info: images/personatemplate.pdf , page2 used on input line 6
  <./images/personatemplate.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=531, page=3, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=536, page=3, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 3>
 Package pdftex.def Info: images/personatemplate.pdf , page3 used on input line 6.
@@ -500,7 +500,7 @@ Package pdftex.def Info: images/personatemplate.pdf , page3 used on input line 6
  <./images/personatemplate.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=540, page=4, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=545, page=4, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 4>
 Package pdftex.def Info: images/personatemplate.pdf , page4 used on input line 6.
@@ -518,7 +518,7 @@ Package pdftex.def Info: images/personatemplate.pdf , page4 used on input line 6
  <./images/personatemplate.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/personatemplate.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/personatemplate.pdf, id=550, page=5, 845.07718pt x 597.55246pt>
+<images/personatemplate.pdf, id=555, page=5, 845.07718pt x 597.55246pt>
 File: images/personatemplate.pdf Graphic file (type pdf)
 <use images/personatemplate.pdf, page 5>
 Package pdftex.def Info: images/personatemplate.pdf , page5 used on input line 6.
@@ -536,7 +536,7 @@ Package pdftex.def Info: images/personatemplate.pdf , page5 used on input line 6
  <./images/personatemplate.pdf>]) (tabelleCockburn.tex
 
 pdfTeX warning: pdflatex (file ./images/Ricerca Immobile.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Ricerca Immobile.pdf, id=559, 597.55246pt x 845.07718pt>
+<images/Ricerca Immobile.pdf, id=564, 597.55246pt x 845.07718pt>
 File: images/Ricerca Immobile.pdf Graphic file (type pdf)
 <use images/Ricerca Immobile.pdf>
 Package pdftex.def Info: images/Ricerca Immobile.pdf  used on input line 1.
@@ -547,7 +547,7 @@ pdfTeX warning: pdflatex (file ./images/Ricerca Immobile.pdf): PDF inclusion: fo
 
 
 pdfTeX warning: pdflatex (file ./images/Ricerca Immobile.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Ricerca Immobile.pdf, id=561, page=1, 597.55246pt x 845.07718pt>
+<images/Ricerca Immobile.pdf, id=566, page=1, 597.55246pt x 845.07718pt>
 File: images/Ricerca Immobile.pdf Graphic file (type pdf)
 <use images/Ricerca Immobile.pdf, page 1>
 Package pdftex.def Info: images/Ricerca Immobile.pdf , page1 used on input line 1.
@@ -574,7 +574,7 @@ Package pdftex.def Info: images/Ricerca Immobile.pdf , page1 used on input line 
  <./images/Ricerca Immobile.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/Use case Registrazione Utente.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Use case Registrazione Utente.pdf, id=585, 597.55246pt x 845.07718pt>
+<images/Use case Registrazione Utente.pdf, id=590, 597.55246pt x 845.07718pt>
 File: images/Use case Registrazione Utente.pdf Graphic file (type pdf)
 <use images/Use case Registrazione Utente.pdf>
 Package pdftex.def Info: images/Use case Registrazione Utente.pdf  used on input line 2.
@@ -585,7 +585,7 @@ pdfTeX warning: pdflatex (file ./images/Use case Registrazione Utente.pdf): PDF 
 
 
 pdfTeX warning: pdflatex (file ./images/Use case Registrazione Utente.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Use case Registrazione Utente.pdf, id=587, page=1, 597.55246pt x 845.07718pt>
+<images/Use case Registrazione Utente.pdf, id=592, page=1, 597.55246pt x 845.07718pt>
 File: images/Use case Registrazione Utente.pdf Graphic file (type pdf)
 <use images/Use case Registrazione Utente.pdf, page 1>
 Package pdftex.def Info: images/Use case Registrazione Utente.pdf , page1 used on input line 2.
@@ -611,7 +611,7 @@ Package pdftex.def Info: images/Use case Registrazione Utente.pdf , page1 used o
  <./images/Use case Registrazione Utente.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/Inserimento di un immobile.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Inserimento di un immobile.pdf, id=607, 597.55246pt x 845.07718pt>
+<images/Inserimento di un immobile.pdf, id=612, 597.55246pt x 845.07718pt>
 File: images/Inserimento di un immobile.pdf Graphic file (type pdf)
 <use images/Inserimento di un immobile.pdf>
 Package pdftex.def Info: images/Inserimento di un immobile.pdf  used on input line 3.
@@ -622,7 +622,7 @@ pdfTeX warning: pdflatex (file ./images/Inserimento di un immobile.pdf): PDF inc
 
 
 pdfTeX warning: pdflatex (file ./images/Inserimento di un immobile.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Inserimento di un immobile.pdf, id=609, page=1, 597.55246pt x 845.07718pt>
+<images/Inserimento di un immobile.pdf, id=614, page=1, 597.55246pt x 845.07718pt>
 File: images/Inserimento di un immobile.pdf Graphic file (type pdf)
 <use images/Inserimento di un immobile.pdf, page 1>
 Package pdftex.def Info: images/Inserimento di un immobile.pdf , page1 used on input line 3.
@@ -648,7 +648,7 @@ Package pdftex.def Info: images/Inserimento di un immobile.pdf , page1 used on i
  <./images/Inserimento di un immobile.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/AvvioChat.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/AvvioChat.pdf, id=629, 597.55246pt x 845.07718pt>
+<images/AvvioChat.pdf, id=634, 597.55246pt x 845.07718pt>
 File: images/AvvioChat.pdf Graphic file (type pdf)
 <use images/AvvioChat.pdf>
 Package pdftex.def Info: images/AvvioChat.pdf  used on input line 4.
@@ -659,7 +659,7 @@ pdfTeX warning: pdflatex (file ./images/AvvioChat.pdf): PDF inclusion: found PDF
 
 
 pdfTeX warning: pdflatex (file ./images/AvvioChat.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/AvvioChat.pdf, id=631, page=1, 597.55246pt x 845.07718pt>
+<images/AvvioChat.pdf, id=636, page=1, 597.55246pt x 845.07718pt>
 File: images/AvvioChat.pdf Graphic file (type pdf)
 <use images/AvvioChat.pdf, page 1>
 Package pdftex.def Info: images/AvvioChat.pdf , page1 used on input line 4.
@@ -800,7 +800,7 @@ Overfull \hbox (5.48987pt too wide) in paragraph at lines 786--787
 [45]) (DiagrammaClassi.tex
 
 pdfTeX warning: pdflatex (file ./images/DiagrammaClassi.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/DiagrammaClassi.pdf, id=984, 597.19106pt x 845.07718pt>
+<images/DiagrammaClassi.pdf, id=989, 597.19106pt x 845.07718pt>
 File: images/DiagrammaClassi.pdf Graphic file (type pdf)
 <use images/DiagrammaClassi.pdf>
 Package pdftex.def Info: images/DiagrammaClassi.pdf  used on input line 1.
@@ -823,7 +823,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--19
 ) (ClassDiagram.tex
 
 pdfTeX warning: pdflatex (file ./images/Diagramma classi 1.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Diagramma classi 1.pdf, id=1006, 597.55246pt x 845.07718pt>
+<images/Diagramma classi 1.pdf, id=1011, 597.55246pt x 845.07718pt>
 File: images/Diagramma classi 1.pdf Graphic file (type pdf)
 <use images/Diagramma classi 1.pdf>
 Package pdftex.def Info: images/Diagramma classi 1.pdf  used on input line 1.
@@ -834,7 +834,7 @@ pdfTeX warning: pdflatex (file ./images/Diagramma classi 1.pdf): PDF inclusion: 
 
 
 pdfTeX warning: pdflatex (file ./images/Diagramma classi 1.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Diagramma classi 1.pdf, id=1008, page=1, 597.55246pt x 845.07718pt>
+<images/Diagramma classi 1.pdf, id=1013, page=1, 597.55246pt x 845.07718pt>
 File: images/Diagramma classi 1.pdf Graphic file (type pdf)
 <use images/Diagramma classi 1.pdf, page 1>
 Package pdftex.def Info: images/Diagramma classi 1.pdf , page1 used on input line 1.
@@ -861,7 +861,7 @@ Package pdftex.def Info: images/Diagramma classi 1.pdf , page1 used on input lin
  <./images/Diagramma classi 1.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/Diagramma classi chatController.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Diagramma classi chatController.pdf, id=1039, 597.55246pt x 845.07718pt>
+<images/Diagramma classi chatController.pdf, id=1044, 597.55246pt x 845.07718pt>
 File: images/Diagramma classi chatController.pdf Graphic file (type pdf)
 <use images/Diagramma classi chatController.pdf>
 Package pdftex.def Info: images/Diagramma classi chatController.pdf  used on input line 2.
@@ -872,7 +872,7 @@ pdfTeX warning: pdflatex (file ./images/Diagramma classi chatController.pdf): PD
 
 
 pdfTeX warning: pdflatex (file ./images/Diagramma classi chatController.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Diagramma classi chatController.pdf, id=1041, page=1, 597.55246pt x 845.07718pt>
+<images/Diagramma classi chatController.pdf, id=1046, page=1, 597.55246pt x 845.07718pt>
 File: images/Diagramma classi chatController.pdf Graphic file (type pdf)
 <use images/Diagramma classi chatController.pdf, page 1>
 Package pdftex.def Info: images/Diagramma classi chatController.pdf , page1 used on input line 2.
@@ -898,7 +898,7 @@ Package pdftex.def Info: images/Diagramma classi chatController.pdf , page1 used
  <./images/Diagramma classi chatController.pdf>]) (SequenceDiagram.tex
 
 pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/sequence diagram.pdf, id=1066, 597.55246pt x 845.07718pt>
+<images/sequence diagram.pdf, id=1071, 597.55246pt x 845.07718pt>
 File: images/sequence diagram.pdf Graphic file (type pdf)
 <use images/sequence diagram.pdf>
 Package pdftex.def Info: images/sequence diagram.pdf  used on input line 1.
@@ -909,7 +909,7 @@ pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: fo
 
 
 pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/sequence diagram.pdf, id=1068, page=1, 597.55246pt x 845.07718pt>
+<images/sequence diagram.pdf, id=1073, page=1, 597.55246pt x 845.07718pt>
 File: images/sequence diagram.pdf Graphic file (type pdf)
 <use images/sequence diagram.pdf, page 1>
 Package pdftex.def Info: images/sequence diagram.pdf , page1 used on input line 1.
@@ -936,7 +936,7 @@ Package pdftex.def Info: images/sequence diagram.pdf , page1 used on input line 
  <./images/sequence diagram.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/sequence diagram.pdf, id=1097, page=2, 597.55246pt x 845.07718pt>
+<images/sequence diagram.pdf, id=1102, page=2, 597.55246pt x 845.07718pt>
 File: images/sequence diagram.pdf Graphic file (type pdf)
 <use images/sequence diagram.pdf, page 2>
 Package pdftex.def Info: images/sequence diagram.pdf , page2 used on input line 1.
@@ -954,7 +954,7 @@ Package pdftex.def Info: images/sequence diagram.pdf , page2 used on input line 
  <./images/sequence diagram.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/sequence diagram.pdf, id=1108, page=3, 597.55246pt x 845.07718pt>
+<images/sequence diagram.pdf, id=1113, page=3, 597.55246pt x 845.07718pt>
 File: images/sequence diagram.pdf Graphic file (type pdf)
 <use images/sequence diagram.pdf, page 3>
 Package pdftex.def Info: images/sequence diagram.pdf , page3 used on input line 1.
@@ -972,7 +972,7 @@ Package pdftex.def Info: images/sequence diagram.pdf , page3 used on input line 
  <./images/sequence diagram.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/sequence diagram.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/sequence diagram.pdf, id=1115, page=4, 597.55246pt x 845.07718pt>
+<images/sequence diagram.pdf, id=1120, page=4, 597.55246pt x 845.07718pt>
 File: images/sequence diagram.pdf Graphic file (type pdf)
 <use images/sequence diagram.pdf, page 4>
 Package pdftex.def Info: images/sequence diagram.pdf , page4 used on input line 1.
@@ -988,12 +988,12 @@ Package pdftex.def Info: images/sequence diagram.pdf , page4 used on input line 
 [55
 
  <./images/sequence diagram.pdf>]) (sonarqube.tex
-<images/sonarqubePassed.png, id=1122, 1156.32pt x 386.6445pt>
+<images/sonarqubePassed.png, id=1127, 1156.32pt x 386.6445pt>
 File: images/sonarqubePassed.png Graphic file (type png)
 <use images/sonarqubePassed.png>
 Package pdftex.def Info: images/sonarqubePassed.png  used on input line 7.
 (pdftex.def)             Requested size: 344.99312pt x 115.35707pt.
-<images/sonarqube.png, id=1123, 1557.82pt x 690.58pt>
+<images/sonarqube.png, id=1128, 1557.82pt x 690.58pt>
 File: images/sonarqube.png Graphic file (type png)
 <use images/sonarqube.png>
 Package pdftex.def Info: images/sonarqube.png  used on input line 9.
@@ -1083,26 +1083,244 @@ Overfull \hbox (87.11218pt too wide) in paragraph at lines 197--206
  [][] 
  []
 
-)) [63] (documentazione.aux (capitolo1.aux) (capitolo2.aux) (capitolo3.aux))
+[63]
+Underfull \hbox (badness 6461) in paragraph at lines 237--237
+[]\OT1/cmr/m/n/9 Agente im-mo-bi-lia-re
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 237--239
+\OT1/cmr/m/n/9 descrizione=Bellissimo ap-par-ta-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 233--243
+ [][] 
+ []
+
+[64]
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 282--292
+ [][] 
+ []
+
+[65]
+Underfull \hbox (badness 6461) in paragraph at lines 325--325
+[]\OT1/cmr/m/n/9 Agente im-mo-bi-lia-re
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 325--327
+\OT1/cmr/m/n/9 descrizione=Bellissimo ap-par-ta-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 321--331
+ [][] 
+ []
+
+[66]
+Underfull \hbox (badness 6461) in paragraph at lines 366--366
+[]\OT1/cmr/m/n/9 Agente im-mo-bi-lia-re
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 366--368
+\OT1/cmr/m/n/9 descrizione=Bellissimo ap-par-ta-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 362--372
+ [][] 
+ []
+
+[67]) (UnitTestRicercaImmobile.tex
+Underfull \hbox (badness 1028) in paragraph at lines 9--9
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma ^^Re
+ []
+
+
+Underfull \hbox (badness 1173) in paragraph at lines 9--10
+\OT1/cmr/m/n/9 classeEnergetica=null, nu-me-ro-Ba-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 5--14
+ [][] 
+ []
+
+
+Underfull \hbox (badness 1028) in paragraph at lines 46--46
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma ^^Re
+ []
+
+
+Underfull \hbox (badness 1173) in paragraph at lines 46--47
+\OT1/cmr/m/n/9 classeEnergetica=null, nu-me-ro-Ba-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 42--51
+ [][] 
+ []
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[68] [69]
+Underfull \hbox (badness 1028) in paragraph at lines 87--87
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma ^^Re
+ []
+
+
+Underfull \hbox (badness 1173) in paragraph at lines 87--88
+\OT1/cmr/m/n/9 classeEnergetica=null, nu-me-ro-Ba-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 83--92
+ [][] 
+ []
+
+[70]
+Underfull \hbox (badness 1028) in paragraph at lines 128--128
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma ^^Re
+ []
+
+
+Underfull \hbox (badness 1173) in paragraph at lines 128--129
+\OT1/cmr/m/n/9 classeEnergetica=null, nu-me-ro-Ba-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 124--133
+ [][] 
+ []
+
+[71]
+Underfull \hbox (badness 10000) in paragraph at lines 168--168
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma
+ []
+
+
+Underfull \hbox (badness 2529) in paragraph at lines 168--168
+\OT1/cmr/m/n/9 non ^^Re pre-sen-te un
+ []
+
+
+Underfull \hbox (badness 1173) in paragraph at lines 168--169
+\OT1/cmr/m/n/9 classeEnergetica=null, nu-me-ro-Ba-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 164--173
+ [][] 
+ []
+
+[72]
+Underfull \hbox (badness 1028) in paragraph at lines 206--206
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma ^^Re
+ []
+
+
+Underfull \hbox (badness 3396) in paragraph at lines 206--206
+\OT1/cmr/m/n/9 pre-sen-te un im-mo-
+ []
+
+
+Underfull \hbox (badness 7558) in paragraph at lines 206--206
+\OT1/cmr/m/n/9 bi-le in ven-di-ta a
+ []
+
+
+Underfull \hbox (badness 1270) in paragraph at lines 206--206
+\OT1/cmr/m/n/9 Na-po-li con 3 stan-
+ []
+
+
+Underfull \hbox (badness 7869) in paragraph at lines 206--206
+\OT1/cmr/m/n/9 ze di 120mq con
+ []
+
+
+Underfull \hbox (badness 1173) in paragraph at lines 207--208
+\OT1/cmr/m/n/9 classeEnergetica=null, nu-me-ro-Ba-
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 202--213
+ [][] 
+ []
+
+) (UnitTestAvvioTrattativa.tex [73]
+Underfull \hbox (badness 1028) in paragraph at lines 10--10
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma ^^Re
+ []
+
+
+Overfull \hbox (0.88461pt too wide) in paragraph at lines 11--13
+\OT1/cmr/m/n/9 offerta1.StatoOfferta=CHIUSA[]AC
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--13
+\OT1/cmr/m/n/9 offerta3.StatoOfferta=CHIUSA[]RI
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 11--13
+\OT1/cmr/m/n/9 offerta3.StatoOfferta=CHIUSA[]RI
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 6--15
+ [][] 
+ []
+
+[74]
+Underfull \hbox (badness 1028) in paragraph at lines 47--47
+[]\OT1/cmr/m/n/9 Nella piat-ta-for-ma ^^Re
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+\OT1/cmr/m/n/9 offerta1.StatoOfferta=CHIUSA[]RI
+ []
+
+
+Overfull \hbox (0.88461pt too wide) in paragraph at lines 48--50
+\OT1/cmr/m/n/9 offerta3.StatoOfferta=CHIUSA[]AC
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+\OT1/cmr/m/n/9 offerta2.StatoOfferta=CHIUSA[]RI
+ []
+
+
+Overfull \hbox (87.11218pt too wide) in paragraph at lines 43--52
+ [][] 
+ []
+
+)) [75] (documentazione.aux (capitolo1.aux) (capitolo2.aux) (capitolo3.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
 Package rerunfilecheck Info: File `documentazione.out' has not changed.
-(rerunfilecheck)             Checksum: 514B23BC3657B7C1B7332F741DB09F44;16341.
+(rerunfilecheck)             Checksum: 1712AA7080DE0431C97B9D9B8BCD4F5A;16890.
  ) 
 Here is how much of TeX's memory you used:
- 14024 strings out of 474486
- 227483 string characters out of 5743755
+ 14384 strings out of 474486
+ 233513 string characters out of 5743755
  2137542 words of memory out of 5000000
- 35570 multiletter control sequences out of 15000+600000
+ 35649 multiletter control sequences out of 15000+600000
  565616 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,17n,81p,546b,2051s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\anton\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt0900.pk> <C:\Users\anton\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmitt10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/anton/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on documentazione.pdf (64 pages, 1997708 bytes).
+Output written on documentazione.pdf (76 pages, 2083730 bytes).
 PDF statistics:
- 1465 PDF objects out of 1728 (max. 8388607)
- 507 named destinations out of 1000 (max. 500000)
- 848 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1837 PDF objects out of 2073 (max. 8388607)
+ 782 named destinations out of 1000 (max. 500000)
+ 856 words of extra memory for PDF output out of 10000 (max. 10000000)
 

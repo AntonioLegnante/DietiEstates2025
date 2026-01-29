@@ -19,7 +19,6 @@ class ModelTest {
     private Agenzia agenzia;
     private Immobile immobile;
     private Chat chat;
-    private Messaggi messaggio;
     private Offerta offerta;
 
     @BeforeEach
@@ -92,7 +91,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Creazione Utente valido")
+    @DisplayName("Test Creazione Utente valido")
     void testUtenteCreation() {
         assertEquals(1, utente.getId());
         assertEquals("testuser", utente.getUsername());
@@ -102,7 +101,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Modifica dati Utente")
+    @DisplayName("Test Modifica dati Utente")
     void testUtenteUpdate() {
         utente.setEmail("newemail@test.com");
         utente.setNumeroDiTelefono("3332223333");
@@ -112,7 +111,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Collegamento Agenzia a Utente")
+    @DisplayName("Test Collegamento Agenzia a Utente")
     void testUtenteWithAgency() {
         utente.setAgenziaGestita(agenzia);
         
@@ -121,7 +120,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Creazione Agenzia valida")
+    @DisplayName("Test Creazione Agenzia valida")
     void testAgenziaCreation() {
         assertEquals(1, agenzia.getId());
         assertEquals("Test Agency", agenzia.getNomeAgenzia());
@@ -132,7 +131,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Validazione Partita IVA")
+    @DisplayName("Test Validazione Partita IVA")
     void testAgenziaPartitaIva() {
         Agenzia agenzia2 = new Agenzia();
         agenzia2.setPartitaIVA("98765432101");
@@ -141,7 +140,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Creazione Immobile valido")
+    @DisplayName("Test Creazione Immobile valido")
     void testImmobileCreation() {
         assertEquals(1, immobile.getId());
         assertEquals("Appartamento Lusso", immobile.getTitolo());
@@ -153,7 +152,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Immobile in affitto")
+    @DisplayName("Test Immobile in affitto")
     void testImmobileForRent() {
         Immobile affitto = new Immobile();
         affitto.setTitolo("Appartamento Affitto");
@@ -167,14 +166,14 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Immobile con garage")
+    @DisplayName("Test Immobile con garage")
     void testImmobileWithGarage() {
         assertTrue(immobile.getGarage());
         assertEquals(2, immobile.getNumeroBagni());
     }
 
     @Test
-    @DisplayName("✅ Test Gallery immagini immobile")
+    @DisplayName("Test Gallery immagini immobile")
     void testImmobileGallery() {
         assertNotNull(immobile.getGalleryImages());
         assertEquals(1, immobile.getGalleryImages().size());
@@ -182,7 +181,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Creazione Chat valida")
+    @DisplayName("Test Creazione Chat valida")
     void testChatCreation() {
         assertEquals(1, chat.getChatId());
         assertEquals("testuser", chat.getUtente().getUsername());
@@ -191,7 +190,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Aggiunta offerte a Chat")
+    @DisplayName("Test Aggiunta offerte a Chat")
     void testChatAddOffers() {
         chat.getOfferte().add(offerta);
         
@@ -200,7 +199,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Cambio stato negoziazione")
+    @DisplayName("Test Cambio stato negoziazione")
     void testChatStatusChange() {
         chat.setStatoNegoziazione(StatoNegoziazione.APERTA);
         assertEquals(StatoNegoziazione.APERTA, chat.getStatoNegoziazione());
@@ -210,7 +209,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Creazione Offerta valida")
+    @DisplayName("Test Creazione Offerta valida")
     void testOffertaCreation() {
         assertEquals(1, offerta.getOffertaId());
         assertEquals(320000.0, offerta.getImportoOfferto());
@@ -219,7 +218,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Cambio stato offerta")
+    @DisplayName("Test Cambio stato offerta")
     void testOffertaStatusChange() {
         offerta.setStato(StatoOfferta.ACCETTATA);
         assertEquals(StatoOfferta.ACCETTATA, offerta.getStato());
@@ -229,7 +228,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Offerta rifiutata")
+    @DisplayName("Test Offerta rifiutata")
     void testOffertaRejected() {
         Offerta rifiutata = new Offerta();
         rifiutata.setImportoOfferto(250000.0);
@@ -240,21 +239,21 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Enum StatoOfferta")
+    @DisplayName("Test Enum StatoOfferta")
     void testStatoOffertaEnum() {
         assertEquals(StatoOfferta.IN_ATTESA, offerta.getStato());
         assertNotEquals(StatoOfferta.ACCETTATA, offerta.getStato());
     }
 
     @Test
-    @DisplayName("✅ Test Enum StatoNegoziazione")
+    @DisplayName("Test Enum StatoNegoziazione")
     void testStatoNegoziazioneEnum() {
         assertEquals(StatoNegoziazione.APERTA, chat.getStatoNegoziazione());
         assertNotEquals(StatoNegoziazione.CHIUSA_ACCETTATA, chat.getStatoNegoziazione());
     }
 
     @Test
-    @DisplayName("✅ Test Immobile con valori limite")
+    @DisplayName("Test Immobile con valori limite")
     void testImmobileWithExtremeValues() {
         Immobile immobileExtra = new Immobile();
         immobileExtra.setPrezzo(5000000.0);
@@ -269,7 +268,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Chat con multipli messaggi e offerte")
+    @DisplayName("Test Chat con multipli offerte")
     void testChatWithMultipleItems() {
         
         Offerta off2 = new Offerta();
@@ -283,7 +282,7 @@ class ModelTest {
     }
 
     @Test
-    @DisplayName("✅ Test Classe energetica immobile")
+    @DisplayName("Test Classe energetica immobile")
     void testImmobileEnergyClass() {
         assertEquals("B", immobile.getClasseEnergetica());
         

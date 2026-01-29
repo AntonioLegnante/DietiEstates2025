@@ -119,7 +119,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("❌ Test Creazione Immobile con agente non trovato")
+    @DisplayName("Test Creazione Immobile con agente non trovato")
     void testCreateImmobileFailureAgentNotFound() throws Exception {
         // Arrange
         when(utenteRepository.findByUsername("nonexistent"))
@@ -139,7 +139,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Ricerca Immobili per città")
+    @DisplayName("Test Ricerca Immobili per città")
     void testSearchImmobiliByCity() {
         // Arrange
         List<Immobile> immobili = Arrays.asList(immobile);
@@ -161,7 +161,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Ricerca Immobili per intervallo prezzo")
+    @DisplayName("Test Ricerca Immobili per intervallo prezzo")
     void testSearchImmobiliByPriceRange() {
         // Arrange
         List<Immobile> immobili = Arrays.asList(immobile);
@@ -184,7 +184,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Ricerca Immobili per numero stanze")
+    @DisplayName("Test Ricerca Immobili per numero stanze")
     void testSearchImmobiliByRooms() {
         // Arrange
         List<Immobile> immobili = Arrays.asList(immobile);
@@ -205,7 +205,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Ricerca Immobili in affitto")
+    @DisplayName("Test Ricerca Immobili in affitto")
     void testSearchImmobiliForRent() {
         // Arrange
         Immobile immobileAffitto = new Immobile();
@@ -235,7 +235,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Ricerca Immobili in vendita")
+    @DisplayName("Test Ricerca Immobili in vendita")
     void testSearchImmobiliForSale() {
         // Arrange
         List<Immobile> immobili = Arrays.asList(immobile);
@@ -257,7 +257,7 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Ricerca Immobili con risultati vuoti")
+    @DisplayName("Test Ricerca Immobili con risultati vuoti")
     void testSearchImmobiliEmptyResults() {
         // Arrange
         when(immobileRepository.ricercaAvanzata(
@@ -278,7 +278,7 @@ class ImmobileServiceTest {
 
 
     @Test
-    @DisplayName("✅ Test Creazione Immobile senza gallery")
+    @DisplayName("Test Creazione Immobile senza gallery")
     void testCreateImmobileWithoutGallery() throws Exception {
         // Arrange
         when(utenteRepository.findByUsername("agent1")).thenReturn(Optional.of(agente));
@@ -300,7 +300,29 @@ class ImmobileServiceTest {
     }
 
     @Test
-    @DisplayName("✅ Test Ricerca con più filtri combinati")
+    @DisplayName("Test Creazione Immobile senza coverImage")
+    void testCreateImmobileWithoutCoverImage() throws Exception {
+        // Arrange
+        when(utenteRepository.findByUsername("agent1")).thenReturn(Optional.of(agente));
+        when(minioService.uploadFile(null))
+                 .thenThrow(new Exception("Cover image is required"));
+        when(minioService.uploadMultipleFiles(galleryImages))
+                .thenReturn(Arrays.asList("https://minio.example.com/gallery1.jpg"));
+        when(immobileRepository.save(any(Immobile.class))).thenReturn(immobile);
+
+        // Act
+        assertThrows(Exception.class, () -> {
+            immobileService.createImmobile(
+                    "Appartamento Lusso", "Bellissimo appartamento", 350000.0,
+                    "120 mq", "Napoli", "Via Roma 123",
+                    false, true, 3, "3°", "B", true, 2,
+                    null, galleryImages, "agent1"
+            );
+        });
+    }
+
+    @Test
+    @DisplayName("Test Ricerca con più filtri combinati")
     void testSearchImmobiliWithMultipleFilters() {
         // Arrange
         List<Immobile> immobili = Arrays.asList(immobile);

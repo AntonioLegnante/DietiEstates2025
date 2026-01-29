@@ -12,6 +12,7 @@ import com.DietiEstates2025.DietiEstates2025.Repositories.UtenteRepository;
 import com.DietiEstates2025.DietiEstates2025.Services.ChatService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -62,15 +63,15 @@ class ChatServiceTest {
         chat.setUtente(offerente);
         chat.setVendorId(vendor);
 
-        o1 = new Offerta(chat, offerente, 100.0, "n1");
+        o1 = new Offerta(chat, offerente, 450.0, "n1");
         o1.setOffertaId(1);
         o1.setStato(StatoOfferta.IN_ATTESA);
 
-        o2 = new Offerta(chat, offerente, 200.0, "n2");
+        o2 = new Offerta(chat, offerente, 430.0, "n2");
         o2.setOffertaId(2);
         o2.setStato(StatoOfferta.IN_ATTESA);
 
-        o3 = new Offerta(chat, offerente, 300.0, "n3");
+        o3 = new Offerta(chat, offerente, 380.0, "n3");
         o3.setOffertaId(3);
         o3.setStato(StatoOfferta.IN_ATTESA);
 
@@ -78,6 +79,7 @@ class ChatServiceTest {
     }
 
     @Test
+    @DisplayName("Accettare la seconda offerta su tre")
     void accettaOffertaSeconda() {
 
         when(offertaRepository.findById(2)).thenReturn(Optional.of(o2));
@@ -99,23 +101,19 @@ class ChatServiceTest {
     }
 
     @Test
+    @DisplayName("Accettare la terza offerta su tre")
     void rifiutaOffertaTerzaOfferta() {
         chat.setOfferte(List.of(o1, o2, o3));
-
         when(offertaRepository.findById(3)).thenReturn(Optional.of(o3));
         when(utenteRepository.findByUsername("Carlo")).thenReturn(Optional.of(vendor));
         when(offertaRepository.save(any(Offerta.class))).thenAnswer(inv -> inv.getArgument(0));
-
         Offerta result = chatService.rifiutaOfferta(3, "Troppo basso", "Carlo");
-
         assertNotNull(result);
         assertEquals(StatoOfferta.RIFIUTATA, result.getStato());
         assertNotNull(result.getDataRisposta());
         assertEquals(StatoNegoziazione.APERTA, chat.getStatoNegoziazione());
-
         assertEquals(StatoOfferta.IN_ATTESA, o1.getStato());
         assertEquals(StatoOfferta.IN_ATTESA, o2.getStato());
-
         verify(offertaRepository, times(1)).findById(3);
         verify(offertaRepository, times(1)).save(result);
     }

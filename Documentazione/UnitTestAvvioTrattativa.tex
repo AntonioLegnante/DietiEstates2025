@@ -1,0 +1,74 @@
+\newpage
+\textbf{Test Accettare la seconda offerta su tre}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    17 & Nella piattaforma è presente un immobile. Su questa chat sono state caricate 3 offerte & idOfferta=2 \newline username=agente & 
+    result!=null, \newline result.dataRisposta!=null, \newline offerta1.StatoOfferta=CHIUSA\_AC -CETTATA, \newline offerta3.StatoOfferta=CHIUSA\_RI -FIUTATA, 
+    \newline offerta3.StatoOfferta=CHIUSA\_RI -FIUTATA \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Accettare la seconda offerta su tre")
+    void accettaOffertaSeconda() {
+        //Arrange
+        when(offertaRepository.findById(2)).thenReturn(Optional.of(o2));
+        when(utenteRepository.findByUsername("agente")).thenReturn(Optional.of(vendor));
+        when(offertaRepository.save(any(Offerta.class))).thenAnswer(inv -> inv.getArgument(0));
+        //Act
+        Offerta result = chatService.accettaOfferta(2, "agente");
+        assertNotNull(result);
+        assertEquals(StatoOfferta.ACCETTATA, result.getStato());
+        assertNotNull(result.getDataRisposta());
+        assertEquals(StatoNegoziazione.CHIUSA_ACCETTATA, chat.getStatoNegoziazione());
+        assertEquals(StatoOfferta.RIFIUTATA, o1.getStato());
+        assertEquals(StatoOfferta.RIFIUTATA, o3.getStato());
+        verify(offertaRepository, times(1)).findById(2);
+        verify(offertaRepository, times(1)).save(result);
+    }
+\end{lstlisting}    
+
+\newpage
+\textbf{Test Accettare la terza offerta su tre}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    19 & Nella piattaforma è presente un immobile. Su questa chat sono state caricate 3 offerte & idOfferta=3 \newline username=agente & 
+    result!=null, \newline result.dataRisposta!=null, \newline offerta1.StatoOfferta=CHIUSA\_RI -FIUTATA, \newline offerta3.StatoOfferta=CHIUSA\_AC -CETTATA, 
+    \newline offerta2.StatoOfferta=CHIUSA\_RI -FIUTATA \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Accettare la terza offerta su tre")
+    void accettaOffertaSeconda() {
+        //Arrange
+        when(offertaRepository.findById(2)).thenReturn(Optional.of(o2));
+        when(utenteRepository.findByUsername("agente")).thenReturn(Optional.of(vendor));
+        when(offertaRepository.save(any(Offerta.class))).thenAnswer(inv -> inv.getArgument(0));
+        //Act
+        Offerta result = chatService.accettaOfferta(2, "agente");
+        assertNotNull(result);
+        assertEquals(StatoOfferta.ACCETTATA, result.getStato());
+        assertNotNull(result.getDataRisposta());
+        assertEquals(StatoNegoziazione.CHIUSA_ACCETTATA, chat.getStatoNegoziazione());
+        assertEquals(StatoOfferta.RIFIUTATA, o1.getStato());
+        assertEquals(StatoOfferta.RIFIUTATA, o3.getStato());
+        verify(offertaRepository, times(1)).findById(2);
+        verify(offertaRepository, times(1)).save(result);
+    }
+\end{lstlisting}    
+

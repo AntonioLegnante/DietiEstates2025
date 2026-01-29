@@ -80,7 +80,8 @@
 \contentsline {section}{\numberline {2.18}Analisi del codice con SonarQube}{56}{section.2.18}%
 \contentsline {chapter}{\numberline {3}Testing}{57}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Strategie adottate}{57}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Unit Test}{58}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Test del Service}{63}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Test End-to-end}{63}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Test Usabilita}{63}{section.3.5}%
+\contentsline {section}{\numberline {3.2}Test di unita Registrazione Utente}{58}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Test di unita Inserimento immobile}{68}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Test di unita Ricerca immobile}{68}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Test di unita Avvio trattativa}{73}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Test di usabilita}{75}{section.3.6}%

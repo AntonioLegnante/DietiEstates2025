@@ -1,0 +1,243 @@
+\textbf{Test Ricerca Immobili per città}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    11 & Nella piattaforma è presente un immobile localizzato a Napoli & localita=Napoli, \newline minPrezzo=null, \newline maxPrezzo=null, \newline affitta=false
+    \newline vendita=true, \newline numeroStanze=null, \newline dimensione=null, \newline piano=null, \newline classeEnergetica=null, numeroBagni=null & 
+    result!=null, \newline result.size=1, \newline result.get(1).citta=Napoli \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+   @Test
+   @DisplayName("Test Ricerca Immobili per citta")
+    void testSearchImmobiliByCity() {
+        // Arrange
+        List<Immobile> immobili = Arrays.asList(immobile);
+        when(immobileRepository.ricercaAvanzata(
+                "Napoli", null, null, false, true, null, null,
+                null, null, null
+        )).thenReturn(immobili);
+        // Act
+        List<Immobile> result = immobileService.applicaRicerca(
+                "Napoli", null, null, false, true, null, null,
+                null, null, null
+        );
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Napoli", result.get(0).getCitta());
+    }
+\end{lstlisting}
+
+\textbf{Test Ricerca Immobili per intervallo prezzo}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    12 & Nella piattaforma è presente un immobile il cui prezzo è compreso fra 300000.0 e 400000.0 & localita=Napoli, \newline minPrezzo=300000.0, \newline maxPrezzo= 400000.0, \newline affitta=false
+    \newline vendita=true, \newline numeroStanze=null, \newline dimensione=null, \newline piano=null, \newline classeEnergetica=null, numeroBagni=null & 
+    result!=null, \newline result.size=1, \newline result.get(1).prezzo>=300000.0, \newline result.get(1).prezzo<=400000.0   \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+   @Test
+    @DisplayName("Test Ricerca Immobili per intervallo prezzo")
+    void testSearchImmobiliByPriceRange() {
+        // Arrange
+        List<Immobile> immobili = Arrays.asList(immobile);
+        when(immobileRepository.ricercaAvanzata(
+                "Napoli", 300000.0, 400000.0, false, true, null, null,
+                null, null, null
+        )).thenReturn(immobili);
+
+        // Act
+        List<Immobile> result = immobileService.applicaRicerca(
+                "Napoli", 300000.0, 400000.0, false, true, null, null,
+                null, null, null
+        );
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.get(0).getPrezzo() >= 300000.0);
+        assertTrue(result.get(0).getPrezzo() <= 400000.0);
+    }
+\end{lstlisting}
+
+\newpage
+\textbf{Test Ricerca Immobili in affitto}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    13 & Nella piattaforma è presente un immobile in affitto & localita=Roma, \newline minPrezzo=null, \newline maxPrezzo=null, \newline affitta=true
+    \newline vendita=false, \newline numeroStanze=null, \newline dimensione=null, \newline piano=null, \newline classeEnergetica=null, numeroBagni=null & 
+    result!=null, \newline result.affitto=true  \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+   @Test
+    @DisplayName("Test Ricerca Immobili in affitto")
+    void testSearchImmobiliForRent() {
+        // Arrange
+        List<Immobile> immobili = Arrays.asList(immobileAffitto);
+        when(immobileRepository.ricercaAvanzata(
+                "Roma", null, null, true, false, null, null,
+                null, null, null
+        )).thenReturn(immobili);
+
+        // Act
+        List<Immobile> result = immobileService.applicaRicerca(
+                "Roma", null, null, true, false, null, null,
+                null, null, null
+        );
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.get(0).getAffitto());
+        assertFalse(result.get(0).getVendita());
+    }
+\end{lstlisting}
+
+\newpage
+
+\textbf{Test Ricerca Immobili in vendita}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    14 & Nella piattaforma è presente un immobile in vedita & localita=Napoli, \newline minPrezzo=null, \newline maxPrezzo=null, \newline affitta=false
+    \newline vendita=true, \newline numeroStanze=null, \newline dimensione=null, \newline piano=null, \newline classeEnergetica=null, numeroBagni=null & 
+    result!=null, \newline result.vendita=true  \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Ricerca Immobili in vendita")
+    void testSearchImmobiliForSale() {
+        // Arrange
+        List<Immobile> immobili = Arrays.asList(immobile);
+        when(immobileRepository.ricercaAvanzata(
+                "Napoli", null, null, false, true, null, null,
+                null, null, null
+        )).thenReturn(immobili);
+
+        // Act
+        List<Immobile> result = immobileService.applicaRicerca(
+                "Napoli", null, null, false, true, null, null,
+                null, null, null
+        );
+
+        // Assert
+        assertNotNull(result);
+        assertFalse(result.get(0).getAffitto());
+        assertTrue(result.get(0).getVendita());
+    }
+\end{lstlisting}
+
+\newpage
+\textbf{Test Ricerca Immobili con risultati vuoti}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    15 & Nella piattaforma non è presente un immobile localizzato a Palermo in vendita & localita=Palermo, \newline minPrezzo=null, \newline maxPrezzo=null, \newline affitta=false
+    \newline vendita=true, \newline numeroStanze=null, \newline dimensione=null, \newline piano=null, \newline classeEnergetica=null, numeroBagni=null & 
+    result!=null, \newline result.size=0  \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+     @Test
+    @DisplayName("Test Ricerca Immobili con risultati vuoti")
+    void testSearchImmobiliEmptyResults() {
+        // Arrange
+        when(immobileRepository.ricercaAvanzata(
+                "Palermo", null, null, false, true, null, null,
+                null, null, null
+        )).thenReturn(new ArrayList<>());
+
+        // Act
+        List<Immobile> result = immobileService.applicaRicerca(
+                "Palermo", null, null, false, true, null, null,
+                null, null, null
+        );
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(0, result.size());
+    }
+\end{lstlisting}
+
+\newpage
+\textbf{Test Ricerca Immobili con risultati vuoti}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    16 & Nella piattaforma è presente un immobile in vendita a Napoli con 3 stanze di 120mq con prezzo compreso fra 300000.0 e 400000.0 & 
+    localita=Napoli, \newline minPrezzo=300000.0, \newline maxPrezzo=400000.0, \newline affitta=false
+    \newline vendita=true, \newline numeroStanze=3, \newline dimensione=120mq, \newline piano=null, \newline classeEnergetica=null, numeroBagni=null & 
+    result!=null, \newline result.size=1, \newline result.get(1).citta=Napoli, \newline result.get(1).prezzo=350000.0, \newline result.get(1).numeroStanze=3,
+    \newline result.get(1).dimensione=120mq  \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Ricerca con piu filtri combinati")
+    void testSearchImmobiliWithMultipleFilters() {
+        // Arrange
+        List<Immobile> immobili = Arrays.asList(immobile);
+        when(immobileRepository.ricercaAvanzata(
+                "Napoli", 300000.0, 400000.0, false, true, 3, "120 mq",
+                null, null, null
+        )).thenReturn(immobili);
+        // Act
+        List<Immobile> result = immobileService.applicaRicerca(
+                "Napoli", 300000.0, 400000.0, false, true, 3, "120 mq",
+                null, null, null
+        );
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Napoli", result.get(0).getCitta());
+        assertEquals(350000.0, result.get(0).getPrezzo());
+        assertEquals(3, result.get(0).getNumeroStanze());
+        assertEquals("120 mq", result.get(0).getDimensione());
+    }
+\end{lstlisting}
+
+
+
+
+

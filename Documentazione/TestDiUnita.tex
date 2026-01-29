@@ -225,4 +225,175 @@
     }
 \end{lstlisting}
 
+\newpage
+\textbf{Test Creazione Immobile valido}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    7 & Agente immobiliare loggato correttamente & titolo=Appartamento Lusso, \newline descrizione=Bellissimo appartamento, \newline prezzo=350000.0, \newline dimensione=120 mq,
+    \newline citta=Napoli \newline indirizzo=Via Roma 123 \newline affitto=false, \newline vendita=true, \newline numeroStanze=3, \newline piano=3,
+    \newline classeEnergetica=B \newline garage=true \newline numeroBagni=2 \newline galleryImages=imageFile \newline galleryImages=galleryImages & 
+    result!=null \newline result.titolo=Appartamento Lusso \newline result.prezzo=350000.0 \newline result.citta=Napoli \\
+    \hline
+    \end{tabular} 
+\end{table}
 
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Creazione Immobile valido")
+    void testCreateImmobileSuccess() throws Exception {
+        // Arrange
+        agente = new Utente();
+        agente.setId(1);
+        agente.setUsername("agent1");
+        agente.setRuolo("agente immobiliare");
+        when(utenteRepository.findByUsername("agent1")).thenReturn(Optional.of(agente));
+        when(minioService.uploadFile(imageFile))
+                .thenReturn("https://minio.example.com/img1.jpg");
+        when(minioService.uploadMultipleFiles(galleryImages))
+                .thenReturn(Arrays.asList("https://minio.example.com/gallery1.jpg"));
+        when(immobileRepository.save(any(Immobile.class))).thenReturn(immobile);
+        // Act
+        Immobile result = immobileService.createImmobile(
+                "Appartamento Lusso", "Bellissimo appartamento", 350000.0,
+                "120 mq", "Napoli", "Via Roma 123",
+                false, true, 3, "3", "B", true, 2,
+                imageFile, galleryImages, "agent1"
+        );
+        // Assert
+        assertNotNull(result);
+        assertEquals("Appartamento Lusso", result.getTitolo());
+        assertEquals(350000.0, result.getPrezzo());
+        assertEquals("Napoli", result.getCitta());
+        assertEquals("agent1", result.getUtente().getUsername());
+        verify(immobileRepository, times(1)).save(any(Immobile.class));
+    }
+\end{lstlisting}
+
+\textbf{Test Creazione Immobile senza effettuare l'accesso - Test del back end}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    8 & Agente non loggato; test del metodo back end & titolo=Appartamento, \newline descrizione=Descrizione, \newline prezzo=100000.0, \newline dimensione=100 mq,
+    \newline citta=Napoli \newline indirizzo=Via Test \newline affitto=false, \newline vendita=true, \newline numeroStanze=2, \newline piano=1,
+    \newline classeEnergetica=A \newline garage=false \newline numeroBagni=1 \newline galleryImages=imageFile \newline galleryImages=galleryImages & 
+    Lancia Exception \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Creazione Immobile con agente non trovato")
+    void testCreateImmobileFailureAgentNotFound() throws Exception {
+        // Arrange
+        when(utenteRepository.findByUsername("nonexistent"))
+                .thenReturn(Optional.empty());
+        when(minioService.uploadFile(imageFile))
+                .thenReturn("https://minio.example.com/img1.jpg");
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> {
+            immobileService.createImmobile(
+                    "Appartamento", "Descrizione", 100000.0,
+                    "100 mq", "Napoli", "Via Test",
+                    false, true, 2, "1", "A", false, 1,
+                    imageFile, galleryImages, "nonexistent"
+            );
+        });
+    }
+\end{lstlisting}
+
+\textbf{Test Creazione Immobile valido senza gallery}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    9 & Agente immobiliare loggato correttamente & titolo=Appartamento Lusso, \newline descrizione=Bellissimo appartamento, \newline prezzo=350000.0, \newline dimensione=120 mq,
+    \newline citta=Napoli \newline indirizzo=Via Roma 123 \newline affitto=false, \newline vendita=true, \newline numeroStanze=3, \newline piano=3,
+    \newline classeEnergetica=B \newline garage=true \newline numeroBagni=2 \newline galleryImages=imageFile \newline galleryImages=null & 
+    result!=null \newline result.titolo=Appartamento Lusso \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+
+\begin{lstlisting}[style=react]
+   @Test
+    @DisplayName("Test Creazione Immobile senza gallery")
+    void testCreateImmobileWithoutGallery() throws Exception {
+        // Arrange
+        when(utenteRepository.findByUsername("agent1")).thenReturn(Optional.of(agente));
+        when(minioService.uploadFile(imageFile))
+                .thenReturn("https://minio.example.com/img1.jpg");
+        when(immobileRepository.save(any(Immobile.class))).thenReturn(immobile);
+
+        // Act
+        Immobile result = immobileService.createImmobile(
+                "Appartamento Lusso", "Bellissimo appartamento", 350000.0,
+                "120 mq", "Napoli", "Via Roma 123",
+                false, true, 3, "3", "B", true, 2,
+                imageFile, null, "agent1"
+        );
+
+        // Assert
+        assertNotNull(result);
+        assertEquals("Appartamento Lusso", result.getTitolo());
+    }
+\end{lstlisting}
+
+\textbf{Test Creazione Immobile valido senza gallery}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    10 & Agente immobiliare loggato correttamente & titolo=Appartamento Lusso, \newline descrizione=Bellissimo appartamento, \newline prezzo=350000.0, \newline dimensione=120 mq,
+    \newline citta=Napoli \newline indirizzo=Via Roma 123 \newline affitto=false, \newline vendita=true, \newline numeroStanze=3, \newline piano=3,
+    \newline classeEnergetica=B \newline garage=true \newline numeroBagni=2 \newline galleryImages=null \newline galleryImages=galleryImages & 
+    lancia Exception \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Test Creazione Immobile senza coverImage")
+    void testCreateImmobileWithoutCoverImage() throws Exception {
+        // Arrange
+        when(utenteRepository.findByUsername("agent1")).thenReturn(Optional.of(agente));
+        when(minioService.uploadFile(null))
+                 .thenThrow(new Exception("Cover image is required"));
+        when(minioService.uploadMultipleFiles(galleryImages))
+                .thenReturn(Arrays.asList("https://minio.example.com/gallery1.jpg"));
+        when(immobileRepository.save(any(Immobile.class))).thenReturn(immobile);
+
+        // Act
+        assertThrows(Exception.class, () -> {
+            immobileService.createImmobile(
+                    "Appartamento Lusso", "Bellissimo appartamento", 350000.0,
+                    "120 mq", "Napoli", "Via Roma 123",
+                    false, true, 3, "3", "B", true, 2,
+                    null, galleryImages, "agent1"
+            );
+        });
+    }
+\end{lstlisting}
+
+ 

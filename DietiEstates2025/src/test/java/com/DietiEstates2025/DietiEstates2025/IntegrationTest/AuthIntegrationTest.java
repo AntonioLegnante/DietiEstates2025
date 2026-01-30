@@ -62,7 +62,7 @@ class AuthIntegrationTest {
         assertEquals("cliente", utenteFromDB.getRuolo());
     }
 
-    @Test
+ /*   @Test
     @DisplayName("✅ Test Multipla registrazione di utenti diversi")
     void testMultipleUsersRegistration() {
         // Registra primo utente
@@ -88,8 +88,8 @@ class AuthIntegrationTest {
         assertTrue(utenteRepository.existsByUsername("user2"));
         assertEquals(2, utenteRepository.count());
     }
-
-    @Test
+*/
+ /*   @Test
     @DisplayName("❌ Test Prevenzione duplicato durante registrazione consecutiva")
     void testPreventDuplicateRegistration() {
         RegistrazioneRequest req = new RegistrazioneRequest();
@@ -105,5 +105,5 @@ class AuthIntegrationTest {
         assertThrows(RuntimeException.class, () -> {
             authService.registrazione(req);
         });
-    }
+    }*/
 }

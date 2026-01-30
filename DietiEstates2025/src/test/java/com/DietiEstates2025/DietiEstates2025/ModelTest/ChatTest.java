@@ -4,10 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.DietiEstates2025.DietiEstates2025.Models.Chat;
 import com.DietiEstates2025.DietiEstates2025.Models.Offerta;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -38,6 +35,7 @@ public class ChatTest {
     }
 
     @Test
+    @DisplayName("Inserimento di un offerta corretta")
     void testAggiungiOffertaConDatiAdHoc() {
 
         chat.aggiungiOfferta(offertaMock);

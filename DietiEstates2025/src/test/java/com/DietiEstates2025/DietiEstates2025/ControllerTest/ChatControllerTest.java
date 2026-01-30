@@ -8,6 +8,7 @@ import com.DietiEstates2025.DietiEstates2025.Models.Offerta;
 import com.DietiEstates2025.DietiEstates2025.Models.Utente;
 import com.DietiEstates2025.DietiEstates2025.Services.ChatService;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,10 +33,11 @@ class ChatControllerTest {
     private ChatController chatController;
 
     @Test
+    @DisplayName("Inserimento di un offerta con valore positivo")
     void makeOffer_positiveAmount_returnsOffertaDTO() {
         // Arrange
         Integer chatId = 1;
-        Double importo = 150.0;
+        Double importo = 550.0;
         String note = "Prova";
         String username = "cliente1";
 
@@ -65,6 +67,7 @@ class ChatControllerTest {
     }
 
     @Test
+    @DisplayName("Inserimento di un offerta con valore negativo")
     void makeOffer_negativeAmount_returnsBadRequest() {
         // Arrange
         Integer chatId = 1;

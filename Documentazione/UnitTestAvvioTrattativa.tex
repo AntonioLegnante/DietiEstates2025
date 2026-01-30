@@ -1,3 +1,32 @@
+\textbf{Inserimento di un offerta corretta - Back-end}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    17 & Nella piattaforma è presente un immobile senza offerte & importoSpecifico=250000.0, \newline noteSpecifiche=Offerta ad hoc per appartamento vista mare & 
+    listaOfferte.size=1, \newline listaOfferta.get(1).importoSpecifico= 250000.0, \newline listaOfferta.get(1).noteSpecifiche=Of -ferta ad hoc per appartamento vista mare \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Inserimento di un offerta corretta")
+    void testAggiungiOffertaConDatiAdHoc() {
+        //Act
+        chat.aggiungiOfferta(offertaMock);
+        List<Offerta> listaOfferte = chat.getOfferte();
+        assertEquals(1, listaOfferte.size(), "La lista dovrebbe contenere esattamente un'offerta");
+        assertTrue(listaOfferte.contains(offertaMock), "L'offerta mockata dovrebbe essere nella lista della chat");
+        assertEquals(importoSpecifico, listaOfferte.get(0).getImportoOfferto());
+        assertEquals(noteSpecifiche, listaOfferte.get(0).getNote());
+        verify(offertaMock, times(1)).setChat(chat);
+    }
+\end{lstlisting} 
+
 \newpage
 \textbf{Test Accettare la seconda offerta su tre}
 \begin{table}[!h]
@@ -72,3 +101,74 @@
     }
 \end{lstlisting}    
 
+\newpage 
+\textbf{Inserimento di un offerta con valore positivo}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    19 & Nella piattaforma è presente un immobile. L'utente è loggato & importo=550.0, \newline note=Prova
+    & response.code=200 \newline response.importoOfferto=550.0 \newline response.note=Prova \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Inserimento di un offerta con valore positivo")
+    void makeOffer_positiveAmount_returnsOffertaDTO() {
+        // Arrange
+        Double importo = 150.0;
+        String note = "Prova";
+        Offerta offerta = new Offerta(chat, offerente, importo, note);
+        offerta.setOffertaId(10);
+        when(authentication.getName()).thenReturn(username);
+        when(chatService.creaOfferta(chatId, importo, note, username)).thenReturn(offerta);
+        ResponseEntity<OffertaDTO> response = chatController.makeOffer(chatId, importo, note, authentication);
+        assertEquals(200, response.getStatusCodeValue());
+        assertNotNull(response.getBody());
+        OffertaDTO dto = response.getBody();
+        assertEquals(importo, dto.getImportoOfferto());
+        assertEquals(chatId, dto.getChatId());
+        assertEquals(offerente.getUsername(), dto.getOfferenteNome());
+        verify(chatService, times(1)).creaOfferta(chatId, importo, note, username);
+    }
+\end{lstlisting}    
+ 
+\newpage 
+\textbf{Inserimento di un offerta con valore negativo}
+\begin{table}[!h]
+    \centering
+    \small 
+    \begin{tabular}{|p{0.5cm}|p{3cm}|p{5cm}|p{5cm}|}
+    \hline
+    \textbf{id} & \textbf{Precond} & \textbf{Input} & \textbf{Output aspettato} \\
+    \hline
+    19 & Nella piattaforma è presente un immobile. L'utente è loggato & importo=-50.0, \newline note=Negativo
+    & response.code=400 \\
+    \hline
+    \end{tabular} 
+\end{table}
+
+\begin{lstlisting}[style=react]
+    @Test
+    @DisplayName("Inserimento di un offerta con valore negativo")
+    void makeOffer_negativeAmount_returnsBadRequest() {
+        // Arrange
+        Double importo = -50.0;
+        String note = "Negativo";
+        when(authentication.getName()).thenReturn(username);
+        when(chatService.creaOfferta(chatId, importo, note, username)).thenReturn(null);
+        // Act
+        ResponseEntity<OffertaDTO> response = chatController.makeOffer(chatId, importo, note, authentication);
+        // Assert
+        assertEquals(400, response.getStatusCodeValue());
+        assertNull(response.getBody());
+        verify(chatService, times(1)).creaOfferta(chatId, importo, note, username);
+    }
+\end{lstlisting}    
+ 
+\newpage

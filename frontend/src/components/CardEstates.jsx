@@ -77,7 +77,7 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
             className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-gray-100 hover:border-blue-300 mb-6"
             onClick={handleCardClick}
         >
-          <div className="relative lg:max-h-[420px] overflow-hidden">
+          <div className="relative overflow-hidden">
             <div className="flex flex-col lg:flex-row">
               <div className="relative w-full lg:w-[40%] h-[420px] bg-gradient-to-br from-gray-200 to-gray-300">
                 <img
@@ -104,8 +104,9 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                 )}
               </div>
 
-              <div className="flex-1 p-6 flex flex-col lg:w-[35%]">
-                <div className="flex-1 overflow-hidden">
+              <div className="flex-1 lg:w-[35%] flex flex-col min-h-[420px]">
+                {/* Contenuto scrollabile */}
+                <div className="flex-1 overflow-y-auto p-6">
                   <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
                     {formatPrice(immobile.prezzo)}
                   </div>
@@ -157,7 +158,7 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                       <div className="mt-4">
                         <div className="text-xs text-gray-500 uppercase tracking-wide mb-2 font-semibold">Servizi</div>
                         <div className="flex flex-wrap gap-2">
-                          {immobile.servizi.map((servizio, idx) => {
+                          {immobile.servizi.slice(0, 6).map((servizio, idx) => {
                             const IconComponent = getServiceIcon(servizio);
                             return (
                                 <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-full text-xs text-gray-700 hover:border-blue-300 transition-colors">
@@ -166,6 +167,11 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                                 </div>
                             );
                           })}
+                          {immobile.servizi.length > 6 && (
+                              <div className="flex items-center px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs text-blue-700 font-medium">
+                                +{immobile.servizi.length - 6} altri
+                              </div>
+                          )}
                         </div>
                       </div>
                   )}
@@ -195,17 +201,15 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                       </div>
                   )}
                 </div>
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200 mt-4">
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-xs text-gray-500 uppercase tracking-wide">Agente</span>
-                    <span className="text-sm font-semibold text-gray-900 truncate">{immobile.agenteImmobiliare}</span>
+
+                {/* Footer fisso con agente - sempre visibile */}
+                <div className="flex-shrink-0 p-4 border-t border-gray-200 bg-white">
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs text-gray-500 uppercase tracking-wide">Agente</span>
+                      <span className="text-sm font-semibold text-gray-900 truncate">{immobile.agenteImmobiliare}</span>
+                    </div>
                   </div>
-                  {immobile.nomeAgenzia && (
-                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-lg ml-3 flex-shrink-0">
-                        <Building2 size={14} className="text-blue-600" />
-                        <span className="text-xs font-medium text-blue-900 whitespace-nowrap">{immobile.nomeAgenzia}</span>
-                      </div>
-                  )}
                 </div>
               </div>
 
@@ -400,27 +404,19 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                     )}
                     <div className="p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-white">
                       <button
-                          onClick={async (e) => {
+                          onClick={(e) => {
                             e.stopPropagation();
-                            try {
-                              const token = localStorage.getItem("token");
-                              const immobileId = immobile.id;
-                              const chatResponse = await axios.get(`${import.meta.env.VITE_API_URL}/chat/openChat`, {
-                                params: { otherUser: immobile.agenteImmobiliare, immobile: immobileId },
-                                headers: { Authorization: `Bearer ${token}` }
-                              });
-                              const chatData = chatResponse.data;
-                              navigate('/Chat', {
-                                state: { chat: chatData, utenteLoggato, immobileId }
-                              });
-                            } catch (err) {
-                              console.error("Errore caricamento chat:", err);
-                              alert("Errore durante l'apertura della chat. Controlla la console.");
-                            }
+                            navigate('/Chat', {
+                              state: {
+                                immobile: immobile.id,
+                                agenteImmobiliare: immobile.agenteImmobiliare,
+                                utenteLoggato
+                              }
+                            });
                           }}
                           className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg transform hover:scale-[1.02] flex items-center justify-center gap-2"
                       >
-                        <MessageCircle size={20} />
+                        <MessageCircle size={18} />
                         CONTATTA AGENTE
                       </button>
                     </div>

@@ -1,34 +1,189 @@
-In questa sezione si vuole descrivere come è stata pensata l'interfaccia e perchè sono state adottate
-determinate scelte piuttosto che altre.
-L’interfaccia di DietiEstates25 è strutturata come un’applicazione web con una barra di navigazione 
-principale e un’area centrale dedicata alla gestione di immobili
+In questa sezione si vuole descrivere come è stata pensata l'interfaccia e perché sono state adottate
+determinate scelte progettuali piuttosto che altre.
+
+L'interfaccia di DietiEstates25 è strutturata come un'applicazione web moderna con una barra di 
+navigazione principale e un'area centrale dedicata alla gestione e visualizzazione degli immobili.
 \\\\
 \textbf{Navigazione}
 
-La navigazione è organizzata tramite un menu principale che consente l’accesso diretto alle 
-funzionalità principali del sistema. Quando l’utente non è autenticato, il menu è limitato alle 
+La navigazione è organizzata tramite un menu principale che consente l'accesso diretto alle 
+funzionalità principali del sistema. Quando l'utente non è autenticato, il menu è limitato alle 
 pagine Home, dalla quale è possibile effettuare la ricerca degli immobili, e alle funzionalità di 
 Registrazione e Accesso.
 
 Un utente autenticato dispone di ulteriori voci di menu; in particolare, un agente immobiliare ha 
 accesso alla funzionalità di inserimento di un nuovo immobile. Tutti gli utenti autenticati possono 
-inoltre accedere allo storico delle chat associate ai singoli immobili tramite un’apposita voce 
+inoltre accedere allo storico delle chat associate ai singoli immobili tramite un'apposita voce 
 del menu.
 \\\\
-\textbf{Motivazioni delle scelte}
+\textbf{Design Visivo e Scelte Cromatiche}
 
-L’interfaccia privilegia una disposizione semplice e lineare al fine di ridurre il carico cognitivo 
-degli utenti, che non sono necessariamente esperti informatici. La pagina principale presenta una 
-barra di ricerca con filtri essenziali, quali città, tipologia dell’operazione (affitto o vendita), 
-prezzo minimo e prezzo massimo; ricerche più specifiche possono essere effettuate tramite l’icona 
-“Altri filtri”.
+L'interfaccia di DietiEstates25 è stata progettata secondo principi di design minimalista e 
+funzionale. Durante la fase iniziale di sviluppo, era stato adottato uno schema cromatico con 
+sfondi blu intensi; tuttavia, questa scelta è stata successivamente rivista in favore di uno 
+schema più neutro e leggero. L'obiettivo è stato quello di non appesantire visivamente l'interfaccia, 
+evitando di affaticare l'utente durante sessioni prolungate di navigazione.
 
-L’utilizzo di maschere guidate e campi obbligatori riduce la possibilità di inserimento di dati non 
-validi, come date incoerenti o importi errati, migliorando l’affidabilità complessiva del sistema.
+La palette cromatica finale privilegia tonalità chiare e neutre per gli sfondi, con l'utilizzo 
+strategico del colore blu brillante esclusivamente per gli elementi interattivi principali, quali 
+pulsanti di azione e call-to-action. Questa scelta crea un contrasto efficace che guida 
+naturalmente l'attenzione dell'utente verso le funzionalità più rilevanti, migliorando la 
+navigabilità complessiva del sistema.
 
-La pagina principale, fino all’esecuzione di una ricerca, rimane intenzionalmente vuota per limitare 
-la quantità di informazioni visualizzate e prevenire il disorientamento dei nuovi utenti. Ogni 
-immobile è rappresentato tramite una scheda contenente le informazioni essenziali e una mappa 
-dedicata; tale scelta evita l’uso di una singola mappa sovraccarica con tutti gli immobili della 
-zona di riferimento, risultando di difficile consultazione. Ulteriori dettagli sono accessibili 
-tramite la pagina specifica dell’immobile, raggiungibile selezionando la relativa scheda.
+L'implementazione è stata realizzata mediante il framework Tailwind CSS, che ha permesso di 
+ottenere transizioni fluide, animazioni delicate e una coerenza stilistica su tutti i componenti 
+dell'interfaccia. L'utilizzo di Tailwind ha inoltre facilitato la creazione di un design 
+responsivo, garantendo un'esperienza utente ottimale su dispositivi di diverse dimensioni.
+\\\\
+\textbf{Visualizzazione degli Immobili}
+
+Una delle scelte progettuali più significative riguarda la modalità di presentazione degli 
+immobili nei risultati di ricerca. Anziché adottare la soluzione convenzionale di una mappa 
+unica contenente tutti gli immobili disponibili rappresentati tramite pin, si è optato per un 
+approccio card-based con mappe individuali.
+
+Ogni immobile è presentato tramite una scheda (card) dedicata che include una mappa specifica 
+mostrante esclusivamente la posizione di quell'immobile. Questa scelta progettuale risponde a 
+diverse esigenze:
+
+\begin{itemize}
+    \item \textbf{Riduzione della confusione visiva}: Una mappa unica con decine o centinaia di pin 
+    sovrapposti risulta difficile da interpretare, specialmente in aree urbane ad alta densità 
+    immobiliare. La visualizzazione individuale elimina completamente questo problema.
+    
+    \item \textbf{Localizzazione geografica precisa}: La mappa dedicata permette all'utente di 
+    comprendere immediatamente il contesto urbano circostante l'immobile, identificando servizi, 
+    trasporti e punti di interesse nelle immediate vicinanze.
+    
+    \item \textbf{Scansionabilità migliorata}: Gli utenti possono scorrere rapidamente i risultati 
+    ottenendo un'immediata comprensione sia delle caratteristiche dell'immobile sia della sua 
+    collocazione geografica, senza dover continuamente interagire con zoom e pan su una mappa 
+    condivisa.
+    
+    \item \textbf{Focus contestuale}: Ogni card fornisce un contesto completo e autonomo, riducendo 
+    il carico cognitivo necessario per correlare informazioni distribuite su interfacce diverse.
+\end{itemize}
+
+Le card sono state progettate con un layout pulito e gerarchico, presentando le informazioni più 
+rilevanti (prezzo, tipologia, indirizzo) in posizione prominente, mentre dettagli secondari sono 
+accessibili espandendo la card o navigando verso la pagina dedicata dell'immobile.
+\\\\
+\textbf{Sistema di Gestione delle Offerte}
+
+Un elemento centrale dell'applicazione è il sistema di gestione delle offerte immobiliari, 
+progettato per facilitare la comunicazione e la negoziazione tra utenti e agenti immobiliari. 
+Il design di questa funzionalità è stato sviluppato con particolare attenzione all'usabilità e 
+alla chiarezza dello stato della trattativa.
+
+Quando un utente invia un'offerta per un immobile, questa viene visualizzata all'interno di una 
+card dedicata che mostra l'importo proposto, la data e l'ora di invio, e un badge di stato. 
+L'interfaccia utente presenta tre pulsanti di azione chiari e distinti: "Accetta", "Controfferta" 
+e "Rifiuta", ciascuno accompagnato da icone intuitive che ne rafforzano il significato.
+
+Dal punto di vista dell'agente immobiliare, l'interfaccia è stata progettata per fornire una 
+panoramica immediata di tutte le negoziazioni attive. La sezione "Le tue negoziazioni" presenta 
+una lista delle trattative in corso, dove ogni elemento mostra informazioni essenziali quali il 
+nome dell'utente interessato, l'immobile di riferimento, l'ultima offerta ricevuta e lo stato 
+attuale della negoziazione.
+
+\textbf{Codifica Cromatica degli Stati}
+
+Una delle decisioni progettuali più efficaci riguarda l'utilizzo di un sistema di codifica 
+cromatica per comunicare istantaneamente lo stato di un'offerta. Questo approccio sfrutta i 
+principi della psicologia del colore e delle convenzioni universalmente riconosciute:
+
+\begin{itemize}
+    \item \textbf{Verde (Accettata)}: Quando un'offerta viene accettata, la card assume una 
+    colorazione verde con bordo verde, comunicando immediatamente un risultato positivo. Il verde 
+    è universalmente associato a conferma, successo e procedere, rendendo il feedback immediato e 
+    inequivocabile.
+    
+    \item \textbf{Blu (Controfferta)}: Se l'agente decide di formulare una controfferta, la card 
+    mantiene la colorazione blu standard, coerente con il tema cromatico dell'applicazione. Il blu 
+    comunica una condizione neutra, indicando che la negoziazione è ancora in corso e richiede 
+    ulteriore interazione.
+    
+    \item \textbf{Rosso (Rifiutata)}: In caso di rifiuto, la card assume una tonalità rossa con 
+    bordo rosso, segnalando chiaramente la conclusione negativa della trattativa. Il rosso è 
+    universalmente riconosciuto come indicatore di stop, errore o stato negativo.
+    
+\end{itemize}
+
+Questo sistema di feedback visivo immediato riduce drasticamente il tempo necessario per 
+comprendere lo stato di una negoziazione, permettendo agli utenti di elaborare le informazioni 
+a colpo d'occhio senza dover leggere descrizioni testuali dettagliate. La codifica cromatica si 
+applica sia al bordo della card che al badge di stato, creando una ridondanza informativa che 
+rinforza il messaggio e lo rende accessibile anche in condizioni di visualizzazione non ottimali.
+
+\textbf{Flusso di Interazione delle Offerte}
+
+Il flusso di interazione è stato progettato per essere lineare e privo di ambiguità. Quando un 
+utente visualizza le proprie offerte, può immediatamente comprenderne lo stato grazie alla 
+codifica cromatica. Se l'offerta è ancora in attesa, l'utente può scegliere di attendere una 
+risposta o eventualmente modificarla. Se è stata fatta una controfferta, l'utente visualizza 
+il nuovo importo proposto dall'agente e può decidere se accettarlo, rifiutarlo o formulare a 
+sua volta una nuova proposta.
+
+Dal lato dell'agente, l'interfaccia fornisce un dashboard centralizzato dove tutte le negoziazioni 
+attive sono visibili contemporaneamente. Ogni card di negoziazione presenta un gradiente decorativo 
+che aggiunge profondità visiva senza compromettere la leggibilità delle informazioni. Un badge 
+"In corso" di colore blu chiaro indica le trattative ancora aperte, mentre un contatore mostra 
+il numero totale di offerte ricevute per quell'immobile specifico.
+
+La gestione delle controfferte è stata implementata con particolare attenzione alla trasparenza: 
+quando l'agente formula una controfferta, l'utente riceve una notifica e può visualizzare sia 
+l'offerta originale che quella proposta dall'agente, facilitando il confronto e la decisione 
+informata.
+
+\textbf{Elementi di Micro-Interazione}
+
+Particolare cura è stata dedicata alle micro-interazioni che accompagnano le azioni dell'utente. 
+Quando si clicca su uno dei pulsanti di azione (Accetta, Controfferta, Rifiuta), l'interfaccia 
+fornisce feedback immediato attraverso transizioni smooth implementate con Tailwind CSS. La card 
+cambia colore gradualmente, comunicando che l'azione è stata registrata con successo. Questo tipo 
+di feedback rassicura l'utente e riduce l'incertezza tipica delle interfacce che non forniscono 
+conferme visive immediate.
+
+Le icone associate ai pulsanti (spunta per accettazione, frecce contrapposte per controfferta, 
+cerchio barrato per rifiuto) sono state selezionate seguendo convenzioni consolidate nell'ambito 
+dell'interaction design, garantendo riconoscibilità immediata anche per utenti meno esperti.
+\\\\
+\textbf{Motivazioni delle Scelte e Riduzione dell'Attrito Cognitivo}
+
+L'interfaccia privilegia una disposizione semplice e lineare al fine di ridurre il carico cognitivo 
+degli utenti, che non sono necessariamente esperti informatici. Il design è stato pensato seguendo 
+principi di progressive disclosure: le informazioni vengono rivelate gradualmente in base alle 
+necessità dell'utente, evitando di sovraccaricare lo schermo con opzioni e dati non immediatamente 
+rilevanti.
+
+La pagina principale presenta una barra di ricerca con filtri essenziali e immediati, quali città, 
+tipologia dell'operazione (affitto o vendita), prezzo minimo e prezzo massimo. Questa selezione 
+minima di filtri rappresenta i criteri di ricerca più comuni secondo le statistiche di utilizzo 
+delle piattaforme immobiliari. Ricerche più specifiche e dettagliate possono essere effettuate 
+tramite l'icona "Altri filtri", che apre un pannello modale contenente opzioni avanzate quali 
+numero di stanze, metratura, piano, classe energetica e numero di bagni.
+
+L'utilizzo di transizioni smooth e micro-interazioni implementate tramite Tailwind CSS contribuisce 
+a creare un'esperienza fluida e naturale. Elementi quali l'hover sulle card, l'apertura dei menu 
+e la visualizzazione dei filtri avanzati sono accompagnati da animazioni delicate che guidano 
+l'attenzione senza distrarre, riducendo l'attrito cognitivo durante la navigazione.
+
+L'utilizzo di maschere guidate e campi obbligatori riduce la possibilità di inserimento di dati non 
+validi, come date incoerenti o importi errati, migliorando l'affidabilità complessiva del sistema. 
+I messaggi di validazione sono posizionati in prossimità dei campi interessati e utilizzano un 
+linguaggio chiaro e orientato alla soluzione.
+
+La pagina principale, fino all'esecuzione di una ricerca, rimane intenzionalmente vuota per limitare 
+la quantità di informazioni visualizzate e prevenire il disorientamento dei nuovi utenti. Questa 
+scelta, nota come "zero state design", permette di mantenere il focus sulla funzionalità di ricerca 
+e riduce l'ansia decisionale che potrebbe derivare dalla presentazione immediata di numerose opzioni.
+
+L'architettura informativa è stata progettata seguendo il principio del "mobile-first design", 
+garantendo che l'esperienza sia ottimale anche su dispositivi con schermi ridotti. La 
+responsività non è stata implementata come semplice adattamento, ma come una riprogettazione 
+consapevole delle interazioni per ogni breakpoint, assicurando usabilità su qualsiasi dispositivo.
+
+In sintesi, ogni scelta progettuale è stata guidata dall'obiettivo di creare un'interfaccia che 
+sia al contempo potente nelle funzionalità e accessibile nell'utilizzo, riducendo sistematicamente 
+ogni forma di attrito cognitivo e massimizzando la chiarezza comunicativa attraverso l'uso 
+strategico di colore, tipografia, spacing e animazioni.

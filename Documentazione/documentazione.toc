@@ -75,13 +75,13 @@
 \contentsline {subsection}{\numberline {2.13.2}Sicurezza del Frontend}{46}{subsection.2.13.2}%
 \contentsline {section}{\numberline {2.14}Schema dei dati}{47}{section.2.14}%
 \contentsline {section}{\numberline {2.15}Progettazione interfaccia utente}{48}{section.2.15}%
-\contentsline {section}{\numberline {2.16}Diagramma delle classi}{48}{section.2.16}%
-\contentsline {section}{\numberline {2.17}Diagramma di sequenza}{51}{section.2.17}%
-\contentsline {section}{\numberline {2.18}Analisi del codice con SonarQube}{56}{section.2.18}%
-\contentsline {chapter}{\numberline {3}Testing}{57}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Strategie adottate}{57}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Test di unita Registrazione Utente}{58}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Test di unita Inserimento immobile}{63}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Test di unita Ricerca Immobile}{68}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Test di unita Avvio trattativa}{74}{section.3.5}%
-\contentsline {section}{\numberline {3.6}Test di usabilita}{82}{section.3.6}%
+\contentsline {section}{\numberline {2.16}Diagramma delle classi}{51}{section.2.16}%
+\contentsline {section}{\numberline {2.17}Diagramma di sequenza}{54}{section.2.17}%
+\contentsline {section}{\numberline {2.18}Analisi del codice con SonarQube}{59}{section.2.18}%
+\contentsline {chapter}{\numberline {3}Testing}{60}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Strategie adottate}{60}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Test di unita Registrazione Utente}{61}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Test di unita Inserimento immobile}{66}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Test di unita Ricerca Immobile}{71}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Test di unita Avvio trattativa}{77}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Test di usabilita}{85}{section.3.6}%

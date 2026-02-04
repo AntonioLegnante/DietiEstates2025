@@ -23,14 +23,26 @@ Ogni test segue rigorosamente il pattern Arrange, Act, Assert:
 Sono state testate le seguenti funzionalità
 \begin{enumerate}
     \item Registrazione
-    \item Login
     \item Ricerca immobili
     \item Caricamento immobili
     \item Avvio di una trattativa
 \end{enumerate}
 
-La maggior parte dei test segue l'approccio WECT (Weak Equivalence Class Testing) 
-mantenendo gli altri valori costanti
-La suite utilizza @MockBean per isolare il service layer dalle sue dipendenze (repository, MinIO service). 
-Questo permette di testare la logica del servizio senza dipendere da database o servizi esterni reali.
+La maggior parte dei test prende ispirazione dai principi del WECT (Weak Equivalence Class 
+Testing), mantenendo costanti gli altri valori di input per isolare il comportamento sotto 
+esame. Tuttavia, i casi di test non si limitano a una semplice partizione formale del dominio
+degli input, ma seguono anche una scomposizione logica dei possibili scenari di utilizzo del
+sistema. In particolare, vengono considerati casi significativi dal punto di vista applicativo,
+come ad esempio il tentativo di caricamento di un immobile duplicato, caricare un offerta con 
+saldo negativo, inserire un immobile senza un immagine principale, che riflettono situazioni 
+realistiche di errore o uso improprio.
 
+In questo modo, la progettazione dei test combina una partizione del dominio degli input con 
+una selezione mirata di scenari applicativi rilevanti, ottenendo una copertura più 
+significativa del comportamento del sistema rispetto a un’applicazione puramente formale del 
+WECT.
+La suite utilizza @MockBean per isolare il service layer dalle sue dipendenze 
+(repository, MinIO service). Questo permette di testare la logica del servizio senza dipendere 
+da database o servizi esterni reali.
+
+\newpage

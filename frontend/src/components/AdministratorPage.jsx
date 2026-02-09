@@ -59,7 +59,7 @@ export function AdministratorPage() {
                 console.log("In AdministratorPage cambiaPassword");
                 console.log(res.data);
                 console.log("In AdministratorPage cambiaPassword dopo res.data");
-                alert("✅ " + res.data);
+                alert("✅ ");
                 if(res.data.token) {
                     localStorage.setItem("token", res.data.token); // salva nuovo JWT
                 }

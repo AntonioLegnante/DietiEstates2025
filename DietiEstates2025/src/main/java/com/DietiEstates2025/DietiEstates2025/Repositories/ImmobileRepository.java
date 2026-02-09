@@ -11,8 +11,8 @@ public interface ImmobileRepository extends JpaRepository<Immobile, Integer> {
     @Query("""
     SELECT i FROM Immobile i
     WHERE (:localita IS NULL 
-          OR LOWER(i.indirizzo) LIKE LOWER(CONCAT('%', :localita, '%'))
-          OR LOWER(i.citta) LIKE LOWER(CONCAT('%', :localita, '%')))
+          OR LOWER(TRIM(i.indirizzo)) LIKE LOWER(CONCAT('%', TRIM(:localita), '%'))
+          OR LOWER(TRIM(i.citta)) LIKE LOWER(CONCAT('%', TRIM(:localita), '%')))
                  
     AND ((i.prezzo <= :maxPrezzo AND i.prezzo >= :minPrezzo) 
         OR (:maxPrezzo IS NULL AND i.prezzo >= :minPrezzo) 

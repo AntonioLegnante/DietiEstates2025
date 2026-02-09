@@ -1,5 +1,5 @@
 import { MapPin, Bus, Home, ChevronLeft, ChevronRight, Maximize, MessageCircle,
-  Bath, Trees, Armchair, Snowflake, Zap, X, GraduationCap, Car, Building2 } from 'lucide-react';
+  Bath, Trees, Armchair, Snowflake, Zap, X, GraduationCap, Car, Building2, Tag } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
 import { StaticMapViewWithPOI } from './MapView.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -88,6 +88,21 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                       e.target.src = "https://via.placeholder.com/400x300?text=Immagine+non+disponibile";
                     }}
                 />
+                {/* Badge Vendita/Affitto */}
+                <div className="absolute top-4 left-4 z-10">
+                  {immobile.vendita && (
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white font-semibold text-sm rounded-full shadow-lg backdrop-blur-sm">
+                        <Tag size={14} />
+                        <span>IN VENDITA</span>
+                      </div>
+                  )}
+                  {immobile.affitto && (
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 text-white font-semibold text-sm rounded-full shadow-lg backdrop-blur-sm">
+                        <Tag size={14} />
+                        <span>IN AFFITTO</span>
+                      </div>
+                  )}
+                </div>
                 {allImages.length > 1 && (
                     <>
                       <button onClick={goPrev} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110">
@@ -252,6 +267,21 @@ export function CardEstates({ immobile, utenteLoggato, preview = false }) {
                   </button>
                   <div className="relative w-full h-96 bg-gradient-to-br from-gray-200 to-gray-300">
                     <img src={allImages[currentImageIndex]} alt={immobile.titolo} className="w-full h-full object-cover cursor-pointer" onClick={() => setShowFullImage(true)} onError={(e) => { e.target.src = "https://via.placeholder.com/800x600?text=Immagine+non+disponibile"; }} />
+                    {/* Badge Vendita/Affitto nel modal */}
+                    <div className="absolute top-4 left-4 z-10">
+                      {immobile.vendita && (
+                          <div className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white font-bold text-base rounded-full shadow-lg backdrop-blur-sm">
+                            <Tag size={16} />
+                            <span>IN VENDITA</span>
+                          </div>
+                      )}
+                      {immobile.affitto && (
+                          <div className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white font-bold text-base rounded-full shadow-lg backdrop-blur-sm">
+                            <Tag size={16} />
+                            <span>IN AFFITTO</span>
+                          </div>
+                      )}
+                    </div>
                     {allImages.length > 1 && (
                         <>
                           <button onClick={goPrev} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white p-3 rounded-full shadow-lg transition-all hover:scale-110 z-10">

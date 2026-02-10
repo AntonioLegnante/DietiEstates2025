@@ -195,9 +195,6 @@ gestite lato server, il token JWT è completamente autonomo e non richiede che i
 Questo rende l'architettura intrinsecamente scalabile poiché non esiste un single point of failure legato alla gestione delle sessioni.\newline
 
 
-\subsection{Memorizzazione del token sul client}
-
-
 
 \subsection{Autorizzazione delle richieste API}
 
@@ -307,7 +304,7 @@ o Kubernetes per ambienti più semplici.\newline
 
 \subsection{Docker per la containerizzazione}
 
-Ogni componente dell'applicazione (backend Spring Boot, frontend React, NGINX, PostgreSQL, MinIO) viene eseguito in container Docker indipendenti. Il backend 
+Ogni componente dell'applicazione (backend Spring Boot, frontend React, NGINX, PostgreSQL, MinIO, Cloudflared) viene eseguito in container Docker indipendenti. Il backend
 Spring Boot utilizza un'immagine base Java ottimizzata (eclipse-temurin), copia il JAR buildato dell'applicazione nel container, e lo espone sulla porta 8080. 
 Il Dockerfile implementa multi-stage builds per compilare l'applicazione all'interno di un container builder e copia solo gli artifact necessari nel container 
 finale, riducendo drasticamente le dimensioni dell'immagine.\newline
@@ -702,7 +699,7 @@ volumes:
 L'intero stack applicativo viene avviato con un singolo comando:
 
 \begin{lstlisting}[style=react]
-docker-compose up -d
+docker-compose up -d cloudflared
 \end{lstlisting}
 
 Questo comando:
